@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'AppTitle ', //Titulo
-      initialRoute: 'home', // inicial rutas y screens.dart
+      initialRoute: 'login', // inicial rutas y screens.dart
       routes: {
       'home': (_) => const HomeScreen(),
       'login': (_) => const LoginScreen(),
