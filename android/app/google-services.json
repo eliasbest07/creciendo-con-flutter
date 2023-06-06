@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "871111009322",
+    "project_id": "tareas-creciendo-con-flutter",
+    "storage_bucket": "tareas-creciendo-con-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:871111009322:android:df709b6f92ec3173678f53",
+        "android_client_info": {
+          "package_name": "com.example.tareas_creciendo_con_flutter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "871111009322-r1598jsqcr5gndrh62vem5l6bllsdh0n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqXpoMHRbibWkiLVKsGGg3RVpjI2f2U4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "871111009322-r1598jsqcr5gndrh62vem5l6bllsdh0n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
