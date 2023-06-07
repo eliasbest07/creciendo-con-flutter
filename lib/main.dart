@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'screens/screens.dart';
-void main() => runApp(const MyApp());
+
+void main() =>
+    runApp(const ProviderScope(child: MyApp())); // para usar Riverpod
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-@override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'AppTitle ', //Titulo
-      initialRoute: 'home', // inicial rutas y screens.dart
+      initialRoute: 'login', // inicial rutas y screens.dart
       routes: {
-      'home': (_) => const HomeScreen(),
-      'login': (_) => const LoginScreen(),
+        'home': (_) => const HomeScreen(),
+        'login': (_) => const LoginScreen(),
       },
     );
   }
