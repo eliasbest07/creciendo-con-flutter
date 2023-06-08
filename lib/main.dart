@@ -4,8 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'screens/screens.dart';
 
-void main() =>
-    runApp(const ProviderScope(child: MyApp())); // para usar Riverpod
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(const ProviderScope(child: MyApp()));
+} // para usar Riverpod
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

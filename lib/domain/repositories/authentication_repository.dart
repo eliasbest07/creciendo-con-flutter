@@ -1,3 +1,3 @@
 abstract class AuthenticationRepository {
-  Future signIn(String email, String password);
+  Future<bool> signIn(String email, String password);
 }
