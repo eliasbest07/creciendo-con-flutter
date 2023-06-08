@@ -1,15 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'screens/screens.dart';
-import 'firebase_options.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(const MyApp());
-}
+import 'screens/screens.dart';
+
+void main() =>
+    runApp(const ProviderScope(child: MyApp())); // para usar Riverpod
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,9 +14,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'AppTitle ', //Titulo
-      initialRoute: 'home', // inicial rutas y screens.dart
+      initialRoute: 'login', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
+        'login': (_) => const LoginScreen(),
       },
     );
   }
