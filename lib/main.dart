@@ -21,7 +21,6 @@ class MyApp extends StatelessWidget {
       initialRoute: 'home', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
-        'login': (_) => const LoginScreen(),
       },
     );
   }
