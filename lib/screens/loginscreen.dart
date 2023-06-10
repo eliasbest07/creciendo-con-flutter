@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,11 +16,13 @@ class LoginScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    final isLoading = ref.watch(loadingProvider); // int , bool, string 
+    final bool isLoading = ref.watch(loadingProvider); // int , bool, string 
 
     // final inputController = ref.watch(loginController);
 
-    final controllerLogin = ref.watch(loginController.notifier);
+    final LoginController controllerLogin = ref.watch(loginController.notifier);
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    print('current user: ${auth.currentUser?.email}');
 
     
     return Scaffold(
@@ -40,6 +43,12 @@ class LoginScreen extends ConsumerWidget {
         children: [
           _backgroundCover(context),
           _boxForm(context, controllerLogin),
+          MaterialButton(
+              onPressed: () {
+                controllerLogin.cerrarSesion();
+              },
+              child: const Text('Cerrar sesion'),
+            ),
           Column(
             children: [
               // _imageCover(),
