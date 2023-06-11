@@ -1,3 +1,7 @@
+import 'dart:ui';
+
+import 'package:animate_do/animate_do.dart';
+import 'package:creciendo_con_flutter/widgets/background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +19,7 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
+    final Size size = MediaQuery.of(context).size;
     final bool isLoading = ref.watch(loadingProvider); // int , bool, string 
 
     // final inputController = ref.watch(loginController);
@@ -24,38 +28,184 @@ class LoginScreen extends ConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     print('current user: ${auth.currentUser?.email}');
 
-    
+    late AnimationController inLogin;
+    late AnimationController inRegister;
+
     return Scaffold(
-      body: isLoading ?  Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MaterialButton(
-              onPressed: () {
-                ref.read(loadingProvider.notifier).state = false; // String, int 
-              },
-              child: const Text('Cambiar A TRUE '),
-            ),
-            const CircularProgressIndicator(),
-          ],
-        )
-        ) : Stack(
+      resizeToAvoidBottomInset: false,
+      body: 
+        Stack(
         children: [
-          _backgroundCover(context),
-          _boxForm(context, controllerLogin),
-          MaterialButton(
-              onPressed: () {
-                controllerLogin.cerrarSesion();
-              },
-              child: const Text('Cerrar sesion'),
-            ),
-          Column(
-            children: [
-              // _imageCover(),
-              // _avatarCircleLogo(),
-              _textDontHaveAccount()
-            ],
+          Background(size:size),
+          BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+          child:  Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 100),
+                const Center(child: Text('TaskFlow',style: TextStyle(fontSize: 24),)),
+                const SizedBox(height: 200,),
+                SizedBox(
+                  width: 250,
+                  child: MaterialButton(
+                    shape: const StadiumBorder(),
+                    color: const Color.fromARGB(255, 123, 205, 243),
+                    onPressed: (){
+                      inLogin.reset();
+                      inLogin.forward();
+                  },
+                  child: const Center(child: Text('Iniciar Sesión',style: TextStyle(fontSize: 22))),),
+                ),
+                SizedBox(
+                  width: 250,
+                  child: MaterialButton(
+                    shape: const StadiumBorder(),
+                    color:const Color.fromARGB(255, 31, 68, 187),
+                    onPressed: (){
+                      inLogin.reset();
+                      inLogin.forward();
+                  },
+                  child: const Center(child: Text('Registrar',style: TextStyle(fontSize: 22, color: Colors.white),)),),
+                ),
+              
+                // Container(
+                //   margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                //   child: TextField(
+                //     controller: controllerLogin.inputControllerEmail, // con.emailController,
+                //     keyboardType: TextInputType.emailAddress,
+                //     decoration: InputDecoration(
+                //         contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                //         border: OutlineInputBorder(
+                //           borderSide: BorderSide.none,
+                //           borderRadius: BorderRadius.circular(30.0),
+                //         ),
+                //         filled: true,
+                //         fillColor: Colors.white,
+                //         hintText: 'Email',
+                //         prefixIcon: const Icon(Icons.email)),
+                //   ),
+                // ),
+          
+            //   MaterialButton(
+            //     onPressed: () {
+            //       controllerLogin.cerrarSesion();
+            //     },
+            //     child: const Text('Cerrar sesion'),
+            //   ),
+            ],),
           ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: FadeInUpBig(
+                animate: false,
+                controller: (controller) {
+                  inLogin= controller;
+                },
+                child: Container(
+                  height: size.height*0.8,
+                  width: size.width*0.8,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)  ),
+                    boxShadow:  [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0,5)
+                      )
+                    ]
+                  ),
+                  child: Stack(children: [
+                    Positioned(
+                      top: 5,
+                      left: 15,
+                      child: MaterialButton(
+                        color: Colors.white,
+                        onPressed: (){
+                          inLogin.reverse();
+                      },
+                      child: const Text('←'),),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                      const  Text('Iniciar Sesion'),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        child: TextField(
+                          controller: controllerLogin.inputControllerEmail, // con.emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                              filled: true,
+                              fillColor: const Color.fromARGB(255, 185, 185, 185),
+                              hintText: 'Email',
+                              prefixIcon: const Icon(Icons.email, color:  Color.fromARGB(255, 123, 205, 243))),
+                          ),
+                        ),
+                        Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 20),
+                              child: TextField(
+                                controller: controllerLogin.inputControllerPassword,
+                                keyboardType: TextInputType.text,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                    contentPadding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                      borderRadius: BorderRadius.circular(30.0),
+                                    ),
+                                    filled: true,
+                                    fillColor: const Color.fromARGB(255, 185, 185, 185),
+                                    hintText: 'Password',
+                                    prefixIcon:const Icon(Icons.lock, color:  Color.fromARGB(255, 123, 205, 243))),
+                              ),
+                            ),
+                            Container(
+                              width: double.infinity,
+                              margin:const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  controllerLogin.inciarSesion();
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                    shape: const StadiumBorder(), backgroundColor: const Color.fromRGBO(1, 61, 115, 0.6),
+                                    padding: const EdgeInsets.symmetric(vertical: 15)),
+                                child:const Text(
+                                  'Entrar',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            )
+                    ],)
+                  ]),
+                ),
+              ),
+            ),
+
+
+          // _backgroundCover(context),
+          // _boxForm(context, controllerLogin),
+          // MaterialButton(
+          //     onPressed: () {
+          //       controllerLogin.cerrarSesion();
+          //     },
+          //     child: const Text('Cerrar sesion'),
+          //   ),
+          // Column(
+          //   children: [
+          //     // _imageCover(),
+          //     // _avatarCircleLogo(),
+          //     _textDontHaveAccount()
+          //   ],
+          // ),
         ],
       ),
     );
@@ -162,7 +312,7 @@ class LoginScreen extends ConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 15),
             primary: Color.fromRGBO(1, 61, 115, 0.6)),
         child: Text(
-          'Login',
+          'Entrar',
           style: TextStyle(color: Colors.white),
         ),
       ),
