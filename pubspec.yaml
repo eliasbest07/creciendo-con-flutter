@@ -38,7 +38,7 @@ dependencies:
   firebase_database: ^10.1.0
   firebase_auth: ^4.6.2
   firebase_core: ^2.10.0
-  animate_do: ^3.0.2
+  animate_do: ^2.1.0
   
 
 dev_dependencies:
