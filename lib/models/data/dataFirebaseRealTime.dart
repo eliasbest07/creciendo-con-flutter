@@ -2,7 +2,7 @@ import 'package:creciendo_con_flutter/models/data/dataClass.dart';
 import 'package:firebase_database/firebase_database.dart';
 class MetaFirebase{
 
-  final DatabaseReference _metaRef = FirebaseDatabase.instance.reference().child('meta');
+  final DatabaseReference _metaRef = FirebaseDatabase.instance.ref().child('meta');
 
   void guardarMeta(Meta meta){
     _metaRef.push().set(meta); //meta.toJson()
@@ -14,7 +14,7 @@ class MetaFirebase{
 
 class ProyectoFirebase{
 
-  final DatabaseReference _proyectoRef = FirebaseDatabase.instance.reference().child('proyecto');
+  final DatabaseReference _proyectoRef = FirebaseDatabase.instance.ref().child('proyecto');
 
   void guardarProyecto(Proyecto proyecto){
     _proyectoRef.push().set(proyecto); //proyecto.toJson()
@@ -26,7 +26,7 @@ class ProyectoFirebase{
 
 class TareaFirebase{
 
-  final DatabaseReference _tareaRef = FirebaseDatabase.instance.reference().child('tarea');
+  final DatabaseReference _tareaRef = FirebaseDatabase.instance.ref().child('tarea');
 
   void guardarTarea(Tarea tarea){
     _tareaRef.push().set(tarea); //tarea.toJson()
@@ -37,7 +37,7 @@ class TareaFirebase{
 
 class UsuarioFirebase{
 
-  final DatabaseReference _usuarioRef = FirebaseDatabase.instance.reference().child('usuario');
+  final DatabaseReference _usuarioRef = FirebaseDatabase.instance.ref().child('usuario');
 
   void guardarUsuario(Usuario usuario){
     _usuarioRef.push().set(usuario); //usuario.toJson()
@@ -48,7 +48,7 @@ class UsuarioFirebase{
 
 class ComentarioFirebase{
 
-  final DatabaseReference _comentarioRef = FirebaseDatabase.instance.reference().child('comentario');
+  final DatabaseReference _comentarioRef = FirebaseDatabase.instance.ref().child('comentario');
 
   void guardarComentario(Comentario comentario){
     _comentarioRef.push().set(comentario); //usuario.toJson()
