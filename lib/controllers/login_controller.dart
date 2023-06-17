@@ -9,7 +9,7 @@ class LoginController extends StateNotifier<Login>{
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _name = TextEditingController();
-
+  bool verClave =false;
   final FirebaseAuthentication auth = FirebaseAuthentication();
   
   void setLogin(Login login){

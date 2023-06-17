@@ -1,4 +1,6 @@
 
+import 'package:creciendo_con_flutter/controllers/animation_controller.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controllers/login_controller.dart';
@@ -13,3 +15,5 @@ final loadingProvider = StateProvider((ref) => true);
 final listaProyectos = StateNotifierProvider<ProyectoProvider, List<Proyecto>> ((ref) => ProyectoProvider()); // es una forma 
 
 final loginController = StateNotifierProvider<LoginController, Login>((ref) => LoginController());
+
+final animationController = StateNotifierProvider<AnimController, void>((ref) => AnimController(null));
