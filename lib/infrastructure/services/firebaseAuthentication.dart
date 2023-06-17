@@ -1,6 +1,7 @@
 import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
 import 'package:creciendo_con_flutter/domain/repositories/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthentication implements AuthenticationRepository {
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -31,5 +32,21 @@ class FirebaseAuthentication implements AuthenticationRepository {
   @override
   Future<void> signOut() async {
     await auth.signOut();
+  }
+
+  @override
+  Future<void> signInWithGoogle() async {
+    // Iniciar sesión con Google
+    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+
+    // Obtener la autenticación de Google
+    final GoogleSignInAuthentication gAuth = await gUser!.authentication;
+
+    // Crear una credencial utilizando los tokens de acceso y de identificación de Google
+    final credential = GoogleAuthProvider.credential(
+        accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+
+    // Iniciar sesión en Firebase con la credencial
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }

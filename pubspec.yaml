@@ -39,6 +39,7 @@ dependencies:
   firebase_auth: ^4.6.2
   firebase_core: ^2.10.0
   animate_do: ^2.1.0
+  google_sign_in: ^6.1.4
   
 
 dev_dependencies:
