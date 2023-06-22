@@ -11,4 +11,14 @@ class Proyecto {
 
   Proyecto(this.icono, this.nombre, this.listMeta, this.listComentario,
       this.listUserLideres);
+
+        Map<String, dynamic> toJson() {
+    return {
+      'icon': icono,
+      'nombre': nombre,
+      'listMeta': listMeta.map((meta) => meta.toJson()).toList(),
+      'listCom': listComentario.map((comentario) => comentario.toJson()).toList(),
+      'listUserLideres': listUserLideres.map((usuario) => usuario.toJson()).toList(),
+    };
+  }
 }
