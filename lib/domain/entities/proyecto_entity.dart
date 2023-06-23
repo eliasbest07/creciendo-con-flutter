@@ -3,16 +3,15 @@ import 'package:creciendo_con_flutter/domain/entities/meta_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
 
 class Proyecto {
-  String icono;
+  String icono='vacio';
   String nombre;
   List<Meta> listMeta = [];
   List<Comentario> listComentario = [];
   List<Usuario> listUserLideres = [];
 
-  Proyecto(this.icono, this.nombre, this.listMeta, this.listComentario,
-      this.listUserLideres);
+  Proyecto({this.nombre='nuevo'});
 
-        Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'icon': icono,
       'nombre': nombre,

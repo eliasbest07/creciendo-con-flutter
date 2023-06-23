@@ -1,4 +1,5 @@
 import 'package:creciendo_con_flutter/presentation/drawables/nav_bar.dart';
+import 'package:creciendo_con_flutter/presentation/widgets/drawer_custom.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -10,6 +11,7 @@ class HomeScreen extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      drawer: DrawerCustom (size: Size(height,width),),
       body: Column(
         children: [
           SizedBox(
