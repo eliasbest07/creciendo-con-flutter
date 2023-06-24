@@ -1,13 +1,20 @@
 import 'package:creciendo_con_flutter/presentation/drawables/nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HomeScreen extends StatelessWidget {
+import '../../providers/riverpod_provider.dart';
+import '../controllers/login_controller.dart';
+
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
+    final LoginController controller = ref.watch(loginController.notifier);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -21,7 +28,13 @@ class HomeScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('TaskFlow'),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.chat))
+                IconButton(
+                  onPressed: () async {
+                    await controller.cerrarSesion();
+                    Navigator.pushNamed(context, 'login');
+                  },
+                  icon: const Icon(Icons.exit_to_app),
+                ),
               ],
             ),
           ),
@@ -36,8 +49,9 @@ class HomeScreen extends StatelessWidget {
                     height: 100,
                     width: 100,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color.fromARGB(255, 147, 216, 207)),
+                      borderRadius: BorderRadius.circular(20),
+                      color: const Color.fromARGB(255, 147, 216, 207),
+                    ),
                   ),
                 );
               },
@@ -45,7 +59,8 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
       floatingActionButton: SizedBox(
           height: 150,
           width: double.infinity,
@@ -56,8 +71,8 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 height: 78,
                 width: 78,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.green),
               ),
             ),
             Positioned(
