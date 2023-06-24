@@ -14,7 +14,8 @@ class FirebaseAuthentication implements AuthenticationRepository {
       //print('${User.user!.email}');
       return auth.authStateChanges().map((user) => user != null).first;
     } on FirebaseAuthException catch (error) {
-      throw UserNotFound(error.message!);
+      //throw UserNotFound(error.message!);
+      return false;
     }
   }
 
@@ -25,7 +26,8 @@ class FirebaseAuthentication implements AuthenticationRepository {
           email: email, password: password);
       return auth.authStateChanges().map((user) => user != null).first;
     } on FirebaseAuthException catch (error) {
-      throw SignUpFailed(error.message!);
+      //throw SignUpFailed(error.message!);
+      return false;
     }
   }
 
