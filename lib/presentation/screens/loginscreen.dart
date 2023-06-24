@@ -267,8 +267,14 @@ class LoginScreen extends ConsumerWidget {
                                   MaterialButton(
                                     color: Colors.black,
                                     splashColor: Colors.white,
-                                    onPressed: () {
-                                      // controller.inicio(context);
+                                    onPressed: () async {
+                                      //controller.inicio(context);
+                                      final isLogin =
+                                          await controllerLogin.inciarSesion();
+
+                                      if (isLogin) {
+                                        Navigator.pushNamed(context, 'home');
+                                      }
                                     },
                                     child: const Text(
                                       'Entrar',
@@ -369,85 +375,41 @@ class LoginScreen extends ConsumerWidget {
                                     spreadRadius: 1,
                                   )
                                 ]),
-                            child: Column(
-                              children: [
-                                SizedBox(height: size.height * 0.015),
-                                Row(
-                                  children: [
-                                    MaterialButton(
-                                      height: 60,
-                                      shape: const CircleBorder(),
-                                      onPressed: () {
-                                        controllerAnim.controllerRegister
-                                            .reverse();
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                      },
-                                      child: const Icon(
-                                        Icons.close_rounded,
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: size.height * 0.020),
-                                const Text('Nuevo Usuario',
-                                    style: TextStyle(fontSize: 20)),
-                                SizedBox(height: size.height * 0.040),
-                                Container(
-                                  height: 50,
-                                  width: 250,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: const Color.fromARGB(
-                                            255, 81, 80, 80),
-                                        width: 2,
-                                      ),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Color.fromARGB(
-                                              255, 118, 118, 118),
-                                          offset: Offset(1, 1),
-                                          blurRadius: 4,
-                                          spreadRadius: 1,
-                                        ),
-                                        BoxShadow(
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                          offset: Offset(-1, -1),
-                                          blurRadius: 3,
-                                          spreadRadius: 3,
-                                        )
-                                      ]),
-                                  child: Row(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: size.height * 0.015),
+                                  Row(
                                     children: [
-                                      const SizedBox(
-                                        width: 20,
+                                      Align(
+                                        alignment: Alignment.bottomLeft,
+                                        child: MaterialButton(
+                                          height: 60,
+                                          shape: const CircleBorder(),
+                                          onPressed: () {
+                                            controllerAnim.controllerRegister
+                                                .reverse();
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                          },
+                                          child: const Icon(
+                                            Icons.close_rounded,
+                                            color: Colors.black,
+                                          ),
+                                        ),
                                       ),
                                       SizedBox(
-                                        width: 200,
-                                        child: TextFormField(
-                                            controller: controllerLogin
-                                                .inputControllerEmail,
-                                            maxLines: 1,
-                                            decoration: const InputDecoration(
-                                                border: InputBorder.none,
-                                                focusedBorder: InputBorder.none,
-                                                hintText: 'Correo'),
-                                            style: const TextStyle(
-                                              overflow: TextOverflow.ellipsis,
-                                              color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                              fontSize: 18,
-                                            )),
-                                      )
+                                        width: size.width * 0.12,
+                                      ),
+                                      const Text(
+                                        'Nuevo Usuario',
+                                        style: TextStyle(fontSize: 20),
+                                      ),
                                     ],
                                   ),
-                                ),
-                                SizedBox(height: size.height * 0.030),
-                                Container(
+                                  SizedBox(height: size.height * 0.0005),
+                                  SizedBox(height: size.height * 0.040),
+                                  Container(
                                     height: 50,
                                     width: 250,
                                     decoration: BoxDecoration(
@@ -455,7 +417,7 @@ class LoginScreen extends ConsumerWidget {
                                         color: Colors.white,
                                         border: Border.all(
                                           color: const Color.fromARGB(
-                                              255, 61, 60, 60),
+                                              255, 81, 80, 80),
                                           width: 2,
                                         ),
                                         boxShadow: const [
@@ -480,118 +442,237 @@ class LoginScreen extends ConsumerWidget {
                                           width: 20,
                                         ),
                                         SizedBox(
-                                          width: 185,
+                                          width: 200,
                                           child: TextFormField(
                                               controller: controllerLogin
-                                                  .inputControllerPassword,
-                                              autocorrect: false,
-                                              obscureText:
-                                                  controllerLogin.verClave,
+                                                  .inputControllerNameRegister,
                                               maxLines: 1,
                                               decoration: const InputDecoration(
                                                   border: InputBorder.none,
                                                   focusedBorder:
                                                       InputBorder.none,
-                                                  hintText: 'Clave'),
+                                                  hintText: 'Nombre'),
                                               style: const TextStyle(
                                                 overflow: TextOverflow.ellipsis,
                                                 color: Color.fromARGB(
                                                     255, 0, 0, 0),
                                                 fontSize: 18,
                                               )),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(height: size.height * 0.040),
+                                  Container(
+                                    height: 50,
+                                    width: 250,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 81, 80, 80),
+                                          width: 2,
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 118, 118, 118),
+                                            offset: Offset(1, 1),
+                                            blurRadius: 4,
+                                            spreadRadius: 1,
+                                          ),
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            offset: Offset(-1, -1),
+                                            blurRadius: 3,
+                                            spreadRadius: 3,
+                                          )
+                                        ]),
+                                    child: Row(
+                                      children: [
+                                        const SizedBox(
+                                          width: 20,
                                         ),
                                         SizedBox(
-                                            width: 20,
-                                            child: IconButton(
-                                              splashRadius: 20,
-                                              icon: controllerLogin.verClave
-                                                  ? const Icon(Icons
-                                                      .remove_red_eye_sharp)
-                                                  : const Icon(
-                                                      Icons.visibility_off),
-                                              onPressed: () {
-                                                controllerLogin.verClave =
-                                                    controllerLogin.verClave;
-                                              },
-                                            )),
-                                        const SizedBox(
-                                          width: 10,
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(height: size.height * 0.040),
-                                MaterialButton(
-                                  color: Colors.black,
-                                  splashColor: Colors.white,
-                                  onPressed: () {
-                                    // controller.registro(context);
-                                  },
-                                  child: const Text(
-                                    'Registrar',
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
-                                SizedBox(height: size.height * 0.030),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Container(
-                                      height: 1,
-                                      width: 40,
-                                      color:
-                                          const Color.fromARGB(155, 61, 60, 60),
-                                    ),
-                                    const Text('tambien puedes iniciar con'),
-                                    Container(
-                                      height: 1,
-                                      width: 40,
-                                      color:
-                                          const Color.fromARGB(155, 61, 60, 60),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: size.height * 0.030),
-                                Container(
-                                  height: 50,
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.white,
-                                      border: Border.all(
-                                        color: const Color.fromARGB(
-                                            255, 61, 60, 60),
-                                        width: 2,
-                                      ),
-                                      boxShadow: const [
-                                        BoxShadow(
-                                          color: Color.fromARGB(
-                                              255, 118, 118, 118),
-                                          offset: Offset(1, 1),
-                                          blurRadius: 2,
-                                          spreadRadius: 1,
-                                        ),
-                                        BoxShadow(
-                                          color: Color.fromARGB(
-                                              255, 255, 255, 255),
-                                          offset: Offset(-1, -1),
-                                          blurRadius: 3,
-                                          spreadRadius: 1,
+                                          width: 200,
+                                          child: TextFormField(
+                                              controller: controllerLogin
+                                                  .inputControllerEmailRegister,
+                                              maxLines: 1,
+                                              decoration: const InputDecoration(
+                                                  border: InputBorder.none,
+                                                  focusedBorder:
+                                                      InputBorder.none,
+                                                  hintText: 'Correo'),
+                                              style: const TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                color: Color.fromARGB(
+                                                    255, 0, 0, 0),
+                                                fontSize: 18,
+                                              )),
                                         )
-                                      ]),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Center(
-                                        child: Image.asset(
-                                            'assets/google_logo.png')),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: size.height * 0.050),
-                                const Text('Si te registras, aceptas nuestros'),
-                                SizedBox(height: size.height * 0.001),
-                                TextButton(
-                                    onPressed: () {},
-                                    child: const Text('Términos y Condiciones'))
-                              ],
+                                  SizedBox(height: size.height * 0.030),
+                                  Container(
+                                      height: 50,
+                                      width: 250,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: const Color.fromARGB(
+                                                255, 61, 60, 60),
+                                            width: 2,
+                                          ),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: Color.fromARGB(
+                                                  255, 118, 118, 118),
+                                              offset: Offset(1, 1),
+                                              blurRadius: 4,
+                                              spreadRadius: 1,
+                                            ),
+                                            BoxShadow(
+                                              color: Color.fromARGB(
+                                                  255, 255, 255, 255),
+                                              offset: Offset(-1, -1),
+                                              blurRadius: 3,
+                                              spreadRadius: 3,
+                                            )
+                                          ]),
+                                      child: Row(
+                                        children: [
+                                          const SizedBox(
+                                            width: 20,
+                                          ),
+                                          SizedBox(
+                                            width: 185,
+                                            child: TextFormField(
+                                                controller: controllerLogin
+                                                    .inputControllerPasswordRegister,
+                                                autocorrect: false,
+                                                obscureText:
+                                                    controllerLogin.verClave,
+                                                maxLines: 1,
+                                                decoration:
+                                                    const InputDecoration(
+                                                        border:
+                                                            InputBorder.none,
+                                                        focusedBorder:
+                                                            InputBorder.none,
+                                                        hintText: 'Clave'),
+                                                style: const TextStyle(
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  color: Color.fromARGB(
+                                                      255, 0, 0, 0),
+                                                  fontSize: 18,
+                                                )),
+                                          ),
+                                          SizedBox(
+                                              width: 20,
+                                              child: IconButton(
+                                                splashRadius: 20,
+                                                icon: controllerLogin.verClave
+                                                    ? const Icon(Icons
+                                                        .remove_red_eye_sharp)
+                                                    : const Icon(
+                                                        Icons.visibility_off),
+                                                onPressed: () {
+                                                  controllerLogin.verClave =
+                                                      controllerLogin.verClave;
+                                                },
+                                              )),
+                                          const SizedBox(
+                                            width: 10,
+                                          ),
+                                        ],
+                                      )),
+                                  SizedBox(height: size.height * 0.040),
+                                  MaterialButton(
+                                    color: Colors.black,
+                                    splashColor: Colors.white,
+                                    onPressed: () async {
+                                      // controller.registro(context);
+                                      final isRegister =  await controllerLogin.registrar();
+                                      if (isRegister) {
+                                        Navigator.pushNamed(context, 'home');
+                                      }
+                                    },
+                                    child: const Text(
+                                      'Registrar',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                  SizedBox(height: size.height * 0.030),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Container(
+                                        height: 1,
+                                        width: 40,
+                                        color: const Color.fromARGB(
+                                            155, 61, 60, 60),
+                                      ),
+                                      const Text('tambien puedes iniciar con'),
+                                      Container(
+                                        height: 1,
+                                        width: 40,
+                                        color: const Color.fromARGB(
+                                            155, 61, 60, 60),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: size.height * 0.030),
+                                  Container(
+                                    height: 50,
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 61, 60, 60),
+                                          width: 2,
+                                        ),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 118, 118, 118),
+                                            offset: Offset(1, 1),
+                                            blurRadius: 2,
+                                            spreadRadius: 1,
+                                          ),
+                                          BoxShadow(
+                                            color: Color.fromARGB(
+                                                255, 255, 255, 255),
+                                            offset: Offset(-1, -1),
+                                            blurRadius: 3,
+                                            spreadRadius: 1,
+                                          )
+                                        ]),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Center(
+                                          child: Image.asset(
+                                              'assets/google_logo.png')),
+                                    ),
+                                  ),
+                                  SizedBox(height: size.height * 0.050),
+                                  const Text(
+                                      'Si te registras, aceptas nuestros'),
+                                  SizedBox(height: size.height * 0.001),
+                                  TextButton(
+                                      onPressed: () {},
+                                      child:
+                                          const Text('Términos y Condiciones'))
+                                ],
+                              ),
                             ),
                           ),
                         ),

@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'AppTitle ', //Titulo
       initialRoute: auth.currentUser == null
-          ? 'home'
-          : 'login', // inicial rutas y screens.dart
+          ? 'login'
+          : 'home', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
         'login': (_) => const LoginScreen(),
