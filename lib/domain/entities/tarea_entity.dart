@@ -13,25 +13,42 @@ class Tarea {
   int nivel;
 
   Tarea(
-      this.nombre,
-      this.descripcion,
-      this.listComentario,
-      this.usuarioAsignado,
-      this.fechaCreada,
-      this.fechaEstablecida,
-      this.estado,
-      this.nivel);
+      {required this.nombre,
+      required this.descripcion,
+      required this.listComentario,
+      required this.usuarioAsignado,
+      required this.fechaCreada,
+      required this.fechaEstablecida,
+      required this.estado,
+      required this.nivel});
 
-        Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'nombre': nombre,
       'descripcion': descripcion,
-      'listComentario': listComentario.map((comentario) => comentario.toJson()).toList(),
+      'listComentario':
+          listComentario.map((comentario) => comentario.toJson()).toList(),
       'usuarioAsignado': usuarioAsignado.toJson(),
       'fechaCreada': fechaCreada.toIso8601String(),
       'fechaEstablecida': fechaEstablecida.toIso8601String(),
       'estado': estado,
       'nivel': nivel,
     };
+  }
+
+  factory Tarea.fromJson(Map<String, dynamic> json) {
+    return Tarea(
+      nombre: json['nombre'],
+      descripcion: json['descripcion'],
+      listComentario: List<Comentario>.from(
+        json['listComentario']
+            .map((comentarioJson) => Comentario.fromJson(comentarioJson)),
+      ),
+      usuarioAsignado: UsuarioAsignado.fromJson(json['usuarioAsignado']),
+      fechaCreada: DateTime.parse(json['fechaCreada']),
+      fechaEstablecida: DateTime.parse(json['fechaEstablecida']),
+      estado: json['estado'],
+      nivel: json['nivel'],
+    );
   }
 }

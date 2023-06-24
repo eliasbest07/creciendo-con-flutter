@@ -5,7 +5,6 @@ import 'package:creciendo_con_flutter/presentation/widgets/background.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../controllers/animation_controller.dart';
 import '../controllers/login_controller.dart';
 import '../../providers/riverpod_provider.dart';
@@ -599,7 +598,8 @@ class LoginScreen extends ConsumerWidget {
                                     splashColor: Colors.white,
                                     onPressed: () async {
                                       // controller.registro(context);
-                                      final isRegister =  await controllerLogin.registrar();
+                                      final isRegister =
+                                          await controllerLogin.registrar();
                                       if (isRegister) {
                                         Navigator.pushNamed(context, 'home');
                                       }
