@@ -32,7 +32,7 @@ class NewProjectDialog extends ConsumerWidget {
          ),
          const SizedBox(height: 30,),
          MaterialButton(
-           color: Colors.blue,
+           color: Theme.of(context).primaryColor,
            onPressed: (){
              controllerProyecto.agregarProyecto();
           Navigator.pop(context);

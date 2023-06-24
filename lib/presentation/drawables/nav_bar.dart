@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class NavBar extends CustomPainter {
+  final primaryColor;
+
+  NavBar({ required this.primaryColor});
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
-      ..color =Color.fromARGB(255, 59, 16, 179)
+      ..color =primaryColor
       ..style = PaintingStyle.fill;
 
     Path path = Path();

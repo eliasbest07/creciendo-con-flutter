@@ -7,12 +7,19 @@ class DrawerCustom extends StatelessWidget {
 final Size size;
   @override
   Widget build(BuildContext context) {
-    return Container(height: double.infinity,width: size.width*0.7, color: Colors.white,
-    child: Column(children:const [
-      Header(),
-      SizedBox(height: 10),
-      Divider(), 
-     ListTile(leading: Icon(Icons.poll_rounded),title: Text('Proyectos'),)
+    return Container(height: size.height,width: size.width*0.5, 
+    decoration:  BoxDecoration(
+      borderRadius:const BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)), color: Theme.of(context).primaryColor),
+    child: Column(children: [
+    //  const Header(),
+      const SizedBox(height: 10),
+      const Divider(), 
+      Padding(
+        padding: const EdgeInsets.only(left:15.0),
+        child: ListTile(leading: const Icon(Icons.poll_rounded,color: Colors.white, size: 40,),title: const Text('Proyectos',style: TextStyle(color:Colors.white, fontSize: 20),), onTap: (){
+          Navigator.pushNamed(context,'ListProject');
+        },),
+      )
     ]),);
   }
 }

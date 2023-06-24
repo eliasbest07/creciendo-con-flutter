@@ -18,7 +18,9 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      drawer: DrawerCustom (size: Size(height,width),),
+      drawer: SizedBox(
+        width: width * 0.6,
+        child: DrawerCustom (size: Size(height,width),)),
       body: Column(
         children: [
           SizedBox(
@@ -68,23 +70,32 @@ class HomeScreen extends ConsumerWidget {
           width: double.infinity,
           child: Stack(children: [
             Positioned(
-              bottom: 40,
-              left: width * 0.125,
-              child: Container(
-                height: 78,
-                width: 78,
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.green),
-              ),
-            ),
-            Positioned(
               left: 0,
               right: 0,
               bottom: 0,
               child: SizedBox(
                 height: 80,
                 width: double.infinity,
-                child: CustomPaint(size: Size.infinite, painter: NavBar()),
+                child: CustomPaint(size: Size.infinite, painter: NavBar(primaryColor: Theme.of(context).primaryColor)),
+              ),
+            ),
+              Positioned(
+              bottom: 40,
+              left: width * 0.125,
+              child: Builder(
+                builder: (context) {
+                  return GestureDetector(
+                    onTap: (){
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Container(
+                      height: 78,
+                      width: 78,
+                      decoration:
+                        const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                    ),
+                  );
+                }
               ),
             ),
           ])),
