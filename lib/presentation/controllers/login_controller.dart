@@ -1,4 +1,5 @@
 import 'package:creciendo_con_flutter/infrastructure/services/firebaseAuthentication.dart';
+import 'package:creciendo_con_flutter/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/login.dart';
@@ -41,6 +42,10 @@ class LoginController extends StateNotifier<Login> {
 
     // await FirebaseAuth.instance.signInWithEmailAndPassword(
     // manda a firebase <--
+  }
+
+  Future<void> iniciarConGoogle() async {
+    await auth.signInWithGoogle();
   }
 
   Future<bool> registrar() async {

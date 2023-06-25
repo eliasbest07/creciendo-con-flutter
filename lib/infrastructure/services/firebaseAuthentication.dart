@@ -41,6 +41,11 @@ class FirebaseAuthentication implements AuthenticationRepository {
     // Iniciar sesión con Google
     final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
+    if (gUser == null) {
+      //El usuerio canceló el inicio de sesión
+      return;
+    }
+
     // Obtener la autenticación de Google
     final GoogleSignInAuthentication gAuth = await gUser!.authentication;
 

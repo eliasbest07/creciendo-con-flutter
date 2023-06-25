@@ -38,7 +38,9 @@ class HomeScreen extends ConsumerWidget {
                 IconButton(
                   onPressed: () async {
                     await controller.cerrarSesion();
-                    Navigator.pushNamed(context, 'login');
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context, 'login');
+                    }
                   },
                   icon: const Icon(Icons.exit_to_app),
                 ),
