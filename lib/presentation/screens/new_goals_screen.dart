@@ -53,7 +53,7 @@ Widget build(BuildContext context) {
                 ),
                 border: OutlineInputBorder(
                   borderSide: const BorderSide(
-                      width: 2, color: const Color(0xff455A64)),
+                      width: 2, color:  Color(0xff455A64)),
                   borderRadius: BorderRadius.circular(11),
                 ),
                 filled: true,
@@ -96,7 +96,7 @@ Widget build(BuildContext context) {
                         ),
                       ),
                       alignment: Alignment.center,
-                      child: Text('UI'),
+                      child: const Text('UI'),
                     ),
                   ),
                 ),
@@ -121,7 +121,7 @@ Widget build(BuildContext context) {
                         ),
                       ),
                       alignment: Alignment.center,
-                      child: Text('FRONT'),
+                      child: const Text('FRONT'),
                     ),
                   ),
                 ),
@@ -146,7 +146,7 @@ Widget build(BuildContext context) {
                         ),
                       ),
                       alignment: Alignment.center,
-                      child: Text('BACK'),
+                      child: const Text('BACK'),
                     ),
                   ),
                 )
@@ -178,7 +178,7 @@ Widget build(BuildContext context) {
                 ),
                 border: OutlineInputBorder(
                   borderSide: const BorderSide(
-                      width: 2, color: const Color(0xff455A64)),
+                      width: 2, color:  Color(0xff455A64)),
                   borderRadius: BorderRadius.circular(11),
                 ),
                 filled: true,
@@ -214,7 +214,7 @@ Widget build(BuildContext context) {
                 ),
                 border: OutlineInputBorder(
                   borderSide: const BorderSide(
-                      width: 2, color: const Color(0xff455A64)),
+                      width: 2, color:  Color(0xff455A64)),
                   borderRadius: BorderRadius.circular(11),
                 ),
                 filled: true,
@@ -295,6 +295,7 @@ Widget build(BuildContext context) {
                         ],
                       ),
                     )
+                  // ignore: dead_code
                   : SizedBox(
                       height: 80,
                       child: ListView.separated(
@@ -306,9 +307,9 @@ Widget build(BuildContext context) {
                               height: 90,
                               alignment: Alignment.center,
                               padding: const EdgeInsets.all(8),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 // borderRadius: borderRadius,
-                                color: const Color.fromARGB(255, 65, 170, 255),
+                                color:  Color.fromARGB(255, 65, 170, 255),
                               ),
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -338,9 +339,9 @@ Widget build(BuildContext context) {
                             child: Container(
                               width: 170,
                               padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
+                              decoration: const BoxDecoration(
                                 // borderRadius: borderRadius,
-                                color: const Color(0xfff0f0f0),
+                                color:  Color(0xfff0f0f0),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

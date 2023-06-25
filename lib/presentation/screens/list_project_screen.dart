@@ -84,9 +84,9 @@ final size;
   @override
   Widget build(BuildContext context) {
     return Container(height: double.infinity,width: size.width*0.7, color: Colors.white,
-    child: Column(children: [
-      const Header(),
-      const SizedBox(height: 10),
+    child: const Column(children: [
+      Header(),
+      SizedBox(height: 10),
       Divider(), /* 
       
       
@@ -114,6 +114,6 @@ class Header extends StatelessWidget {
     return Container(height: 200,width: double.infinity,
     color: Colors.blue,
   
-    child: Center(child: Container(height: 90,width: 90,decoration: BoxDecoration(color: Colors.white,shape:BoxShape.circle ),)),);
+    child: Center(child: Container(height: 90,width: 90,decoration: const BoxDecoration(color: Colors.white,shape:BoxShape.circle ),)),);
   }
 }

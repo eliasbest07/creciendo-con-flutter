@@ -1,8 +1,6 @@
 import 'dart:ui';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:creciendo_con_flutter/presentation/widgets/background.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../controllers/animation_controller.dart';
@@ -745,7 +743,7 @@ class LoginScreen extends ConsumerWidget {
     return Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height * 1,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
             gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -756,7 +754,7 @@ class LoginScreen extends ConsumerWidget {
   }
 
   Widget _textAppName() {
-    return Text(
+    return const Text(
       'Delivery',
       style: TextStyle(
           fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
@@ -803,7 +801,7 @@ class LoginScreen extends ConsumerWidget {
             filled: true,
             fillColor: Colors.white,
             hintText: 'Email',
-            prefixIcon: Icon(Icons.email)),
+            prefixIcon: const Icon(Icons.email)),
       ),
     );
   }
@@ -839,10 +837,10 @@ class LoginScreen extends ConsumerWidget {
           // aqui se conecta el backend firebv
         }, //=> TextEditingController(),
         style: ElevatedButton.styleFrom(
-            shape: StadiumBorder(),
-            padding: EdgeInsets.symmetric(vertical: 15),
+            shape: const StadiumBorder(),
+            padding: const EdgeInsets.symmetric(vertical: 15),
             primary: Color.fromRGBO(1, 61, 115, 0.6)),
-        child: Text(
+        child: const Text(
           'Entrar',
           style: TextStyle(color: Colors.white),
         ),
@@ -852,21 +850,21 @@ class LoginScreen extends ConsumerWidget {
 
   Widget _textForgotPassword() {
     return Container(
-        margin: EdgeInsets.only(top: 10),
+        margin: const EdgeInsets.only(top: 10),
         child: GestureDetector(
           onTap: () => {},
-          child:
-              Text('Forgot Password?', style: TextStyle(color: Colors.white)),
+          child: const Text('Forgot Password?',
+              style: TextStyle(color: Colors.white)),
         ));
   }
 
   Widget _textDontHaveAccount() {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
+          const Text(
             'New User?',
             style: TextStyle(
                 color: Colors.white,
@@ -874,12 +872,12 @@ class LoginScreen extends ConsumerWidget {
                 letterSpacing: 1.0,
                 fontWeight: FontWeight.w400),
           ),
-          SizedBox(
+          const SizedBox(
             width: 7,
           ),
           GestureDetector(
             onTap: () => {}, //con.goToRegisterPage(),
-            child: Text(
+            child: const Text(
               'Create An Account',
               style: TextStyle(
                   decoration: TextDecoration.underline,
@@ -907,8 +905,8 @@ class LoginScreen extends ConsumerWidget {
   // }
 
   Widget _lineDivider() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: Row(children: <Widget>[
         Expanded(
             child: Divider(
@@ -933,7 +931,7 @@ class LoginScreen extends ConsumerWidget {
     return Container(
         width: double.infinity,
         height: 45,
-        margin: EdgeInsets.symmetric(horizontal: 40),
+        margin: const EdgeInsets.symmetric(horizontal: 40),
         child: Container(
           color: Colors.red,
         )
@@ -948,7 +946,6 @@ class LoginScreen extends ConsumerWidget {
         // ),
         );
   }
-
   // Widget _avatarCircleLogo() {
   //   return Image(
   //     image: AssetImage(

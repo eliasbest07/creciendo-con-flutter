@@ -20,7 +20,7 @@ class ListGoalScreen extends StatelessWidget {
           )
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text('ListGoalScreen'),
       ),
     );
