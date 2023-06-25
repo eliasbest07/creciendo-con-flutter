@@ -1,4 +1,5 @@
 import 'package:creciendo_con_flutter/presentation/drawables/nav_bar.dart';
+import 'package:creciendo_con_flutter/presentation/screens/screens.dart';
 import 'package:creciendo_con_flutter/presentation/widgets/drawer_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,12 +54,23 @@ class HomeScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color.fromARGB(255, 147, 216, 207),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GoalDetailScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: const Color.fromARGB(255, 147, 216, 207),
+                      ),
+                      child: Text('cuadro $index'),
                     ),
                   ),
                 );
