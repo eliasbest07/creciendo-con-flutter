@@ -19,8 +19,10 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SizedBox(
-        width: width * 0.6,
-        child: DrawerCustom (size: Size(height,width),)),
+          width: width * 0.6,
+          child: DrawerCustom(
+            size: Size(height, width),
+          )),
       body: Column(
         children: [
           SizedBox(
@@ -35,7 +37,9 @@ class HomeScreen extends ConsumerWidget {
                 IconButton(
                   onPressed: () async {
                     await controller.cerrarSesion();
-                    Navigator.pushNamed(context, 'login');
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context, 'login');
+                    }
                   },
                   icon: const Icon(Icons.exit_to_app),
                 ),
@@ -76,27 +80,28 @@ class HomeScreen extends ConsumerWidget {
               child: SizedBox(
                 height: 80,
                 width: double.infinity,
-                child: CustomPaint(size: Size.infinite, painter: NavBar(primaryColor: Theme.of(context).primaryColor)),
+                child: CustomPaint(
+                    size: Size.infinite,
+                    painter:
+                        NavBar(primaryColor: Theme.of(context).primaryColor)),
               ),
             ),
-              Positioned(
+            Positioned(
               bottom: 40,
               left: width * 0.125,
-              child: Builder(
-                builder: (context) {
-                  return GestureDetector(
-                    onTap: (){
-                      Scaffold.of(context).openDrawer();
-                    },
-                    child: Container(
-                      height: 78,
-                      width: 78,
-                      decoration:
-                        const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
-                    ),
-                  );
-                }
-              ),
+              child: Builder(builder: (context) {
+                return GestureDetector(
+                  onTap: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  child: Container(
+                    height: 78,
+                    width: 78,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.green),
+                  ),
+                );
+              }),
             ),
           ])),
     );
