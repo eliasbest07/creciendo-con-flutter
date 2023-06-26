@@ -33,9 +33,9 @@ class MyApp extends StatelessWidget {
       theme: Theme.of(context).copyWith(
         primaryColor: const Color.fromARGB(255, 10, 53, 103),
         colorScheme: Theme.of(context).colorScheme.copyWith(
-      primary:const Color.fromARGB(255, 10, 53, 103),
-    ),
-),
+              primary: const Color.fromARGB(255, 10, 53, 103),
+            ),
+      ),
     );
   }
 }

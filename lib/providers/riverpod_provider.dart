@@ -6,7 +6,7 @@ import '../presentation/controllers/proyecto_controller.dart';
 import '../domain/entities/login.dart';
 import '../domain/entities/proyecto_entity.dart';
 
-final loadingProvider = StateProvider((ref) => true);
+final loadingProvider = StateProvider<bool>((ref) => false);
 
 // final listaProyectos = StateNotifierProvider<ProyectoProvider, List<Proyecto>> ((ref) => ProyectoProvider([Proyecto()])); // es una forma
 
