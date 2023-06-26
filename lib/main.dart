@@ -12,6 +12,10 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 } // para usar Riverpod
 
+Future initilizeApp(BuildContext? context) async {
+  await Future.delayed(const Duration(seconds: 3));
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -27,8 +31,8 @@ class MyApp extends StatelessWidget {
       routes: {
         'home': (_) => const HomeScreen(),
         'login': (_) => const SplashPage(),
-        'ListProject':  (_) => const ListProjectScreen(),
-        'ListGoals':  (_) => const NewGoalScreen(),
+        'ListProject': (_) => const ListProjectScreen(),
+        'ListGoals': (_) => const NewGoalScreen(),
       },
       theme: Theme.of(context).copyWith(
         primaryColor: const Color.fromARGB(255, 10, 53, 103),
