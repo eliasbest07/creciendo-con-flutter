@@ -1,3 +1,4 @@
+import 'package:creciendo_con_flutter/presentation/screens/splash_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -25,9 +26,9 @@ class MyApp extends StatelessWidget {
           : 'home', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
-        'login': (_) => const LoginScreen(),
-        'ListProject': (_) => const ListProjectScreen(),
-        'ListGoals': (_) => const NewGoalScreen(),
+        'login': (_) => const SplashPage(),
+        'ListProject':  (_) => const ListProjectScreen(),
+        'ListGoals':  (_) => const NewGoalScreen(),
       },
       theme: Theme.of(context).copyWith(
         primaryColor: const Color.fromARGB(255, 10, 53, 103),

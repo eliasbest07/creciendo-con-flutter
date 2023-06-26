@@ -17,7 +17,7 @@ class LoginController extends StateNotifier<Login> {
 
   final TextEditingController _nameRegisterController = TextEditingController();
 
-  final TextEditingController _name = TextEditingController();
+  // final TextEditingController _name = TextEditingController();
   bool verClave = false;
   final FirebaseAuthentication auth = FirebaseAuthentication();
 
@@ -37,6 +37,7 @@ class LoginController extends StateNotifier<Login> {
     // async
     state =
         Login(email: _emailController.text, password: _passwordController.text);
+    // ignore: avoid_print
     print(' correo = ${state.email} | clave= ${state.password}');
     return await auth.signIn(state.email, state.password);
 
@@ -56,6 +57,8 @@ class LoginController extends StateNotifier<Login> {
   }
 
   Future<void> cerrarSesion() async {
+    inputControllerEmail.text = "";
+    inputControllerPassword.text = "";
     await auth.signOut();
   }
   // se conecta al backend Firebase
