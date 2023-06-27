@@ -1,3 +1,4 @@
+import 'package:creciendo_con_flutter/presentation/screens/splash_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,10 @@ Future<void> main() async {
   await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 } // para usar Riverpod
+
+Future initilizeApp(BuildContext? context) async {
+  await Future.delayed(const Duration(seconds: 3));
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -25,7 +30,7 @@ class MyApp extends StatelessWidget {
           : 'home', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
-        'login': (_) => const LoginScreen(),
+        'login': (_) => const SplashPage(),
         'ListProject': (_) => const ListProjectScreen(),
         'ListGoals': (_) => const NewGoalScreen(),
       },
