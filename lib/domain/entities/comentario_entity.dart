@@ -1,10 +1,9 @@
 class Comentario {
-  int id;
+  String? id;
   String nombre;
   String descripcion;
 
-  Comentario(
-      {required this.id, required this.nombre, required this.descripcion});
+  Comentario({this.id, required this.nombre, required this.descripcion});
 
   Map<String, dynamic> toJson() {
     return {
@@ -14,7 +13,7 @@ class Comentario {
     };
   }
 
-  factory Comentario.fromJson(Map<String, dynamic> json) {
+  factory Comentario.fromJson(Map<dynamic, dynamic> json) {
     return Comentario(
       id: json['id'],
       nombre: json['nombre'],

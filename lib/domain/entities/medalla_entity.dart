@@ -1,10 +1,10 @@
 class Medalla {
-  int id;
+  String? id;
   String nombre;
   String img;
 
   Medalla({
-    required this.id,
+    this.id,
     required this.nombre,
     required this.img,
   });

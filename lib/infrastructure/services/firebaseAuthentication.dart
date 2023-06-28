@@ -1,3 +1,4 @@
+import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
 import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
 import 'package:creciendo_con_flutter/domain/repositories/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -70,18 +71,19 @@ class FirebaseAuthentication implements AuthenticationRepository {
   @override
   Future<void> storeUserName(String email, String name) async {
     User? user = auth.currentUser;
+
     if (user != null) {
       DatabaseReference ref =
           FirebaseDatabase.instance.ref().child("users").child(user.uid);
+      Usuario usu = Usuario(
+          email: email,
+          nombre: name,
+          rol: "Auxiliar",
+          fechaRegistro: DateTime.now());
       try {
-        await ref.update({
-          "uid": user.uid,
-          "rol": "auxiliar",
-          "email": email,
-          "nombre": name
-        });
+        await ref.update(usu.toJson());
       } catch (e) {
-        print("Error al almacenar el usuario");
+        print("Error al almacenar el usuario: $e");
       }
     }
   }
@@ -102,8 +104,12 @@ class FirebaseAuthentication implements AuthenticationRepository {
     try {
       DatabaseReference ref =
           FirebaseDatabase.instance.ref().child("users").child(uid);
-      await ref.update(
-          {"uid": uid, "rol": "auxiliar", "email": email, "nombre": name});
+      Usuario user = Usuario(
+          email: email,
+          nombre: name,
+          rol: "Auxiliar",
+          fechaRegistro: DateTime.now());
+      await ref.update(user.toJson());
     } catch (e) {
       print("Error al almacenar el usuario");
     }

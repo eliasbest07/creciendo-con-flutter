@@ -1,21 +1,21 @@
 import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
 
-import 'usuarioAsignado_entity.dart';
-
 class Tarea {
+  String? id;
   String nombre;
   String descripcion;
-  List<Comentario>? listComentario = [];
-  UsuarioAsignado? usuarioAsignado;
+  List<Comentario>? listComentarioTarea = [];
+  String? usuarioAsignado;
   DateTime? fechaCreada;
   DateTime? fechaEstablecida;
   String estado;
   int nivel;
 
   Tarea({
+    this.id,
     required this.nombre,
     required this.descripcion,
-    this.listComentario,
+    this.listComentarioTarea,
     this.usuarioAsignado,
     this.fechaCreada,
     this.fechaEstablecida,
@@ -25,11 +25,13 @@ class Tarea {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'nombre': nombre,
       'descripcion': descripcion,
-      'listComentario':
-          listComentario?.map((comentario) => comentario.toJson()).toList(),
-      'usuarioAsignado': usuarioAsignado?.toJson(),
+      'listComentarioTarea': listComentarioTarea
+          ?.map((comentario) => comentario.toJson())
+          .toList(),
+      'usuarioAsignado': usuarioAsignado,
       'fechaCreada': fechaCreada?.toIso8601String(),
       'fechaEstablecida': fechaEstablecida?.toIso8601String(),
       'estado': estado,
@@ -37,15 +39,16 @@ class Tarea {
     };
   }
 
-  factory Tarea.fromJson(Map<String, dynamic> json) {
+  factory Tarea.fromJson(Map<dynamic, dynamic> json) {
     return Tarea(
+      id: json['id'],
       nombre: json['nombre'],
       descripcion: json['descripcion'],
-      listComentario: List<Comentario>.from(
-        json['listComentario']
+      listComentarioTarea: List<Comentario>.from(
+        json['listComentarioTarea']
             .map((comentarioJson) => Comentario.fromJson(comentarioJson)),
       ),
-      usuarioAsignado: UsuarioAsignado.fromJson(json['usuarioAsignado']),
+      usuarioAsignado: json['usuarioAsignado'],
       fechaCreada: DateTime.parse(json['fechaCreada']),
       fechaEstablecida: DateTime.parse(json['fechaEstablecida']),
       estado: json['estado'],
