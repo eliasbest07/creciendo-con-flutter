@@ -1,11 +1,9 @@
 import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/medalla_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/meta_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/proyectoLider_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/proyecto_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/tarea_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/usuarioLider_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
 import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
 import 'package:creciendo_con_flutter/domain/repositories/proyecto_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
