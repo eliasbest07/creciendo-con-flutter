@@ -1,6 +1,7 @@
 import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
 import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
 import 'package:creciendo_con_flutter/domain/repositories/authentication_repository.dart';
+import 'package:creciendo_con_flutter/infrastructure/services/local_storage/local_storage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,6 +14,10 @@ class FirebaseAuthentication implements AuthenticationRepository {
     try {
       await auth.signInWithEmailAndPassword(email: email, password: password);
       //print('${User.user!.email}');
+
+      //guardando logeo internamente en shared preferences
+        final LocalStorage localStorage = LocalStorage();
+        localStorage.setLoggedIn(true);
       return auth.authStateChanges().map((user) => user != null).first;
     } on FirebaseAuthException catch (error) {
       throw UserNotFound("Error durante el logeo: $error");
@@ -34,6 +39,9 @@ class FirebaseAuthentication implements AuthenticationRepository {
   @override
   Future<void> signOut() async {
     await auth.signOut();
+    //guardando logeo internamente en shared preferences
+                       final LocalStorage localStorage = LocalStorage();
+                       localStorage.setLoggedIn(false);
   }
 
   @override
@@ -58,8 +66,14 @@ class FirebaseAuthentication implements AuthenticationRepository {
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
+
+    
       if (user != null) {
         storeUserNameWithGoogle(user);
+
+        //guardando logeo internamente en shared preferences
+        final LocalStorage localStorage = LocalStorage();
+        localStorage.setLoggedIn(true);
       } else {
         print("Error al obtener usuario");
       }

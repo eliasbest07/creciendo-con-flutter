@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:animate_do/animate_do.dart';
+import 'package:creciendo_con_flutter/infrastructure/services/local_storage/local_storage.dart';
 import 'package:creciendo_con_flutter/infrastructure/services/proyecto_crud.dart';
 import 'package:creciendo_con_flutter/presentation/widgets/background.dart';
 import 'package:flutter/material.dart';
@@ -575,6 +576,11 @@ class CuadroRegistro extends StatelessWidget {
                     // controller.registro(context);
                     final isRegister = await controllerLogin.registrar();
                     if (context.mounted && isRegister) {
+
+                      //guardando logeo internamente en shared preferences
+                       final LocalStorage localStorage = LocalStorage();
+                       localStorage.setLoggedIn(true);
+                       
                       Navigator.pushReplacementNamed(context, 'home');
                     }
                   },
