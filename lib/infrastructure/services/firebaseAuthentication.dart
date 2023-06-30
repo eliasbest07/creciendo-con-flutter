@@ -11,14 +11,11 @@ class FirebaseAuthentication implements AuthenticationRepository {
   @override
   Future<bool> signIn(String email, String password) async {
     try {
-      final User = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
+      await auth.signInWithEmailAndPassword(email: email, password: password);
       //print('${User.user!.email}');
       return auth.authStateChanges().map((user) => user != null).first;
     } on FirebaseAuthException catch (error) {
-      //throw UserNotFound(error.message!);
-      print("Error de inicio de sesión: ${error.message}");
-      return false;
+      throw UserNotFound("Error durante el logeo: $error");
     }
   }
 
@@ -30,8 +27,7 @@ class FirebaseAuthentication implements AuthenticationRepository {
           .then((value) => {storeUserName(email, name)});
       return auth.authStateChanges().map((user) => user != null).first;
     } on FirebaseAuthException catch (error) {
-      //throw SignUpFailed(error.message!);
-      return false;
+      throw SignUpFailed("Error durante el registro: $error");
     }
   }
 
@@ -42,48 +38,49 @@ class FirebaseAuthentication implements AuthenticationRepository {
 
   @override
   Future<void> signInWithGoogle() async {
-    // Iniciar sesión con Google
-    final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
+    try {
+      // Iniciar sesión con Google
+      final GoogleSignInAccount? gUser = await GoogleSignIn().signIn();
 
-    if (gUser == null) {
-      //El usuerio canceló el inicio de sesión
-      return;
-    }
+      if (gUser == null) {
+        //El usuerio canceló el inicio de sesión
+        return;
+      }
 
-    // Obtener la autenticación de Google
-    final GoogleSignInAuthentication gAuth = await gUser.authentication;
+      // Obtener la autenticación de Google
+      final GoogleSignInAuthentication gAuth = await gUser.authentication;
 
-    // Crear una credencial utilizando los tokens de acceso y de identificación de Google
-    final credential = GoogleAuthProvider.credential(
-        accessToken: gAuth.accessToken, idToken: gAuth.idToken);
+      // Crear una credencial utilizando los tokens de acceso y de identificación de Google
+      final credential = GoogleAuthProvider.credential(
+          accessToken: gAuth.accessToken, idToken: gAuth.idToken);
 
-    // Iniciar sesión en Firebase con la credencial
-    final UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    final User? user = userCredential.user;
-    if (user != null) {
-      storeUserNameWithGoogle(user);
-    } else {
-      print("Error al obtener usuario");
+      // Iniciar sesión en Firebase con la credencial
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      final User? user = userCredential.user;
+      if (user != null) {
+        storeUserNameWithGoogle(user);
+      } else {
+        print("Error al obtener usuario");
+      }
+    } on FirebaseAuthException catch (error) {
+      throw SignUpFailed(
+          "Error durante el inicio de sesión con Google: $error");
     }
   }
 
+// Almacena el nombre de usuario en Firebase Realtime Database.
+// Nota: El método requiere que el usuario esté autenticado.
   @override
   Future<void> storeUserName(String email, String name) async {
-    User? user = auth.currentUser;
+    User? user = getCurrentUser();
 
     if (user != null) {
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref().child("users").child(user.uid);
-      Usuario usu = Usuario(
-          email: email,
-          nombre: name,
-          rol: "Auxiliar",
-          fechaRegistro: DateTime.now());
+      Usuario usu = createUsuario(email, name);
       try {
-        await ref.update(usu.toJson());
+        await updateUserData(user.uid, usu);
       } catch (e) {
-        print("Error al almacenar el usuario: $e");
+        print(e.toString());
       }
     }
   }
@@ -102,16 +99,35 @@ class FirebaseAuthentication implements AuthenticationRepository {
     }
     //Almacena el usuario
     try {
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref().child("users").child(uid);
-      Usuario user = Usuario(
-          email: email,
-          nombre: name,
-          rol: "Auxiliar",
-          fechaRegistro: DateTime.now());
-      await ref.update(user.toJson());
+      Usuario usu = createUsuario(email, name);
+      await updateUserData(uid, usu);
     } catch (e) {
-      print("Error al almacenar el usuario");
+      print(e.toString());
+    }
+  }
+
+  @override
+  User? getCurrentUser() {
+    return auth.currentUser;
+  }
+
+  @override
+  Usuario createUsuario(String email, String name) {
+    return Usuario(
+        email: email,
+        nombre: name,
+        rol: "Auxiliar",
+        fechaRegistro: DateTime.now());
+  }
+
+  @override
+  Future<void> updateUserData(String uid, Usuario usuario) async {
+    DatabaseReference ref =
+        FirebaseDatabase.instance.ref().child("users").child(uid);
+    try {
+      await ref.update(usuario.toJson());
+    } catch (e) {
+      throw UserStorageFailed("Error al almacenar el usuario: $e");
     }
   }
 }

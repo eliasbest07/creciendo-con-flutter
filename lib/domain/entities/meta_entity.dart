@@ -17,9 +17,9 @@ class Meta {
       required this.nombre,
       this.porcentaje,
       required this.item,
-      required this.fechaCreada,
+      this.fechaCreada,
       required this.fechaEstablecida,
-      required this.listTarea,
+      this.listTarea,
       this.listComentarioMeta});
 
   Map<String, dynamic> toJson() {
