@@ -6,6 +6,7 @@ import 'package:creciendo_con_flutter/domain/entities/proyecto_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/tarea_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/usuarioLider_entity.dart';
 import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
+import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
 import 'package:creciendo_con_flutter/domain/repositories/proyecto_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -21,68 +22,16 @@ class ProyectoCrud implements ProyectoRepository {
       // Obtener el ID del proyecto creado
       String proyectoId = proyectoRef.key!;
 
-      if (proyecto.listComentarioPy != null) {
-        // Actualizar las IDs de los comentarios del proyecto
-        proyecto.listComentarioPy!
-            .asMap()
-            .forEach((comentarioPyIndex, comentario) {
-          DatabaseReference comentRef =
-              proyectoRef.child("listComentarioPy").push();
-          String comentId = comentRef.key!;
-          proyecto.listComentarioPy![comentarioPyIndex].id = comentId;
-        });
-      }
+      await _actualizarIDsComentariosProyecto(proyectoRef, proyecto);
+      await _actualizarIDsMetasProyecto(proyectoRef, proyecto);
 
-      if (proyecto.listMeta != null) {
-        // Actualizar las IDs de las metas y tareas dentro del proyecto
-        proyecto.listMeta!.asMap().forEach((metaIndex, meta) {
-          DatabaseReference metaRef = proyectoRef.child("listMeta").push();
-          String metaId = metaRef.key!;
-          proyecto.listMeta![metaIndex].id = metaId;
-          if (meta.listTarea != null) {
-            // Actualizar las IDs de las tareas dentro de cada meta
-            meta.listTarea!.asMap().forEach((tareaIndex, tarea) {
-              DatabaseReference tareaRef = metaRef.child("listTarea").push();
-              String tareaId = tareaRef.key!;
-              proyecto.listMeta![metaIndex].listTarea![tareaIndex].id = tareaId;
-              if (tarea.listComentarioTarea != null) {
-                // Actualizar las IDs de los comentarios de las tareas
-                tarea.listComentarioTarea!
-                    .asMap()
-                    .forEach((comentarioIndex, comentario) {
-                  DatabaseReference comentarioRef =
-                      tareaRef.child("listComentarioTarea").push();
-                  String comentarioId = comentarioRef.key!;
-                  proyecto.listMeta![metaIndex].listTarea![tareaIndex]
-                      .listComentarioTarea![comentarioIndex].id = comentarioId;
-                });
-              }
-            });
-          }
-
-          if (meta.listComentarioMeta != null) {
-            // Actualizar las IDs de los comentarios de las tareas
-            meta.listComentarioMeta!
-                .asMap()
-                .forEach((comentarioIndex, comentario) {
-              DatabaseReference comentarioRef =
-                  metaRef.child("listComentarioMeta").push();
-              String comentarioId = comentarioRef.key!;
-              proyecto.listMeta![metaIndex].listComentarioMeta![comentarioIndex]
-                  .id = comentarioId;
-            });
-          }
-        });
-      }
-
-      FirebaseAuth auth = FirebaseAuth.instance;
-      String userId = auth.currentUser!.uid;
-      UsuarioLider userLider = UsuarioLider(usuarioLiderId: userId);
-      ProyectoLider pyLider = ProyectoLider(proyectoLiderId: proyectoId);
+      final FirebaseAuth auth = FirebaseAuth.instance;
+      final String userId = auth.currentUser!.uid;
+      final UsuarioLider userLider = UsuarioLider(usuarioLiderId: userId);
+      final ProyectoLider pyLider = ProyectoLider(proyectoLiderId: proyectoId);
 
       // Actualizar el proyecto con el ID generado
       proyecto.id = proyectoId;
-
       // Convertir el proyecto actualizado a un mapa
       Map<String, dynamic> proyectoMap = proyecto.toJson();
 
@@ -91,61 +40,100 @@ class ProyectoCrud implements ProyectoRepository {
       await proyectoRef.child("listUserLideres").push().set(userLider.toJson());
 
       //Agregar el ID del proyecto a la lista listProyectoLider del usuario
-      DatabaseReference usuarioRef =
+      final DatabaseReference usuarioRef =
           db.ref().child("users").child(userId).child("listProyectoLider");
       await usuarioRef.push().set(pyLider.toJson());
 
       return true;
     } catch (e) {
-      print("Error al guardar proyecto: $e");
-      return false;
+      throw ProyectStorageFailed("Error al almacenar proyecto: $e");
     }
   }
 
   @override
   Future<void> guardarMeta(String proyectoId, Meta meta) async {
-    DatabaseReference proyectoRef =
-        db.ref().child("proyecto").child(proyectoId);
-    DatabaseReference metaRef = proyectoRef.child("listMeta").push();
-    await metaRef.set(meta.toJson());
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseReference metaRef = proyectoRef.child("listMeta").push();
+      //Obtener el ID generado
+      String metaId = metaRef.key!;
+      //Asignar el ID a la meta
+      meta.id = metaId;
+      meta.fechaCreada = DateTime.now();
+      await metaRef.set(meta.toJson());
+    } catch (e) {
+      throw MetaStorageFailed("Error al almacenar meta: $e");
+    }
   }
 
   @override
   Future<void> guardarTarea(
       String proyectoId, String metaId, Tarea tarea) async {
-    DatabaseReference metaRef = db
-        .ref()
-        .child("proyecto")
-        .child(proyectoId)
-        .child("listMeta")
-        .child(metaId);
-    await metaRef.child("listTarea").push().set(tarea.toJson());
+    try {
+      DatabaseReference metaRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoId)
+          .child("listMeta")
+          .child(metaId);
+      DatabaseReference tareaRef = metaRef.child("listTarea").push();
+      //Obtener el ID generado
+      String tareaId = tareaRef.key!;
+      //Asignar el ID a la tarea
+      tarea.id = tareaId;
+      await tareaRef.set(tarea.toJson());
+    } catch (e) {
+      throw TareaStorageFailed("Error al almacenar tarea: $e");
+    }
   }
 
   @override
   Future<void> guardarComentarioMeta(
       String proyectoId, String metaId, Comentario comentario) async {
-    DatabaseReference metaRef = db
-        .ref()
-        .child("proyecto")
-        .child(proyectoId)
-        .child("listMeta")
-        .child(metaId);
-    await metaRef.child("listComentarioMeta").push().set(comentario.toJson());
+    try {
+      DatabaseReference metaRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoId)
+          .child("listMeta")
+          .child(metaId);
+      DatabaseReference comentMetaRef =
+          metaRef.child("listComentarioMeta").push();
+      //Obtener el ID generado
+      String comentMetaId = comentMetaRef.key!;
+      //Asignar el ID
+      comentario.id = comentMetaId;
+      await comentMetaRef.set(comentario.toJson());
+    } catch (e) {
+      throw CommentMetaStorageFailed(
+          "Error al almacenar comentario de meta: $e");
+    }
   }
 
   @override
   Future<void> guardarComentarioTarea(String proyectoId, String metaId,
       String tareaId, Comentario comentario) async {
-    DatabaseReference tareaRef = db
-        .ref()
-        .child("proyecto")
-        .child(proyectoId)
-        .child("listMeta")
-        .child(metaId)
-        .child("listTarea")
-        .child(tareaId);
-    await tareaRef.child("listComentarioTarea").push().set(comentario.toJson());
+    try {
+      DatabaseReference tareaRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoId)
+          .child("listMeta")
+          .child(metaId)
+          .child("listTarea")
+          .child(tareaId);
+      DatabaseReference comentTareaRef =
+          tareaRef.child("listComentarioTarea").push();
+      //Obtener el ID generado
+      String comentTareaId = comentTareaRef.key!;
+      //Asignar el ID
+      comentario.id = comentTareaId;
+      await comentTareaRef.set(comentario.toJson());
+    } catch (e) {
+      throw CommentTareaStorageFailed(
+          "Error al almacenar comentario de tarea: $e");
+    }
   }
 
   //Eliminar objetos de firebase realtime
@@ -260,6 +248,69 @@ class ProyectoCrud implements ProyectoRepository {
       String proyectoId, Comentario comentario) {
     // TODO: implement guardarComentarioProyecto
     throw UnimplementedError();
+  }
+
+  Future<void> _actualizarIDsComentariosProyecto(
+      DatabaseReference proyectoRef, Proyecto proyecto) async {
+    if (proyecto.listComentarioPy != null) {
+      proyecto.listComentarioPy!
+          .asMap()
+          .forEach((comentarioPyIndex, comentario) {
+        final DatabaseReference comentRef =
+            proyectoRef.child("listComentarioPy").push();
+        final String comentId = comentRef.key!;
+        proyecto.listComentarioPy![comentarioPyIndex].id = comentId;
+      });
+    }
+  }
+
+  Future<void> _actualizarIDsMetasProyecto(
+      DatabaseReference proyectoRef, Proyecto proyecto) async {
+    if (proyecto.listMeta != null) {
+      proyecto.listMeta!.asMap().forEach((metaIndex, meta) {
+        final DatabaseReference metaRef = proyectoRef.child("listMeta").push();
+        final String metaId = metaRef.key!;
+        proyecto.listMeta![metaIndex].id = metaId;
+
+        if (meta.listTarea != null) {
+          _actualizarIDsTareasMeta(metaRef, proyecto.listMeta![metaIndex]);
+        }
+
+        if (meta.listComentarioMeta != null) {
+          _actualizarIDsComentariosMeta(metaRef, proyecto.listMeta![metaIndex]);
+        }
+      });
+    }
+  }
+
+  void _actualizarIDsTareasMeta(DatabaseReference metaRef, Meta meta) {
+    meta.listTarea!.asMap().forEach((tareaIndex, tarea) {
+      final DatabaseReference tareaRef = metaRef.child("listTarea").push();
+      final String tareaId = tareaRef.key!;
+      meta.listTarea![tareaIndex].id = tareaId;
+
+      if (tarea.listComentarioTarea != null) {
+        actualizarIDsComentariosTarea(tareaRef, tarea);
+      }
+    });
+  }
+
+  void actualizarIDsComentariosTarea(DatabaseReference tareaRef, Tarea tarea) {
+    tarea.listComentarioTarea!.asMap().forEach((comentarioIndex, comentario) {
+      final DatabaseReference comentarioRef =
+          tareaRef.child("listComentarioTarea").push();
+      final String comentarioId = comentarioRef.key!;
+      tarea.listComentarioTarea![comentarioIndex].id = comentarioId;
+    });
+  }
+
+  void _actualizarIDsComentariosMeta(DatabaseReference metaRef, Meta meta) {
+    meta.listComentarioMeta!.asMap().forEach((comentarioIndex, comentario) {
+      final DatabaseReference comentarioRef =
+          metaRef.child("listComentarioMeta").push();
+      final String comentarioId = comentarioRef.key!;
+      meta.listComentarioMeta![comentarioIndex].id = comentarioId;
+    });
   }
 
   /* @override
