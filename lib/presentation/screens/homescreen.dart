@@ -102,7 +102,8 @@ class HomeScreen extends ConsumerWidget {
             ),
             Positioned(
               bottom: 40,
-              left: width * 0.35,
+              // 0.35/2=0.175 menos el ancho del circulo que es 78/3=19.5
+              left: width * 0.175-19.5,
               child: Builder(builder: (context) {
                 return GestureDetector(
                   onTap: () {
