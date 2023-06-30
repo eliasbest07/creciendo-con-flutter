@@ -1,4 +1,4 @@
-import 'package:creciendo_con_flutter/presentation/screens/splash_page.dart';
+import 'package:TaskFlow/presentation/screens/splash_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'AppTitle ', //Titulo
+      title: 'TaskFlow', //Titulo
       initialRoute: auth.currentUser == null
           ? 'login'
           : 'home', // inicial rutas y screens.dart
@@ -35,7 +35,8 @@ class MyApp extends StatelessWidget {
         'ListGoals': (_) => const NewGoalScreen(),
       },
       theme: Theme.of(context).copyWith(
-        primaryColor: const Color.fromARGB(255, 10, 53, 103),
+        primaryColor:
+            const Color.fromARGB(255, 10, 53, 103), // primari Color theme
         colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: const Color.fromARGB(255, 10, 53, 103),
             ),

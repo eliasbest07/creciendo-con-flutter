@@ -1,7 +1,7 @@
-import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/meta_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/usuarioLider_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/usuarioLider_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario_entity.dart';
 
 class Proyecto {
   String? id;

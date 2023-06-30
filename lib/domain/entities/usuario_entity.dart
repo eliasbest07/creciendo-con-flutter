@@ -1,6 +1,6 @@
-import 'package:creciendo_con_flutter/domain/entities/medalla_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/proyectoAuxiliar_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/proyectoLider_entity.dart';
+import 'package:TaskFlow/domain/entities/medalla_entity.dart';
+import 'package:TaskFlow/domain/entities/proyectoAuxiliar_entity.dart';
+import 'package:TaskFlow/domain/entities/proyectoLider_entity.dart';
 
 class Usuario {
   String? uid;

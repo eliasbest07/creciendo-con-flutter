@@ -1,7 +1,7 @@
-import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/meta_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
-import 'package:creciendo_con_flutter/infrastructure/services/proyecto_crud.dart';
+import 'package:TaskFlow/domain/entities/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/infrastructure/services/proyecto_crud.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/proyecto_entity.dart';

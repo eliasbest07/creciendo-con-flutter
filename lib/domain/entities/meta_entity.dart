@@ -1,5 +1,5 @@
-import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/tarea_entity.dart';
 import 'package:flutter/widgets.dart';
 
 class Meta {

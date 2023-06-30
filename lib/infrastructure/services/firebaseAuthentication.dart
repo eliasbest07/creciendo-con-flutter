@@ -1,6 +1,6 @@
-import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
-import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
-import 'package:creciendo_con_flutter/domain/repositories/authentication_repository.dart';
+import 'package:TaskFlow/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/exceptions/exceptions.dart';
+import 'package:TaskFlow/domain/repositories/authentication_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:google_sign_in/google_sign_in.dart';

@@ -1,4 +1,4 @@
-import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/comentario_entity.dart';
 
 class Tarea {
   String? id;

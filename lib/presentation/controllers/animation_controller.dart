@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
-class AnimController extends StateNotifier<void>{
+class AnimController extends StateNotifier<void> {
   AnimController(super.state);
 
   late AnimationController controllerLogin;
   late AnimationController controllerRegister;
+  late AnimationController showalerta;
+  late AnimationController showMensaje;
+  String mensajeError = '';
 
   // void set controllerLogin(AnimationController? controllerLogin){
   //   _controllerLogin = controllerLogin;

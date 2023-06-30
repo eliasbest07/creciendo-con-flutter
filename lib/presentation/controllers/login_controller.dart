@@ -1,5 +1,4 @@
-import 'package:creciendo_con_flutter/infrastructure/services/firebaseAuthentication.dart';
-import 'package:creciendo_con_flutter/providers/riverpod_provider.dart';
+import 'package:TaskFlow/infrastructure/services/firebaseAuthentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/login.dart';
@@ -18,20 +17,28 @@ class LoginController extends StateNotifier<Login> {
   final TextEditingController _nameRegisterController = TextEditingController();
 
   // final TextEditingController _name = TextEditingController();
-  bool verClave = false;
+  bool verClave = true;
   final FirebaseAuthentication auth = FirebaseAuthentication();
 
   void setLogin(Login login) {
     state = login;
   }
 
-  get inputControllerEmail => _emailController;
-  get inputControllerPassword => _passwordController;
+  bool get claveVer => verClave;
+  set claveVer(bool act) {
+    verClave = act;
+  }
 
-  get inputControllerEmailRegister => _emailRegisterController;
-  get inputControllerPasswordRegister => _passwordRegisterController;
+  TextEditingController get inputControllerEmail => _emailController;
+  TextEditingController get inputControllerPassword => _passwordController;
 
-  get inputControllerNameRegister => _nameRegisterController;
+  TextEditingController get inputControllerEmailRegister =>
+      _emailRegisterController;
+  TextEditingController get inputControllerPasswordRegister =>
+      _passwordRegisterController;
+
+  TextEditingController get inputControllerNameRegister =>
+      _nameRegisterController;
 
   Future<bool> inciarSesion() async {
     // async
