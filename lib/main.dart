@@ -34,12 +34,16 @@ class MyApp extends StatelessWidget {
         'ListProject': (_) => const ListProjectScreen(),
         'ListGoals': (_) => const NewGoalScreen(),
       },
-      theme: Theme.of(context).copyWith(
+      theme: ThemeData(primaryColor: const Color.fromARGB(255, 10, 53, 103),
+      colorScheme: Theme.of(context).colorScheme.copyWith(
+        primary: const Color.fromARGB(255, 10, 53, 103),
+      ), fontFamily: 'Accolade' )
+      /*Theme.of(context).copyWith(
         primaryColor: const Color.fromARGB(255, 10, 53, 103),
         colorScheme: Theme.of(context).colorScheme.copyWith(
               primary: const Color.fromARGB(255, 10, 53, 103),
             ),
-      ),
+      ), */
     );
   }
 }
