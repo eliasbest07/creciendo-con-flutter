@@ -1,4 +1,5 @@
 import 'package:TaskFlow/presentation/screens/splash_page.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,10 +18,25 @@ Future initilizeApp(BuildContext? context) async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
+
   @override
   Widget build(BuildContext context) {
     final FirebaseAuth auth = FirebaseAuth.instance;
+    // final LocalStorage localStorage = LocalStorage();
+    // //final FirebaseAuth auth = FirebaseAuth.instance;
+    // return FutureBuilder<bool>(
+    //   future: localStorage.isLoggedIn(),
+    //   builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       // Muestra un indicador de carga mientras se espera el resultado
+    //       return CircularProgressIndicator();
+    //     } else if (snapshot.hasError) {
+    //       // Muestra un mensaje de error si ocurrió un error durante la operación
+    //       return Text('Error: ${snapshot.error}');
+    //     } else {
+    //       final isLoggedIn = snapshot.data ?? false;
+    //       print('usuario logeado? : $isLoggedIn');
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

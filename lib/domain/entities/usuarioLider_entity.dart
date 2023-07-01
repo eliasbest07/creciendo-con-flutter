@@ -12,7 +12,7 @@ class UsuarioLider {
         usuarioLiderId: usuarioLiderId ?? this.usuarioLiderId,
       );
 
-  factory UsuarioLider.fromJson(Map<String, dynamic> json) => UsuarioLider(
+  factory UsuarioLider.fromJson(Map<dynamic, dynamic> json) => UsuarioLider(
         usuarioLiderId: json["usuarioLiderId"],
       );
 

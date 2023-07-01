@@ -1,6 +1,7 @@
 import 'package:TaskFlow/domain/entities/comentario_entity.dart';
 import 'package:TaskFlow/domain/entities/tarea_entity.dart';
-import 'package:flutter/widgets.dart';
+
+
 
 class Meta {
   String? id;
@@ -17,9 +18,9 @@ class Meta {
       required this.nombre,
       this.porcentaje,
       required this.item,
-      required this.fechaCreada,
+      this.fechaCreada,
       required this.fechaEstablecida,
-      required this.listTarea,
+      this.listTarea,
       this.listComentarioMeta});
 
   Map<String, dynamic> toJson() {
@@ -37,15 +38,26 @@ class Meta {
   }
 
   factory Meta.fromJson(Map<dynamic, dynamic> json) => Meta(
-        id: json['id'],
-        nombre: json['nombre'],
-        porcentaje: double.parse(json['porcentaje'].toString()),
-        item: json['item'],
-        fechaCreada: DateTime.parse(json['fechaCreada']),
-        fechaEstablecida: DateTime.parse(json['fechaEstablecida']),
-        listTarea: List<Tarea>.from(
-            json["listTarea"].map((tareaJson) => Tarea.fromJson(tareaJson))),
-        listComentarioMeta: List<Comentario>.from(json["listComentarioMeta"]
-            .map((comentarioJson) => Comentario.fromJson(comentarioJson))),
-      );
+      id: json['id'],
+      nombre: json['nombre'],
+      porcentaje: json['porcentaje'] != null
+          ? double.parse(json['porcentaje'].toString())
+          : null,
+      item: json['item'],
+      fechaCreada: json['fechaCreada'] != null
+          ? DateTime.parse(json['fechaCreada'])
+          : null,
+      fechaEstablecida: DateTime.parse(json['fechaEstablecida']),
+      listTarea: json['listTarea'] != null
+          ? (json['listTarea'] as Map<dynamic, dynamic>)
+              .values
+              .map((tareaJson) => Tarea.fromJson(tareaJson))
+              .toList()
+          : null,
+      listComentarioMeta: json['listComentarioMeta'] != null
+          ? (json['listComentarioMeta'] as Map<dynamic, dynamic>)
+              .values
+              .map((comentJson) => Comentario.fromJson(comentJson))
+              .toList()
+          : null);
 }

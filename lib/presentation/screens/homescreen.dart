@@ -19,6 +19,22 @@ class HomeScreen extends ConsumerWidget {
     final LoginController controller = ref.watch(loginController.notifier);
 
     return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor:Colors.white ,
+        title: Text('TaskFlow',style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+        actions: <Widget>[
+          IconButton(
+            onPressed: () async {
+              await controller.cerrarSesion();
+              if (context.mounted) {
+                Navigator.pushReplacementNamed(context, 'login');
+              }
+            },
+            icon: Icon(Icons.exit_to_app, color: Colors.black,),
+          )
+          ]
+      ),
       resizeToAvoidBottomInset: false,
       drawer: SizedBox(
           width: width * 0.6,
@@ -28,25 +44,11 @@ class HomeScreen extends ConsumerWidget {
       body: Column(
         children: [
           SizedBox(
-            height: height * 0.08,
+            height: height * 0.02,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('TaskFlow'),
-                IconButton(
-                  onPressed: () async {
-                    await controller.cerrarSesion();
-                    if (context.mounted) {
-                      Navigator.pushReplacementNamed(context, 'login');
-                    }
-                  },
-                  icon: const Icon(Icons.exit_to_app),
-                ),
-              ],
-            ),
+          Text('Tus tareas', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+          SizedBox(
+            height: height * 0.02,
           ),
           SizedBox(
             height: height * 0.2,
