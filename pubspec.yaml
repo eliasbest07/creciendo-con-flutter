@@ -1,5 +1,5 @@
-name: creciendo_con_flutter
-description: A new Flutter project.
+name: TaskFlow
+description: A new Flutter project creciendo_con_flutter.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -41,6 +41,11 @@ dependencies:
   animate_do: ^2.1.0
   google_sign_in: ^6.1.4
   flutter_typeahead: ^4.6.2
+  flutter_native_splash: ^2.3.1
+
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/logo.png
   
 
 dev_dependencies:

@@ -1,3 +1,4 @@
+import 'package:TaskFlow/presentation/screens/splash_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,10 @@ Future<void> main() async {
   runApp(const ProviderScope(child: MyApp()));
 } // para usar Riverpod
 
+Future initilizeApp(BuildContext? context) async {
+  await Future.delayed(const Duration(seconds: 3));
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
@@ -19,25 +24,26 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'AppTitle ', //Titulo
+      title: 'TaskFlow', //Titulo
       initialRoute: auth.currentUser == null
           ? 'login'
           : 'home', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
-        'login': (_) => const LoginScreen(),
         'ListProject':  (_) => const ListProjectScreen(),
         'ListGoals':  (_) => const ListGoalScreen(),
         'ListTasks': (_) => const  ListTaskScreen(),
         'newGoal': (_) => const  NewGoalScreen(),
-        'newTask': (_) => const  NewTaskScreen()
+        'newTask': (_) => const  NewTaskScreen(),
+        'login': (_) => const SplashPage()
       },
       theme: Theme.of(context).copyWith(
-        primaryColor: const Color.fromARGB(255, 10, 53, 103),
+        primaryColor:
+            const Color.fromARGB(255, 10, 53, 103), // primari Color theme
         colorScheme: Theme.of(context).colorScheme.copyWith(
-      primary:const Color.fromARGB(255, 10, 53, 103),
-    ),
-),
+              primary: const Color.fromARGB(255, 10, 53, 103),
+            ),
+      ),
     );
   }
 }

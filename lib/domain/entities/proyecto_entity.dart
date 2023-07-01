@@ -1,23 +1,51 @@
-import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/meta_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/usuarioLider_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario_entity.dart';
 
 class Proyecto {
-  String icono='vacio';
+  String? id;
+  String icon;
   String nombre;
-  List<Meta> listMeta = [];
-  List<Comentario> listComentario = [];
-  List<Usuario> listUserLideres = [];
+  List<Meta>? listMeta;
+  List<Comentario>? listComentarioPy;
+  List<UsuarioLider>? listUserLideres;
 
-  Proyecto({this.nombre='nuevo'});
+  Proyecto(
+      {this.id,
+      required this.icon,
+      required this.nombre,
+      this.listMeta,
+      this.listComentarioPy,
+      this.listUserLideres});
 
   Map<String, dynamic> toJson() {
     return {
-      'icon': icono,
+      'id': id,
+      'icon': icon,
       'nombre': nombre,
-      'listMeta': listMeta.map((meta) => meta.toJson()).toList(),
-      'listCom': listComentario.map((comentario) => comentario.toJson()).toList(),
-      'listUserLideres': listUserLideres.map((usuario) => usuario.toJson()).toList(),
+      'listMeta': listMeta?.map((meta) => meta.toJson()).toList(),
+      'listComentarioPy':
+          listComentarioPy?.map((comentario) => comentario.toJson()).toList(),
+      'listUserLideres':
+          listUserLideres?.map((lideres) => lideres.toJson()).toList(),
     };
   }
+
+  factory Proyecto.fromJson(Map<dynamic, dynamic> json) => Proyecto(
+        id: json["id"],
+        icon: json["icon"],
+        nombre: json["nombre"],
+        listMeta: json["listMeta"] != null
+            ? List<Meta>.from(
+                json["listMeta"].map((metaJson) => Meta.fromJson(metaJson)))
+            : null,
+        listComentarioPy: json["listComentarioPy"] != null
+            ? List<Comentario>.from(json["listComentarioPy"]
+                .map((comentarioJson) => Comentario.fromJson(comentarioJson)))
+            : null,
+        listUserLideres: json["listUserLideres"] != null
+            ? List<UsuarioLider>.from(json["listUserLideres"])
+            : null,
+      );
 }

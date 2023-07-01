@@ -1,4 +1,4 @@
-import 'package:creciendo_con_flutter/infrastructure/services/firebaseAuthentication.dart';
+import 'package:TaskFlow/infrastructure/services/firebaseAuthentication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/login.dart';
@@ -16,30 +16,44 @@ class LoginController extends StateNotifier<Login> {
 
   final TextEditingController _nameRegisterController = TextEditingController();
 
-  bool verClave = false;
+  // final TextEditingController _name = TextEditingController();
+  bool verClave = true;
+
   final FirebaseAuthentication auth = FirebaseAuthentication();
 
   void setLogin(Login login) {
     state = login;
   }
 
-  get inputControllerEmail => _emailController;
-  get inputControllerPassword => _passwordController;
+  bool get claveVer => verClave;
+  set claveVer(bool act) {
+    verClave = act;
+  }
 
-  get inputControllerEmailRegister => _emailRegisterController;
-  get inputControllerPasswordRegister => _passwordRegisterController;
+  TextEditingController get inputControllerEmail => _emailController;
+  TextEditingController get inputControllerPassword => _passwordController;
 
-  get inputControllerNameRegister => _nameRegisterController;
+  TextEditingController get inputControllerEmailRegister =>
+      _emailRegisterController;
+  TextEditingController get inputControllerPasswordRegister =>
+      _passwordRegisterController;
+
+  TextEditingController get inputControllerNameRegister =>
+      _nameRegisterController;
 
   Future<bool> inciarSesion() async {
     // async
     state =
         Login(email: _emailController.text, password: _passwordController.text);
-    // print(' correo = ${state.email} | clave= ${state.password}');
+
     return await auth.signIn(state.email, state.password);
 
     // await FirebaseAuth.instance.signInWithEmailAndPassword(
     // manda a firebase <--
+  }
+
+  Future<void> iniciarConGoogle() async {
+    await auth.signInWithGoogle();
   }
 
   Future<bool> registrar() async {
@@ -50,6 +64,8 @@ class LoginController extends StateNotifier<Login> {
   }
 
   Future<void> cerrarSesion() async {
+    inputControllerEmail.text = "";
+    inputControllerPassword.text = "";
     await auth.signOut();
   }
   // se conecta al backend Firebase

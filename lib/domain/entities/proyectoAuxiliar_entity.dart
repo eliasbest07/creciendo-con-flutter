@@ -1,11 +1,23 @@
 class ProyectoAuxiliar {
-  int idUser;
+  String proyectoAuxiliarId;
 
-  ProyectoAuxiliar(this.idUser);
+  ProyectoAuxiliar({
+    required this.proyectoAuxiliarId,
+  });
 
-  Map<String, dynamic> toJson() {
-    return {
-      'idUser': idUser,
-    };
-  }
+  ProyectoAuxiliar copyWith({
+    String? proyectoAuxiliarId,
+  }) =>
+      ProyectoAuxiliar(
+        proyectoAuxiliarId: proyectoAuxiliarId ?? this.proyectoAuxiliarId,
+      );
+
+  factory ProyectoAuxiliar.fromJson(Map<String, dynamic> json) =>
+      ProyectoAuxiliar(
+        proyectoAuxiliarId: json["proyectoAuxiliarId"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "proyectoAuxiliarId": proyectoAuxiliarId,
+      };
 }

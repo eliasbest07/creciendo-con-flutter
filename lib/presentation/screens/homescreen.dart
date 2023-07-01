@@ -1,10 +1,12 @@
-import 'package:creciendo_con_flutter/presentation/drawables/nav_bar.dart';
-import 'package:creciendo_con_flutter/presentation/widgets/drawer_custom.dart';
+
+import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
+import '../drawables/nav_bar.dart';
+import '../widgets/widgets.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,8 +21,10 @@ class HomeScreen extends ConsumerWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       drawer: SizedBox(
-        width: width * 0.6,
-        child: DrawerCustom (size: Size(height,width),)),
+          width: width * 0.6,
+          child: DrawerCustom(
+            size: Size(height, width),
+          )),
       body: Column(
         children: [
           SizedBox(
@@ -35,7 +39,9 @@ class HomeScreen extends ConsumerWidget {
                 IconButton(
                   onPressed: () async {
                     await controller.cerrarSesion();
-                    Navigator.pushNamed(context, 'login');
+                    if (context.mounted) {
+                      Navigator.pushReplacementNamed(context, 'login');
+                    }
                   },
                   icon: const Icon(Icons.exit_to_app),
                 ),
@@ -49,12 +55,23 @@ class HomeScreen extends ConsumerWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 100,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color.fromARGB(255, 147, 216, 207),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const GoalDetailScreen(),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: const Color.fromARGB(255, 147, 216, 207),
+                      ),
+                      child: Text('cuadro $index'),
                     ),
                   ),
                 );
@@ -76,10 +93,13 @@ class HomeScreen extends ConsumerWidget {
               child: SizedBox(
                 height: 80,
                 width: double.infinity,
-                child: CustomPaint(size: Size.infinite, painter: NavBar(primaryColor: Theme.of(context).primaryColor)),
+                child: CustomPaint(
+                    size: Size.infinite,
+                    painter:
+                        NavBar(primaryColor: Theme.of(context).primaryColor)),
               ),
             ),
-              Positioned(
+            Positioned(
               bottom: 40,
               left: width * 0.125,
               child: Builder(
