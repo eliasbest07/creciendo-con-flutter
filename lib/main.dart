@@ -24,7 +24,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final LocalStorage localStorage = LocalStorage();
     //final FirebaseAuth auth = FirebaseAuth.instance;
-
     return FutureBuilder<bool>(
       future: localStorage.isLoggedIn(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
@@ -48,12 +47,10 @@ class MyApp extends StatelessWidget {
               'ListProject': (_) => const ListProjectScreen(),
               'ListGoals': (_) => const NewGoalScreen(),
             },
-            theme: Theme.of(context).copyWith(
-              primaryColor: const Color.fromARGB(255, 10, 53, 103),
-              colorScheme: Theme.of(context).colorScheme.copyWith(
-                primary: const Color.fromARGB(255, 10, 53, 103),
-              ),
-            ),
+            theme: ThemeData(primaryColor: const Color.fromARGB(255, 10, 53, 103),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: const Color.fromARGB(255, 10, 53, 103),
+            ), fontFamily: 'Accolade' ),
           );
         }
       },
