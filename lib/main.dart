@@ -1,3 +1,4 @@
+import 'package:creciendo_con_flutter/infrastructure/services/local_storage/local_storage.dart';
 import 'package:creciendo_con_flutter/presentation/screens/splash_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -17,33 +18,42 @@ Future initilizeApp(BuildContext? context) async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key});
+
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth auth = FirebaseAuth.instance;
+    final LocalStorage localStorage = LocalStorage();
+    //final FirebaseAuth auth = FirebaseAuth.instance;
+    return FutureBuilder<bool>(
+      future: localStorage.isLoggedIn(),
+      builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Muestra un indicador de carga mientras se espera el resultado
+          return CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Muestra un mensaje de error si ocurrió un error durante la operación
+          return Text('Error: ${snapshot.error}');
+        } else {
+          final isLoggedIn = snapshot.data ?? false;
+          print('usuario logeado? : $isLoggedIn');
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'AppTitle ', //Titulo
-      initialRoute: auth.currentUser == null
-          ? 'login'
-          : 'home', // inicial rutas y screens.dart
-      routes: {
-        'home': (_) => const HomeScreen(),
-        'login': (_) => const SplashPage(),
-        'ListProject': (_) => const ListProjectScreen(),
-        'ListGoals': (_) => const NewGoalScreen(),
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Flutter Flow',
+            initialRoute: isLoggedIn ? 'home' : 'login',
+            routes: {
+              'home': (_) => const HomeScreen(),
+              'login': (_) => const SplashPage(),
+              'ListProject': (_) => const ListProjectScreen(),
+              'ListGoals': (_) => const NewGoalScreen(),
+            },
+            theme: ThemeData(primaryColor: const Color.fromARGB(255, 10, 53, 103),
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: const Color.fromARGB(255, 10, 53, 103),
+            ), fontFamily: 'Accolade' ),
+          );
+        }
       },
-      theme: ThemeData(primaryColor: const Color.fromARGB(255, 10, 53, 103),
-      colorScheme: Theme.of(context).colorScheme.copyWith(
-        primary: const Color.fromARGB(255, 10, 53, 103),
-      ), fontFamily: 'Accolade' )
-      /*Theme.of(context).copyWith(
-        primaryColor: const Color.fromARGB(255, 10, 53, 103),
-        colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: const Color.fromARGB(255, 10, 53, 103),
-            ),
-      ), */
     );
   }
 }

@@ -37,15 +37,22 @@ class Proyecto {
         icon: json["icon"],
         nombre: json["nombre"],
         listMeta: json["listMeta"] != null
-            ? List<Meta>.from(
-                json["listMeta"].map((metaJson) => Meta.fromJson(metaJson)))
+            ? (json['listMeta'] as Map<dynamic, dynamic>)
+                .values
+                .map((metaJson) => Meta.fromJson(metaJson))
+                .toList()
             : null,
         listComentarioPy: json["listComentarioPy"] != null
-            ? List<Comentario>.from(json["listComentarioPy"]
-                .map((comentarioJson) => Comentario.fromJson(comentarioJson)))
+            ? (json['listComentarioPy'] as Map<dynamic, dynamic>)
+                .values
+                .map((comentPyJson) => Comentario.fromJson(comentPyJson))
+                .toList()
             : null,
         listUserLideres: json["listUserLideres"] != null
-            ? List<UsuarioLider>.from(json["listUserLideres"])
+            ? (json['listUserLideres'] as Map<dynamic, dynamic>)
+                .values
+                .map((listUserJson) => UsuarioLider.fromJson(listUserJson))
+                .toList()
             : null,
       );
 }
