@@ -15,10 +15,25 @@ final Size size;
       const SizedBox(height: 10),
       const Divider(), 
       Padding(
-        padding: const EdgeInsets.only(left:15.0),
-        child: ListTile(leading: const Icon(Icons.poll_rounded,color: Colors.white, size: 40,),title: const Text('Proyectos',style: TextStyle(color:Colors.white, fontSize: 20),), onTap: (){
-          Navigator.pushNamed(context,'ListProject');
-        },),
+        padding: const EdgeInsets.only(left:10.0),
+        child: MaterialButton(
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.poll_rounded,color: Colors.white, size: 40,),title: const Text('Proyectos',style: TextStyle(color:Colors.white, fontSize: 20),)),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(left:10.0, top:10),
+        child: MaterialButton(
+        
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.grading_outlined,color: Colors.white, size: 40,),title: const Text('Metas',style: TextStyle(color:Colors.white, fontSize: 20),)),
+        ),
       )
     ]),);
   }

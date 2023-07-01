@@ -92,7 +92,8 @@ class HomeScreen extends ConsumerWidget {
                       height: 78,
                       width: 78,
                       decoration:
-                        const BoxDecoration(shape: BoxShape.circle, color: Colors.green),
+                        const BoxDecoration(shape: BoxShape.circle, color: Color.fromARGB(255, 103, 159, 228)),
+                        child: Image.asset('assets/avatar.png'),
                     ),
                   );
                 }

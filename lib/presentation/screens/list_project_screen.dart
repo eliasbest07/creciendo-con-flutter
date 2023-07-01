@@ -13,6 +13,7 @@ class ListProjectScreen extends ConsumerWidget {
     final listaProject = ref.watch(listaProyectos);
     final size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 240, 237, 237),
       appBar: AppBar(title: const Text('Mis proyectos'),
       actions: [Padding(
         padding: const EdgeInsets.only(right:8.0),
@@ -21,7 +22,7 @@ class ListProjectScreen extends ConsumerWidget {
           
         }, icon:const Icon(Icons.add_box_rounded,color: Colors.white,)),
       )],),
-      drawer: Drawer(size: size,),
+      // drawer: Drawer(size: size,),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -35,37 +36,55 @@ class ListProjectScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 10.0, left: 15, right: 15),
-                  child: Container(height:150,width: 100, decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(255, 240, 237, 237),
+                  child: Container(height:150,width: 100, decoration: BoxDecoration(borderRadius: BorderRadius.circular(20), color:const  Color.fromARGB(255, 255, 255, 255),
                   boxShadow: const [
                     BoxShadow(blurRadius: 7,offset: Offset(1,2), color: Color.fromARGB(136, 0, 0, 0))
                   ]
                   ),
-                  child: Column(children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top:8.0, left: 20, right: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                        Text(listaProject[index].nombre),
-                        Container(height: 70 ,width: 70, decoration: BoxDecoration(borderRadius: BorderRadius.circular(7), color:Colors.yellow),)
-                      ],),
-                    ),
-                    const SizedBox(height: 10,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                      MaterialButton(
-                        color: Theme.of(context).primaryColor,
-                        onPressed: (){
-                            Navigator.pushNamed(context, 'ListGoals');
-                      },child: const Text('ir a  Metas',style: TextStyle(color:Colors.white),)),
-                      MaterialButton(
-                        color: Theme.of(context).primaryColor,
-                        onPressed: (){
-
-                      },child: const Text('ir a  Tareas',style: TextStyle(color:Colors.white)),),
-                    ],)
-                  ]),),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width*0.77,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                          
+                          Padding(
+                            padding: const EdgeInsets.only(top:8.0, left: 20, right: 5),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                              SizedBox(
+                                width: size.width*0.4,
+                                height: 50,
+                                child: Text(listaProject[index].nombre)),
+                              Container(height: 70 ,width: 70, decoration: BoxDecoration(borderRadius: BorderRadius.circular(7), color:Colors.yellow),)
+                            ],),
+                          ),
+                          const SizedBox(height: 10,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                            MaterialButton(
+                              color: Theme.of(context).primaryColor,
+                              onPressed: (){
+                                  Navigator.pushNamed(context, 'ListGoals');
+                            },child: const Text('ir a  Metas',style: TextStyle(color:Colors.white),)),
+                            MaterialButton(
+                              color: Theme.of(context).primaryColor,
+                              onPressed: (){
+                              Navigator.pushNamed(context, 'ListTasks');
+                            },child: const Text('ir a  Tareas',style: TextStyle(color:Colors.white)),),
+                          ],)
+                        ]),
+                      ),
+                      Column(children: [
+                        Container(height: 75, width: 60, decoration: const BoxDecoration(borderRadius: BorderRadius.only(topRight:Radius.circular(20)), color: Colors.green), child: Center(child: IconButton(icon: const Icon(Icons.edit , color: Colors.white,), onPressed: () {  },)),),
+                          Container(height: 75, width: 60, decoration: const BoxDecoration(borderRadius: BorderRadius.only(bottomRight:Radius.circular(20)), color: Colors.red), child: Center(child: IconButton(icon: const Icon(Icons.delete_forever , color: Colors.white,), onPressed: () {  },)),),
+                      ],)
+                    ],
+                  ),),
                 );
               },),
             ),

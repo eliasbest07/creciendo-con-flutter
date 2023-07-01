@@ -27,7 +27,10 @@ class MyApp extends StatelessWidget {
         'home': (_) => const HomeScreen(),
         'login': (_) => const LoginScreen(),
         'ListProject':  (_) => const ListProjectScreen(),
-        'ListGoals':  (_) => const NewGoalScreen(),
+        'ListGoals':  (_) => const ListGoalScreen(),
+        'ListTasks': (_) => const  ListTaskScreen(),
+        'newGoal': (_) => const  NewGoalScreen(),
+        'newTask': (_) => const  NewTaskScreen()
       },
       theme: Theme.of(context).copyWith(
         primaryColor: const Color.fromARGB(255, 10, 53, 103),
