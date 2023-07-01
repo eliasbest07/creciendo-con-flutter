@@ -7,7 +7,7 @@ class DrawerCustom extends StatelessWidget {
 final Size size;
   @override
   Widget build(BuildContext context) {
-    return Container(height: size.height,width: size.width*0.5, 
+    return Container(height: size.height,width: size.width*0.6, 
     decoration:  BoxDecoration(
       borderRadius:const BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)), color: Theme.of(context).primaryColor),
     child: Column(children: [
@@ -32,8 +32,50 @@ final Size size;
           onPressed: (){
             // Navigator.pushNamed(context,'ListProject');
           },
-          child:const ListTile(leading:  Icon(Icons.grading_outlined,color: Colors.white, size: 40,),title: const Text('Metas',style: TextStyle(color:Colors.white, fontSize: 20),)),
+          child:const ListTile(leading:  Icon(Icons.chat,color: Colors.white, size: 40,),title:  Text('Hilo de Comentarios',style: TextStyle(color:Colors.white, fontSize: 20),)),
         ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(left:10.0, top:10),
+        child: MaterialButton(
+        
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.trending_up_outlined,color: Colors.white, size: 40,),title:  Text('Ranking',style: TextStyle(color:Colors.white, fontSize: 20),)),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(left:10.0, top:10),
+        child: MaterialButton(
+        
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.task,color: Colors.white, size: 40,),title:  Text('Lista de Tareas',style: TextStyle(color:Colors.white, fontSize: 20),)),
+        ),
+      ),
+      const Expanded(child: SizedBox(width: 10,)),
+      Padding(
+        padding: const EdgeInsets.only(left:10.0, top:10),
+        child: MaterialButton(
+        
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.person_pin,color: Colors.white, size: 40,),title:  Text('Nombre usuario',style: TextStyle(color:Colors.white, fontSize: 20),)),
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+          Text('estatus: Auxiliar',style: TextStyle(color:Colors.white, fontSize: 20),),
+        ],),
       )
     ]),);
   }
