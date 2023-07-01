@@ -9,7 +9,7 @@ import 'package:creciendo_con_flutter/domain/repositories/proyecto_repository.da
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-class ProyectoCrud implements ProyectoRepository {
+class ProyectoService implements ProyectoRepository {
   FirebaseDatabase db = FirebaseDatabase.instance;
 
   //Guardar objetos de firebase realtime
@@ -30,19 +30,33 @@ class ProyectoCrud implements ProyectoRepository {
 
       // Actualizar el proyecto con el ID generado
       proyecto.id = proyectoId;
-      // Convertir el proyecto actualizado a un mapa
+      await _guardarProyecto(proyecto, proyectoRef);
+      await _almacenarProyectoUsuario(proyectoRef, userLider, userId, pyLider);
+
+      return true;
+    } catch (e) {
+      print(e.toString());
+    }
+    return false;
+  }
+
+  Future<void> _almacenarProyectoUsuario(DatabaseReference proyectoRef,
+      UsuarioLider userLider, String userId, ProyectoLider pyLider) async {
+    await proyectoRef.child("listUserLideres").push().set(userLider.toJson());
+
+    //Agregar el ID del proyecto a la lista listProyectoLider del usuario
+    final DatabaseReference usuarioRef =
+        db.ref().child("users").child(userId).child("listProyectoLider");
+    await usuarioRef.push().set(pyLider.toJson());
+  }
+
+  Future<void> _guardarProyecto(
+      Proyecto proyecto, DatabaseReference proyectoRef) async {
+    try {
       Map<String, dynamic> proyectoMap = proyecto.toJson();
 
       // Guardar el proyecto actualizado con las IDs generadas
       await proyectoRef.set(proyectoMap);
-      await proyectoRef.child("listUserLideres").push().set(userLider.toJson());
-
-      //Agregar el ID del proyecto a la lista listProyectoLider del usuario
-      final DatabaseReference usuarioRef =
-          db.ref().child("users").child(userId).child("listProyectoLider");
-      await usuarioRef.push().set(pyLider.toJson());
-
-      return true;
     } catch (e) {
       throw ProyectStorageFailed("Error al almacenar proyecto: $e");
     }
@@ -80,9 +94,37 @@ class ProyectoCrud implements ProyectoRepository {
       String tareaId = tareaRef.key!;
       //Asignar el ID a la tarea
       tarea.id = tareaId;
+      tarea.fechaCreada = DateTime.now();
       await tareaRef.set(tarea.toJson());
     } catch (e) {
       throw TareaStorageFailed("Error al almacenar tarea: $e");
+    }
+  }
+
+  @override
+  Future<void> guardarComentarioProyecto(
+      String proyectoId, Comentario comentario) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseReference comentPyRef =
+          proyectoRef.child("listComentarioPy").push();
+      //Obtener el ID generado
+      String comentPyId = comentPyRef.key!;
+      await _guardarComentarioPyConId(comentario, comentPyId, comentPyRef);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _guardarComentarioPyConId(Comentario comentario,
+      String comentPyId, DatabaseReference comentPyRef) async {
+    try {
+      comentario.id = comentPyId;
+      await comentPyRef.set(comentario.toJson());
+    } catch (e) {
+      throw CommentPyStorageFailed(
+          "Error al almacenar comentario de proyecto: $e");
     }
   }
 
@@ -100,7 +142,16 @@ class ProyectoCrud implements ProyectoRepository {
           metaRef.child("listComentarioMeta").push();
       //Obtener el ID generado
       String comentMetaId = comentMetaRef.key!;
-      //Asignar el ID
+      await _guardarComentarioMetaConId(
+          comentario, comentMetaId, comentMetaRef);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _guardarComentarioMetaConId(Comentario comentario,
+      String comentMetaId, DatabaseReference comentMetaRef) async {
+    try {
       comentario.id = comentMetaId;
       await comentMetaRef.set(comentario.toJson());
     } catch (e) {
@@ -125,7 +176,16 @@ class ProyectoCrud implements ProyectoRepository {
           tareaRef.child("listComentarioTarea").push();
       //Obtener el ID generado
       String comentTareaId = comentTareaRef.key!;
-      //Asignar el ID
+      await _guardarComentarioTareaConId(
+          comentario, comentTareaId, comentTareaRef);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _guardarComentarioTareaConId(Comentario comentario,
+      String comentTareaId, DatabaseReference comentTareaRef) async {
+    try {
       comentario.id = comentTareaId;
       await comentTareaRef.set(comentario.toJson());
     } catch (e) {
@@ -134,118 +194,83 @@ class ProyectoCrud implements ProyectoRepository {
     }
   }
 
-  //Eliminar objetos de firebase realtime
+  Future<List<Proyecto>> obtenerTodosProyectos() async {
+    try {
+      DatabaseReference proyectosRef = db.ref().child("proyecto");
+      DatabaseEvent databaseEvent = await proyectosRef.once();
 
-  /* Future<void> eliminarProyecto(Proyecto proyecto) async {
-    await db.ref().child("proyecto").remove();
+      List<Proyecto> proyectos = [];
+      Map<dynamic, dynamic>? proyectosData =
+          databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
+
+      return _cargarProyectos(proyectosData, proyectos);
+    } catch (e) {
+      print(e.toString());
+    }
+    return [];
   }
 
-  Future<void> eliminarMeta(Meta meta) async {
-    await db.ref().child("meta").remove();
+  List<Proyecto> _cargarProyectos(
+      Map<dynamic, dynamic>? proyectosData, List<Proyecto> proyectos) {
+    try {
+      if (proyectosData != null) {
+        proyectosData.forEach((proyectoId, proyectoData) {
+          Proyecto? proyecto = Proyecto.fromJson(proyectoData);
+          proyecto.id = proyectoId;
+          proyectos.add(proyecto);
+        });
+      }
+      return proyectos;
+    } catch (e) {
+      throw GetAllProyectsFailed("Error al cargar proyectos: $e");
+    }
   }
 
-  Future<void> eliminarTarea(Tarea tarea) async {
-    await db.ref().child("tarea").remove();
-  }
-
-  Future<void> eliminarComentario(Comentario comentario) async {
-    await db.ref().child("comentario").remove();
-  }
- */
-  //Actualizar objeto dentro de firebase realtime
-
-  /* Future<void> actualizarProyectoDeUsuario(
-      String usuarioId, String proyectoId, Proyecto proyectoActualizado) async {
-    DatabaseReference usuarioRef = db
-        .ref()
-        .child("usuario")
-        .child(usuarioId)
-        .child("proyecto")
-        .child(proyectoId);
-
-    Map<String, dynamic> proyectoActualizadoMap = proyectoActualizado.toJson();
-    await usuarioRef.set(proyectoActualizadoMap);
-  }
-
-  Future<void> actualizarMeta(
-      String usuarioId, Meta metaActualizada, String metaID) async {
-    DatabaseReference usuarioRef =
-        db.ref().child("usuario").child(usuarioId).child("meta").child(metaID);
-
-    Map<String, dynamic> metaActualizadaMap = metaActualizada.toJson();
-    await usuarioRef.set(metaActualizadaMap);
-  }
-
-  Future<void> actualizarTarea(
-      String usuarioId, Tarea tarea, String tareaID) async {
-    DatabaseReference usuarioRef = db
-        .ref()
-        .child("usuario")
-        .child(usuarioId)
-        .child("tarea")
-        .child(tareaID);
-
-    Map<String, dynamic> tareaActualizadaMap = tarea.toJson();
-    await usuarioRef.set(tareaActualizadaMap);
-  }
-
-  Future<void> actualizarComentario(
-      String usuarioId, Comentario comActualizado, String comentarioId) async {
-    DatabaseReference usuarioRef = db
-        .ref()
-        .child("usuario")
-        .child(usuarioId)
-        .child("comentario")
-        .child(comentarioId);
-
-    Map<String, dynamic> comentarioActualizadaMap = comActualizado.toJson();
-    await usuarioRef.set(comentarioActualizadaMap);
-  } */
-
-  /*  @override
-  Future<Comentario?> obtenerComentario(String comentarioId) async {
-    DatabaseReference ref = db.ref().child("comentario").child(comentarioId);
-    final snapshot = await ref.get();
-    if (snapshot.value != null) {
-      Map<String, dynamic> comentarioData =
-          snapshot.value as Map<String, dynamic>;
-      Comentario comentario = Comentario.fromJson(comentarioData);
-      return comentario;
+  @override
+  Future<Proyecto?> buscarProyecto(String proyectoId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseEvent databaseEvent = await proyectoRef.once();
+      return _procesarProyectoSnapshot(databaseEvent.snapshot);
+    } catch (e) {
+      print(e.toString());
     }
     return null;
   }
 
   @override
-  Future<Meta?> obtenerMeta(String metaId) async {
-    DatabaseReference ref = db.ref().child("meta").child(metaId);
-    final snapshot = await ref.get();
-    if (snapshot.value != null) {
-      Map<String, dynamic> metaData = snapshot.value as Map<String, dynamic>;
-      Meta meta = Meta.fromJson(metaData);
-      return meta;
-    }
-    return null;
-  } */
+  Future<Meta?> buscarMeta(String proyectoId, String metaId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseEvent databaseEvent =
+          await proyectoRef.child("listMeta").child(metaId).once();
 
-  @override
-  Future<Proyecto?> obtenerProyecto(String proyectoId) async {
-    DatabaseReference ref = db.ref().child("proyecto").child(proyectoId);
-    DatabaseEvent databaseEvent = await ref.once();
-    if (databaseEvent.snapshot.value != null) {
-      Map<dynamic, dynamic> proyectoData =
-          databaseEvent.snapshot.value as Map<dynamic, dynamic>;
-      Proyecto proyecto = Proyecto.fromJson(proyectoData);
-      print(proyectoData);
-      return proyecto;
+      return _procesarMetaSnapshot(databaseEvent.snapshot);
+    } catch (e) {
+      print(e.toString());
     }
     return null;
   }
 
   @override
-  Future<void> guardarComentarioProyecto(
-      String proyectoId, Comentario comentario) {
-    // TODO: implement guardarComentarioProyecto
-    throw UnimplementedError();
+  Future<Tarea?> buscarTarea(
+      String proyectoId, String metaId, String tareaId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseEvent databaseEvent = await proyectoRef
+          .child("listMeta")
+          .child(metaId)
+          .child("listTarea")
+          .child(tareaId)
+          .once();
+      return _procesarTareaSnapshot(databaseEvent.snapshot);
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
   }
 
   Future<void> _actualizarIDsComentariosProyecto(
@@ -311,28 +336,62 @@ class ProyectoCrud implements ProyectoRepository {
     });
   }
 
-  /* @override
-  Future<Tarea?> obtenerTarea(String tareaId) async {
-    DatabaseReference ref = db.ref().child("tarea").child(tareaId);
-    final snapshot = await ref.get();
-    if (snapshot.value != null) {
-      Map<String, dynamic> tareaData = snapshot.value as Map<String, dynamic>;
-      Tarea tarea = Tarea.fromJson(tareaData);
-      return tarea;
+  Meta? _procesarMetaSnapshot(DataSnapshot metaSnapshot) {
+    try {
+      if (metaSnapshot.value != null) {
+        Map<dynamic, dynamic> metaData =
+            metaSnapshot.value as Map<dynamic, dynamic>;
+        return Meta.fromJson(metaData);
+      }
+      return null;
+    } catch (e) {
+      throw MetaSearchFailed("Error al buscar meta: $e");
+    }
+  }
+
+  Proyecto? _procesarProyectoSnapshot(DataSnapshot proyectoSnapshot) {
+    try {
+      if (proyectoSnapshot.value != null) {
+        Map<dynamic, dynamic> proyectoData =
+            proyectoSnapshot.value as Map<dynamic, dynamic>;
+        return Proyecto.fromJson(proyectoData);
+      }
+    } catch (e) {
+      throw ProyectSearchFailed("Error al buscar proyecto: $e");
+    }
+
+    return null;
+  }
+
+  Tarea? _procesarTareaSnapshot(DataSnapshot tareaSnapshot) {
+    try {
+      if (tareaSnapshot.value != null) {
+        Map<dynamic, dynamic> tareaData =
+            tareaSnapshot.value as Map<dynamic, dynamic>;
+        return Tarea.fromJson(tareaData);
+      }
+    } catch (e) {
+      throw TareaSearchFailed("Error al buscar tarea: $e");
     }
     return null;
   }
 
   @override
-  Future<Usuario?> obtenerUsuario(String usuarioId) async {
-    DatabaseReference ref = db.ref().child("usuario").child(usuarioId);
-    final snapshot = await ref.get();
-    if (snapshot.value != null) {
-      Map<String, dynamic> usuarioData = snapshot.value as Map<String, dynamic>;
-      Usuario usuario = Usuario.fromJson(usuarioData);
-      return usuario;
+  Future<void> eliminarProyecto(String proyectoId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      await _eliminarProyect(proyectoRef);
+    } catch (e) {
+      print(e.toString());
     }
-    return null;
   }
-*/
+
+  Future<void> _eliminarProyect(DatabaseReference proyectoRef) async {
+    try {
+      await proyectoRef.remove();
+    } catch (e) {
+      throw ProyectDeleteFailed("Error al eliminar proyecto: $e");
+    }
+  }
 }
