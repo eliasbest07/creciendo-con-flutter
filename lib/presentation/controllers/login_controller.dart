@@ -1,4 +1,4 @@
-import 'package:creciendo_con_flutter/infrastructure/services/firebaseAuthentication.dart';
+import 'package:creciendo_con_flutter/infrastructure/services/firebase_authentication.dart';
 import 'package:creciendo_con_flutter/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

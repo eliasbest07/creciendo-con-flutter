@@ -64,6 +64,17 @@ class TareaStorageFailed implements Exception {
   }
 }
 
+class CommentPyStorageFailed implements Exception {
+  final String message;
+
+  CommentPyStorageFailed(this.message);
+
+  @override
+  String toString() {
+    return "CommentPyStorageFailed: $message";
+  }
+}
+
 class CommentMetaStorageFailed implements Exception {
   final String message;
 
@@ -83,5 +94,60 @@ class CommentTareaStorageFailed implements Exception {
   @override
   String toString() {
     return "CommentTareaStorageFailed: $message";
+  }
+}
+
+class ProyectSearchFailed implements Exception {
+  final String message;
+
+  ProyectSearchFailed(this.message);
+
+  @override
+  String toString() {
+    return "ProyectSearchFailed: $message";
+  }
+}
+
+class MetaSearchFailed implements Exception {
+  final String message;
+
+  MetaSearchFailed(this.message);
+
+  @override
+  String toString() {
+    return "MetaSearchFailed: $message";
+  }
+}
+
+class TareaSearchFailed implements Exception {
+  final String message;
+
+  TareaSearchFailed(this.message);
+
+  @override
+  String toString() {
+    return "TareaSearchFailed: $message";
+  }
+}
+
+class GetAllProyectsFailed implements Exception {
+  final String message;
+
+  GetAllProyectsFailed(this.message);
+
+  @override
+  String toString() {
+    return "GetAllProyectsFailed: $message";
+  }
+}
+
+class ProyectDeleteFailed implements Exception {
+  final String message;
+
+  ProyectDeleteFailed(this.message);
+
+  @override
+  String toString() {
+    return "ProyectDeleteFailed: $message";
   }
 }

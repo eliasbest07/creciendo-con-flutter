@@ -17,21 +17,9 @@ abstract class ProyectoRepository {
   Future<void> guardarComentarioTarea(
       String proyectoId, String metaId, String tareaId, Comentario comentario);
 
-/*   Future<void> eliminarProyecto(Proyecto proyecto);
-  Future<void> eliminarMeta(Meta meta);
-  Future<void> eliminarTarea(Tarea tarea);
-  Future<void> eliminarComentario(Comentario comentario); */
+  Future<void> eliminarProyecto(String proyectoId);
 
-  /* Future<void> actualizarProyectoDeUsuario(
-      String usuarioId, String proyectoId, Proyecto proyectoActualizado);
-  Future<void> actualizarMeta(
-      String usuarioId, Meta metaActualizada, String metaID);
-  Future<void> actualizarTarea(String usuarioId, Tarea tarea, String tareaID);
-  Future<void> actualizarComentario(
-      String usuarioId, Comentario comActualizado, String comentarioId); */
-
-  Future<Proyecto?> obtenerProyecto(String proyectoId);
-  /* Future<Meta?> obtenerMeta(String metaId);
-  Future<Tarea?> obtenerTarea(String tareaId);
-  Future<Comentario?> obtenerComentario(String comentarioId); */
+  Future<Proyecto?> buscarProyecto(String proyectoId);
+  Future<Meta?> buscarMeta(String proyectoId, String metaId);
+  Future<Tarea?> buscarTarea(String proyectoId, String metaId, String tareaId);
 }
