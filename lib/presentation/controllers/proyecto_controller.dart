@@ -1,10 +1,8 @@
-
-
+import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/proyecto_entity.dart';
 import '../../infrastructure/services/proyecto_service.dart';
-
 
 class ProyectoProvider extends StateNotifier<List<Proyecto>> {
   // ProyectoProvider(super.state);
@@ -25,15 +23,23 @@ class ProyectoProvider extends StateNotifier<List<Proyecto>> {
   }
 
   Future<bool> agregarProyecto() async {
-    bool save = false;
     if (inputName.text.isEmpty) {
-      return save;
+      return false;
     }
     Proyecto nuevoProyecto = Proyecto(icon: "icon", nombre: inputName.text);
-    state = [...state, nuevoProyecto];
-    inputName.text = '';
-    save = await ProyectoService().guardarProyecto(nuevoProyecto);
-    return save;
+
+    //Verificar si el usuario tiene suficientes puntos
+    bool puntoSuf = await UsuarioService().verificarPuntosSuficientes();
+
+    if (puntoSuf) {
+      bool save = await ProyectoService().guardarProyecto(nuevoProyecto);
+      if (save) {
+        state = [...state, nuevoProyecto];
+        inputName.text = '';
+        return true;
+      }
+    }
+    return false;
     //mandar a guardar este nuevoProyecto en firebase y retornar un true si lo guardo bien
     // o retornar false si por cualquier razon no se guardo en firebase
     //bool seGuardo = firebase.nuevoProyectodelUsuario(IDusuario, nuevoProyecto);

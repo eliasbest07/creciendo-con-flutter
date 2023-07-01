@@ -162,3 +162,14 @@ class InsufficientPointsException implements Exception {
     return "InsufficientPointsException: $message";
   }
 }
+
+class GetUserFailed implements Exception {
+  final String message;
+
+  GetUserFailed(this.message);
+
+  @override
+  String toString() {
+    return "GetUserFailed: $message";
+  }
+}
