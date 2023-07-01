@@ -16,8 +16,8 @@ class FirebaseAuthentication implements AuthenticationRepository {
       //print('${User.user!.email}');
 
       //guardando logeo internamente en shared preferences
-        final LocalStorage localStorage = LocalStorage();
-        localStorage.setLoggedIn(true);
+      final LocalStorage localStorage = LocalStorage();
+      localStorage.setLoggedIn(true);
       return auth.authStateChanges().map((user) => user != null).first;
     } on FirebaseAuthException catch (error) {
       throw UserNotFound("Error durante el logeo: $error");
@@ -68,7 +68,6 @@ class FirebaseAuthentication implements AuthenticationRepository {
           await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
 
-    
       if (user != null) {
         storeUserNameWithGoogle(user);
 
@@ -131,7 +130,7 @@ class FirebaseAuthentication implements AuthenticationRepository {
     return Usuario(
         email: email,
         nombre: name,
-        rol: "Auxiliar",
+        rol: "Usuario",
         fechaRegistro: DateTime.now());
   }
 
@@ -145,5 +144,4 @@ class FirebaseAuthentication implements AuthenticationRepository {
       throw UserStorageFailed("Error al almacenar el usuario: $e");
     }
   }
-  
 }

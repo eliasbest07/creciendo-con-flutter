@@ -1,7 +1,6 @@
 import 'package:TaskFlow/domain/entities/comentario_entity.dart';
 import 'package:TaskFlow/domain/entities/meta_entity.dart';
-import 'package:TaskFlow/domain/entities/usuarioLider_entity.dart';
-import 'package:TaskFlow/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/usuarioProyecto_entity.dart';
 
 class Proyecto {
   String? id;
@@ -9,7 +8,7 @@ class Proyecto {
   String nombre;
   List<Meta>? listMeta;
   List<Comentario>? listComentarioPy;
-  List<UsuarioLider>? listUserLideres;
+  List<UsuariosProyecto>? listUserProyecto;
 
   Proyecto(
       {this.id,
@@ -17,7 +16,7 @@ class Proyecto {
       required this.nombre,
       this.listMeta,
       this.listComentarioPy,
-      this.listUserLideres});
+      this.listUserProyecto});
 
   Map<String, dynamic> toJson() {
     return {
@@ -27,8 +26,8 @@ class Proyecto {
       'listMeta': listMeta?.map((meta) => meta.toJson()).toList(),
       'listComentarioPy':
           listComentarioPy?.map((comentario) => comentario.toJson()).toList(),
-      'listUserLideres':
-          listUserLideres?.map((lideres) => lideres.toJson()).toList(),
+      'listUserProyecto':
+          listUserProyecto?.map((lideres) => lideres.toJson()).toList(),
     };
   }
 
@@ -48,10 +47,11 @@ class Proyecto {
                 .map((comentPyJson) => Comentario.fromJson(comentPyJson))
                 .toList()
             : null,
-        listUserLideres: json["listUserLideres"] != null
-            ? (json['listUserLideres'] as Map<dynamic, dynamic>)
+        listUserProyecto: json["listUserProyecto"] != null
+            ? (json['listUserProyecto'] as Map<dynamic, dynamic>)
                 .values
-                .map((listUserJson) => UsuarioLider.fromJson(listUserJson))
+                .map((listUserProyectoJson) =>
+                    UsuariosProyecto.fromJson(listUserProyectoJson))
                 .toList()
             : null,
       );
