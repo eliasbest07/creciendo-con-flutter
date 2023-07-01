@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 
-class ListGoalScreen extends StatelessWidget {
+class ListTaskScreen extends StatelessWidget {
 
-  const ListGoalScreen({Key? key}) : super(key: key);
+  const ListTaskScreen({Key? key}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Metas'),
+        title: const Text('Lista de Tareas'),
         centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.only(right:8.0),
             child: IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, 'newGoal');
+                Navigator.pushNamed(context, 'newTask');
               },
               icon: const Icon(Icons.add_box_rounded, color: Colors.white,),
             ),

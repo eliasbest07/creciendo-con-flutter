@@ -1,13 +1,15 @@
-import 'package:creciendo_con_flutter/domain/entities/comentario_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/meta_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/proyectoLider_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/proyecto_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/tarea_entity.dart';
-import 'package:creciendo_con_flutter/domain/entities/usuarioLider_entity.dart';
-import 'package:creciendo_con_flutter/domain/exceptions/exceptions.dart';
-import 'package:creciendo_con_flutter/domain/repositories/proyecto_repository.dart';
+
+import 'package:TaskFlow/domain/entities/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/proyectoLider_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto_entity.dart';
+import 'package:TaskFlow/domain/entities/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/usuarioLider_entity.dart';
+import 'package:TaskFlow/domain/exceptions/exceptions.dart';
+import 'package:TaskFlow/domain/repositories/proyecto_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+
+import '../../domain/entities/comentario_entity.dart';
 
 class ProyectoService implements ProyectoRepository {
   FirebaseDatabase db = FirebaseDatabase.instance;

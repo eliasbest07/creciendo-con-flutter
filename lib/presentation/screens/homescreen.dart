@@ -1,11 +1,12 @@
-import 'package:creciendo_con_flutter/presentation/drawables/nav_bar.dart';
-import 'package:creciendo_con_flutter/presentation/screens/screens.dart';
-import 'package:creciendo_con_flutter/presentation/widgets/drawer_custom.dart';
+
+import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
+import '../drawables/nav_bar.dart';
+import '../widgets/widgets.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -18,8 +19,10 @@ class HomeScreen extends ConsumerWidget {
     final LoginController controller = ref.watch(loginController.notifier);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         automaticallyImplyLeading: false,
+
         backgroundColor:Colors.white ,
         title: Text('TaskFlow',style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
         actions: <Widget>[
@@ -34,52 +37,148 @@ class HomeScreen extends ConsumerWidget {
           )
           ]
       ),
-      resizeToAvoidBottomInset: false,
       drawer: SizedBox(
-          width: width * 0.6,
+        height: height * 0.7,
+          width: width * 0.7,
           child: DrawerCustom(
             size: Size(height, width),
           )),
-      body: Column(
-        children: [
-          SizedBox(
-            height: height * 0.02,
-          ),
-          Text('Tus tareas', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
-          SizedBox(
-            height: height * 0.02,
-          ),
-          SizedBox(
-            height: height * 0.2,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const GoalDetailScreen(),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: const Color.fromARGB(255, 147, 216, 207),
-                      ),
-                      child: Text('cuadro $index'),
-                    ),
-                  ),
-                );
-              },
+      body: Stack(
+        children: [   Column(
+          children: [
+            SizedBox(
+              height: height * 0.02,
             ),
+          const Padding(
+            padding:  EdgeInsets.only(left: 10.0),
+            child: Row(
+                children:  [
+                  Text('Tus Metas y tareas', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+                ],
+              ),
           ),
-        ],
+            SizedBox(
+              height: height * 0.02,
+            ),
+            SizedBox(
+              height: height * 0.2,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GoalDetailScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: height * 0.18,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                            border:const Border.fromBorderSide(
+                              BorderSide(
+                                width: 4,
+                                color:   Color.fromARGB(255, 147, 216, 207),
+                              ),
+                            ),
+                        ),
+                        child: Stack(children: [
+                          Container(
+                            height: 40,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(155, 147, 216, 207),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                            ),
+                        ),
+                        ],)
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: height * 0.02,
+            ),
+            const Padding(
+            padding:  EdgeInsets.only(left: 10.0),
+            child: Row(
+                children:  [
+                  Text('Proyectos para unirte', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+                ],
+              ),
+          ),
+          SizedBox(
+              height: height * 0.13,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GoalDetailScreen(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: height * 0.11,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                            border:const Border.fromBorderSide(
+                              BorderSide(
+                                width: 4,
+                                color:   Color.fromARGB(255, 147, 216, 207),
+                              ),
+                            ),
+                        ),
+                        child: Stack(children: [
+                          Container(
+                            height: 40,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(155, 147, 216, 207),
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                            ),
+                        ),
+                        ],)
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(
+              height: height * 0.02,
+            ),
+            const Padding(
+            padding:  EdgeInsets.only(left: 10.0),
+            child: Row(
+                children:  [
+                  Text('Noticias', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+                ],
+              ),
+          ),
+          ],
+          
+        ), 
+        Positioned(
+          bottom: 120,
+          right: 10,
+          child: Container(height: 40, width: width*0.6,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(10),
+          )),
+          )
+        ]
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
@@ -102,22 +201,72 @@ class HomeScreen extends ConsumerWidget {
             ),
             Positioned(
               bottom: 40,
-              // 0.35/2=0.175 menos el ancho del circulo que es 78/3=19.5
-              left: width * 0.175-19.5,
-              child: Builder(builder: (context) {
-                return GestureDetector(
-                  onTap: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  child: Container(
-                    height: 78,
-                    width: 78,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.green),
-                  ),
-                );
-              }),
+              left: width * 0.125,
+              child: Builder(
+                builder: (context) {
+                  return GestureDetector(
+                    onTap: (){
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: Container(
+                      height: 78,
+                      width: 78,
+                      decoration:
+                        const BoxDecoration(shape: BoxShape.circle, color: Color.fromARGB(255, 103, 159, 228)),
+                        child: Image.asset('assets/avatar.png'),
+                    ),
+                  );
+                }
+              ),
             ),
+            Positioned(
+              left: width * 0.8,
+              bottom: 20,
+              child: Container(
+                height: 40,
+                width: 60,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ), 
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:const  Icon(Icons.home, color: Colors.white, size: 30,)
+              ),
+            ),
+            Positioned(
+              left: width * 0.6,
+              bottom: 20,
+              child: Container(
+                height: 40,
+                width: 60,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:const Color.fromARGB(255, 103, 159, 228),
+                    width: 2,
+                  ), 
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:const  Icon(Icons.calendar_month, color: Color.fromARGB(155, 103, 159, 228), size: 30,)
+              ),
+            ),
+            Positioned(
+              left: width * 0.4,
+              bottom: 20,
+              child: Container(
+                height: 40,
+                width: 60,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:const Color.fromARGB(155, 103, 159, 228),
+                    width: 2,
+                  ), 
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child:const  Icon(Icons.notifications, color: Color.fromARGB(255, 103, 159, 228), size: 30,)
+              ),
+            )
           ])),
     );
   }

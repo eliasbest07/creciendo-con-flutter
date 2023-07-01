@@ -1,4 +1,4 @@
-import 'package:creciendo_con_flutter/presentation/dialog/new_project_dialog.dart';
+import 'package:TaskFlow/presentation/dialog/new_project_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
