@@ -22,7 +22,7 @@ class ProyectoService implements ProyectoRepository {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final String userId = auth.currentUser!.uid;
       bool puntos = false;
-      Usuario usuario = await _obtenerUsuarioActual(userId);
+      Usuario usuario = await obtenerUsuarioActual(userId);
 
       puntos = _verificarPuntosSuficientes(usuario);
       if (puntos = true) {
@@ -52,7 +52,7 @@ class ProyectoService implements ProyectoRepository {
     return false;
   }
 
-  Future<Usuario> _obtenerUsuarioActual(String userId) async {
+  Future<Usuario> obtenerUsuarioActual(String userId) async {
     final DatabaseReference usuarioRef = db.ref().child("users").child(userId);
     DatabaseEvent databaseEvent = await usuarioRef.once();
     Map<dynamic, dynamic> userData =

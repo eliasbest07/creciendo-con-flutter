@@ -128,8 +128,10 @@ class FirebaseAuthentication implements AuthenticationRepository {
   @override
   Usuario createUsuario(String email, String name) {
     return Usuario(
+        avatar: 'vacio',
         email: email,
         nombre: name,
+        puntos: 10,
         rol: "Usuario",
         fechaRegistro: DateTime.now());
   }

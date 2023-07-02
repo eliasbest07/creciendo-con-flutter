@@ -9,6 +9,7 @@ class ProyectoProvider extends StateNotifier<List<Proyecto>> {
   ProyectoProvider() : super([]) {
     init();
   }
+  
   TextEditingController inputName = TextEditingController();
   void init() {
     state = List<Proyecto>.empty();

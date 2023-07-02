@@ -14,6 +14,9 @@ class ListProjectScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mis proyectos'),
+        leading: IconButton(onPressed: (){
+          Navigator.pop(context);
+        }, icon:const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white,)),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -34,12 +37,16 @@ class ListProjectScreen extends ConsumerWidget {
           )
         ],
       ),
-      drawer: Drawer(
-        size: size,
-      ),
       body: SingleChildScrollView(
         child: Column(children: [
-          const SizedBox(height: 80),
+          const SizedBox(height: 20),
+          Container(height: 40, width: size.width*0.6,
+          decoration: BoxDecoration(
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child:const Center(child: Text('10',style: TextStyle(color: Colors.white),)),),
+          const SizedBox(height: 20),
           SizedBox(
             height: size.height * 0.7,
             width: double.infinity,

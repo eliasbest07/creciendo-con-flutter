@@ -6,12 +6,14 @@ import 'package:firebase_database/firebase_database.dart';
 import '../../domain/exceptions/exceptions.dart';
 
 class UsuarioService implements UsuarioRepository {
+  FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseDatabase db = FirebaseDatabase.instance;
+
   @override
   Future<void> gastarPuntos(String userId, int cantidad) async {
     final DatabaseReference usuarioRef = db.ref().child("users").child(userId);
 
-    DatabaseEvent databaseEvent = await usuarioRef.child("puntos").once();
+    DatabaseEvent databaseEvent = await usuarioRef.child("puntos").once(); 
     int puntosActuales = (databaseEvent.snapshot.value as int?) ?? 0;
 
     if (puntosActuales >= cantidad) {
@@ -27,11 +29,11 @@ class UsuarioService implements UsuarioRepository {
   Future<bool> verificarPuntosSuficientes() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String userId = auth.currentUser!.uid;
-    Usuario usuario = await _obtenerUsuarioActual(userId);
+    Usuario usuario = await obtenerUsuarioActual(userId);
     return usuario.tieneSuficientesPuntos();
   }
 
-  Future<Usuario> _obtenerUsuarioActual(String userId) async {
+  Future<Usuario> obtenerUsuarioActual(String userId) async {
     try {
       final DatabaseReference usuarioRef =
           db.ref().child("users").child(userId);
@@ -42,5 +44,19 @@ class UsuarioService implements UsuarioRepository {
     } catch (e) {
       throw GetUserFailed("Error al obtener el usuario actual: $e");
     }
+  }
+  
+  @override
+  Stream<int> obtenerPuntos() async*{
+    yield* db // return 
+          .ref()
+          .child("users")
+          .child(auth.currentUser!.uid)
+          .child('puntos')
+          .onValue
+          .map((event) {   
+            final puntos = event.snapshot.value as int;
+    return puntos;
+    });
   }
 }
