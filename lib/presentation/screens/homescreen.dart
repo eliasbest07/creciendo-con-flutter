@@ -1,6 +1,9 @@
 
+import 'dart:io';
+
 import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../infrastructure/services/usuario_service.dart';
@@ -19,7 +22,17 @@ class HomeScreen extends ConsumerWidget {
 
     final LoginController controller = ref.watch(loginController.notifier);
     final listaProject = ref.watch(listaProyectos);
+    
+    // esto es para que se cargue la imagen en cache
+    final CacheManager cacheManager = CacheManager(
+      Config(
+        'my_custom_cache_key', // una clave secreata para el cache
+        stalePeriod:
+            const Duration(days: 7), // La imagen caducará después de 7 días
+      ),
+    );
 
+    final primaryColor=Theme.of(context).primaryColor;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -125,10 +138,14 @@ class HomeScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
+                        listaProject[index].fechaInicio= DateTime.parse("2023-06-06");
+                        listaProject[index].fechaEstablecida= DateTime.parse("2023-08-06");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => ProjectDetailScreen(project: listaProject[index]),
+                            builder: (context) => ProjectDetailScreen(
+                              cacheManager: cacheManager,
+                              project: listaProject[index]),
                           ),
                         );
                       },
@@ -141,11 +158,36 @@ class HomeScreen extends ConsumerWidget {
                                 width: 4,
                                 color:   Color.fromARGB(255, 147, 216, 207),
                               ),
-                            ),
+                            ), // listaProject[index].icon
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(listaProject[index].icon))
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        height: 200,
+                        width: 160,
+                        child: FutureBuilder(
+                          future: cacheManager.getSingleFile(
+                            listaProject[index].icon,
+                          ),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<File> snapshot) {
+                            if (snapshot.hasError) {
+                              return const Center(
+                                child: Text('No se pudo cargar la imagen'),
+                              );
+                            }
+                            if (!snapshot.hasData) {
+                              return  Center(
+                                child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ),
+                              );
+                            }
+                            final imageFile = snapshot.data!;
+                            return Image.file(imageFile);
+                          },
+                        ),
+                      ))
                       ),
                     ),
                   );
@@ -166,126 +208,12 @@ class HomeScreen extends ConsumerWidget {
           ],
           
         ), 
-        Positioned(
-          bottom: 120,
-          right: 10,
-          child: Container(height: 40, width: width*0.6,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(30),
-          )),
-          )
+    
         ]
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: SizedBox(
-          height: 150,
-          width: double.infinity,
-          child: Stack(children: [
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 0,
-              child: SizedBox(
-                height: 80,
-                width: double.infinity,
-                child: CustomPaint(
-                    size: Size.infinite,
-                    painter:
-                        NavBar(primaryColor: Theme.of(context).primaryColor)),
-              ),
-            ),
-            Positioned(
-              bottom: 40,
-              left: width * 0.125,
-              child: Builder(
-                builder: (context) {
-                  return GestureDetector(
-                    onTap: (){
-                      Scaffold.of(context).openDrawer();
-                    },
-                    child: Container(
-                      height: 78,
-                      width: 78,
-                      decoration:
-                        const BoxDecoration(shape: BoxShape.circle, color: Color.fromARGB(255, 103, 159, 228)),
-                        child: Image.asset('assets/avatar.png'),
-                    ),
-                  );
-                }
-              ),
-            ),
-            Positioned(
-              bottom: 7,
-              left: 0,
-              child: Container(
-                height: 30,
-                width: 60,
-              decoration: const BoxDecoration(
-                color:  Color.fromARGB(255, 103, 159, 228),
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(30), bottomRight: Radius.circular(30))
-              ),
-              child: StreamBuilder(
-                stream: UsuarioService().obtenerPuntos(),
-                builder: (context, snapshot) {
-                  if(snapshot.hasData){
-                  return Center(child: Text(snapshot.data.toString()));
-                  }
-                  else{
-                    return const Center(child:  CircularProgressIndicator());
-                  }
-                },
-                ),)),
-            Positioned(
-              left: width * 0.8,
-              bottom: 20,
-              child: Container(
-                height: 40,
-                width: 60,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  ), 
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child:const  Icon(Icons.home, color: Colors.white, size: 30,)
-              ),
-            ),
-            Positioned(
-              left: width * 0.6,
-              bottom: 20,
-              child: Container(
-                height: 40,
-                width: 60,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color:const Color.fromARGB(255, 103, 159, 228),
-                    width: 2,
-                  ), 
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child:const  Icon(Icons.calendar_month, color: Color.fromARGB(155, 103, 159, 228), size: 30,)
-              ),
-            ),
-            Positioned(
-              left: width * 0.4,
-              bottom: 20,
-              child: Container(
-                height: 40,
-                width: 60,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color:const Color.fromARGB(155, 103, 159, 228),
-                    width: 2,
-                  ), 
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child:const  Icon(Icons.notifications, color: Color.fromARGB(255, 103, 159, 228), size: 30,)
-              ),
-            )
-          ])),
+          bottomNavigationBar:NavBar(primaryColor: primaryColor, width: width) ,
     );
   }
 }
+
+

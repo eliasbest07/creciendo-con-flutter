@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class NavBar extends CustomPainter {
+class NavBarShape extends CustomPainter {
   final primaryColor;
 
-  NavBar({ required this.primaryColor});
+  NavBarShape({ required this.primaryColor});
   @override
   void paint(Canvas canvas, Size size) {
     Paint paint = Paint()
@@ -37,5 +37,5 @@ class NavBar extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(NavBar oldDelegate) => oldDelegate != this;
+  bool shouldRepaint(NavBarShape oldDelegate) => oldDelegate != this;
 }
