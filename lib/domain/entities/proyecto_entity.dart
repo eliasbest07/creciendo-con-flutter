@@ -9,6 +9,8 @@ class Proyecto {
   List<Meta>? listMeta;
   List<Comentario>? listComentarioPy;
   List<UsuariosProyecto>? listUserProyecto;
+  DateTime? fechaInicio;
+  DateTime? fechaEstablecida;
 
   Proyecto(
       {this.id,

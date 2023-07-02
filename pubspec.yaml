@@ -44,6 +44,7 @@ dependencies:
   flutter_native_splash: ^2.3.1
   shared_preferences: ^2.1.2
   flutter_launcher_icons: ^0.13.1
+  flutter_cache_manager: ^3.3.0
 
 flutter_native_splash:
   color: "#FFFFFF"
