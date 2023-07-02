@@ -1,7 +1,5 @@
-import 'package:TaskFlow/domain/entities/comentario_entity.dart';
-import 'package:TaskFlow/domain/entities/tarea_entity.dart';
-
-
+import 'package:TaskFlow/domain/entities/proyecto/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
 
 class Meta {
   String? id;

@@ -1,3 +1,4 @@
+import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../controllers/animation_controller.dart';
@@ -41,7 +42,7 @@ class PantallaPrincipal extends StatelessWidget {
         const Text('¿No estás registrado aún?'),
         SizedBox(height: size.height * 0.001),
         TextButton(
-            onPressed: () {
+            onPressed: () async {
               controllerAnim.controllerRegister.reset();
               controllerAnim.controllerRegister.forward();
             },

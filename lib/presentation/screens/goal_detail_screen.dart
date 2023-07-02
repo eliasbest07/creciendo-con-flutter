@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../domain/entities/tarea_entity.dart';
+import '../../domain/entities/proyecto/tarea_entity.dart';
 import 'screens.dart';
 
 class GoalDetailScreen extends StatelessWidget {
