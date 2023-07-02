@@ -3,6 +3,7 @@ import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../infrastructure/services/usuario_service.dart';
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
 import '../drawables/nav_bar.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
     final width = MediaQuery.of(context).size.width;
 
     final LoginController controller = ref.watch(loginController.notifier);
+    final listaProject = ref.watch(listaProyectos);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -117,6 +119,7 @@ class HomeScreen extends ConsumerWidget {
               height: height * 0.13,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                itemCount: listaProject.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -125,7 +128,7 @@ class HomeScreen extends ConsumerWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const GoalDetailScreen(),
+                            builder: (context) => ProjectDetailScreen(project: listaProject[index]),
                           ),
                         );
                       },
@@ -140,15 +143,9 @@ class HomeScreen extends ConsumerWidget {
                               ),
                             ),
                         ),
-                        child: Stack(children: [
-                          Container(
-                            height: 40,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(155, 147, 216, 207),
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                            ),
-                        ),
-                        ],)
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: Image.network(listaProject[index].icon))
                       ),
                     ),
                   );
@@ -175,7 +172,7 @@ class HomeScreen extends ConsumerWidget {
           child: Container(height: 40, width: width*0.6,
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(30),
           )),
           )
         ]
@@ -219,6 +216,27 @@ class HomeScreen extends ConsumerWidget {
                 }
               ),
             ),
+            Positioned(
+              bottom: 7,
+              left: 0,
+              child: Container(
+                height: 30,
+                width: 60,
+              decoration: const BoxDecoration(
+                color:  Color.fromARGB(255, 103, 159, 228),
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(30), bottomRight: Radius.circular(30))
+              ),
+              child: StreamBuilder(
+                stream: UsuarioService().obtenerPuntos(),
+                builder: (context, snapshot) {
+                  if(snapshot.hasData){
+                  return Center(child: Text(snapshot.data.toString()));
+                  }
+                  else{
+                    return const Center(child:  CircularProgressIndicator());
+                  }
+                },
+                ),)),
             Positioned(
               left: width * 0.8,
               bottom: 20,

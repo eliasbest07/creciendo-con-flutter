@@ -151,3 +151,25 @@ class ProyectDeleteFailed implements Exception {
     return "ProyectDeleteFailed: $message";
   }
 }
+
+class InsufficientPointsException implements Exception {
+  final String message;
+
+  InsufficientPointsException(this.message);
+
+  @override
+  String toString() {
+    return "InsufficientPointsException: $message";
+  }
+}
+
+class GetUserFailed implements Exception {
+  final String message;
+
+  GetUserFailed(this.message);
+
+  @override
+  String toString() {
+    return "GetUserFailed: $message";
+  }
+}

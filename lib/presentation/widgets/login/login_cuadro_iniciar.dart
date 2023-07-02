@@ -190,7 +190,6 @@ class CuadroInicioSesion extends StatelessWidget {
                       controllerAnim.showMensaje.forward();
                       return;
                     }
-
                     controllerAnim.showalerta.reset(); //desde el inicio
                     controllerAnim.showalerta
                         .forward(); // comienza la animacion de cargando

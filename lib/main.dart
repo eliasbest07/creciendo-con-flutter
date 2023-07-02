@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'infrastructure/services/local_storage/local_storage.dart';
 import 'presentation/screens/screens.dart';
 
 Future<void> main() async {
@@ -22,8 +23,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseAuth auth = FirebaseAuth.instance;
-    // final LocalStorage localStorage = LocalStorage();
+
+    final LocalStorage localStorage = LocalStorage();
     // //final FirebaseAuth auth = FirebaseAuth.instance;
     // return FutureBuilder<bool>(
     //   future: localStorage.isLoggedIn(),
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
     //     } else {
     //       final isLoggedIn = snapshot.data ?? false;
     //       print('usuario logeado? : $isLoggedIn');
-
+    final FirebaseAuth auth = FirebaseAuth.instance;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'TaskFlow', //Titulo

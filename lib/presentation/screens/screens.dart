@@ -1,3 +1,5 @@
+export 'package:TaskFlow/presentation/screens/project_detail.dart';
+
 export 'package:TaskFlow/presentation/screens/list_task_screen.dart';
 export 'package:TaskFlow/presentation/screens/new_task_screen.dart';
 export 'package:TaskFlow/presentation/screens/list_goal_screen.dart';

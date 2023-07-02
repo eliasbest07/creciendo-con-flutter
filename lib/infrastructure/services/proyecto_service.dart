@@ -1,15 +1,16 @@
-
 import 'package:TaskFlow/domain/entities/meta_entity.dart';
-import 'package:TaskFlow/domain/entities/proyectoLider_entity.dart';
+import 'package:TaskFlow/domain/entities/proyectoUser_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/tarea_entity.dart';
-import 'package:TaskFlow/domain/entities/usuarioLider_entity.dart';
+import 'package:TaskFlow/domain/entities/usuarioProyecto_entity.dart';
 import 'package:TaskFlow/domain/exceptions/exceptions.dart';
 import 'package:TaskFlow/domain/repositories/proyecto_repository.dart';
+import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
 import '../../domain/entities/comentario_entity.dart';
+import '../../domain/entities/usuario_entity.dart';
 
 class ProyectoService implements ProyectoRepository {
   FirebaseDatabase db = FirebaseDatabase.instance;
@@ -18,38 +19,70 @@ class ProyectoService implements ProyectoRepository {
   @override
   Future<bool> guardarProyecto(Proyecto proyecto) async {
     try {
-      DatabaseReference proyectoRef = db.ref().child("proyecto").push();
-      // Obtener el ID del proyecto creado
-      String proyectoId = proyectoRef.key!;
-
-      await _actualizarIDsComentariosProyecto(proyectoRef, proyecto);
-      await _actualizarIDsMetasProyecto(proyectoRef, proyecto);
-
       final FirebaseAuth auth = FirebaseAuth.instance;
       final String userId = auth.currentUser!.uid;
-      final UsuarioLider userLider = UsuarioLider(usuarioLiderId: userId);
-      final ProyectoLider pyLider = ProyectoLider(proyectoLiderId: proyectoId);
+      bool puntos = false;
+      Usuario usuario = await obtenerUsuarioActual(userId);
 
-      // Actualizar el proyecto con el ID generado
-      proyecto.id = proyectoId;
-      await _guardarProyecto(proyecto, proyectoRef);
-      await _almacenarProyectoUsuario(proyectoRef, userLider, userId, pyLider);
+      puntos = _verificarPuntosSuficientes(usuario);
+      if (puntos = true) {
+        await UsuarioService().gastarPuntos(userId, 100);
 
-      return true;
+        DatabaseReference proyectoRef = db.ref().child("proyecto").push();
+        // Obtener el ID del proyecto creado
+        String proyectoId = proyectoRef.key!;
+
+        await _actualizarIDsComentariosProyecto(proyectoRef, proyecto);
+        await _actualizarIDsMetasProyecto(proyectoRef, proyecto);
+
+        final UsuariosProyecto userPy =
+            UsuariosProyecto(usuarioId: userId, rol: "Lider");
+        final ProyectoUser pyUser = ProyectoUser(proyectoUserId: proyectoId);
+
+        // Actualizar el proyecto con el ID generado
+        proyecto.id = proyectoId;
+        await _guardarProyecto(proyecto, proyectoRef);
+        await _almacenarProyectoUsuario(proyectoRef, userPy, userId, pyUser);
+
+        return true;
+      }
     } catch (e) {
       print(e.toString());
     }
     return false;
   }
 
-  Future<void> _almacenarProyectoUsuario(DatabaseReference proyectoRef,
-      UsuarioLider userLider, String userId, ProyectoLider pyLider) async {
-    await proyectoRef.child("listUserLideres").push().set(userLider.toJson());
+  Future<Usuario> obtenerUsuarioActual(String userId) async {
+    final DatabaseReference usuarioRef = db.ref().child("users").child(userId);
+    DatabaseEvent databaseEvent = await usuarioRef.once();
+    Map<dynamic, dynamic> userData =
+        databaseEvent.snapshot.value as Map<dynamic, dynamic>;
+    return Usuario.fromJson(userData);
+  }
 
-    //Agregar el ID del proyecto a la lista listProyectoLider del usuario
+  bool _verificarPuntosSuficientes(Usuario usuario) {
+    if (usuario.tieneSuficientesPuntos()) {
+      return true;
+    } else {
+      throw InsufficientPointsException(
+          "El usuario no tiene los puntos suficientos para crear un proyecto");
+    }
+  }
+
+  Future<void> _almacenarProyectoUsuario(
+      DatabaseReference proyectoRef,
+      UsuariosProyecto usuariosProyecto,
+      String userId,
+      ProyectoUser pyUser) async {
+    await proyectoRef
+        .child("listUserProyecto")
+        .push()
+        .set(usuariosProyecto.toJson());
+
+    //Agregar el ID del proyecto a la lista listProyectos del usuario
     final DatabaseReference usuarioRef =
-        db.ref().child("users").child(userId).child("listProyectoLider");
-    await usuarioRef.push().set(pyLider.toJson());
+        db.ref().child("users").child(userId).child("listProyecto");
+    await usuarioRef.push().set(pyUser.toJson());
   }
 
   Future<void> _guardarProyecto(
