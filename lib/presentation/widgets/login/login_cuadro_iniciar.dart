@@ -241,15 +241,14 @@ class CuadroInicioSesion extends StatelessWidget {
                     controllerAnim.showalerta.forward();
                     try {
                       await controllerLogin.iniciarConGoogle();
+                      if (context.mounted) {
+                        Navigator.pushReplacementNamed(context, 'home');
+                      }
                     } catch (e) {
                       controllerAnim.showalerta.reverse();
                       ref.read(showMensaje.notifier).state = e.toString();
                       controllerAnim.showMensaje.reset();
                       controllerAnim.showMensaje.forward();
-                    }
-
-                    if (context.mounted) {
-                      Navigator.pushReplacementNamed(context, 'home');
                     }
                   },
                   child: Container(
