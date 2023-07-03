@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final LocalStorage localStorage = LocalStorage();
+    //final LocalStorage localStorage = LocalStorage();
     // //final FirebaseAuth auth = FirebaseAuth.instance;
     // return FutureBuilder<bool>(
     //   future: localStorage.isLoggedIn(),

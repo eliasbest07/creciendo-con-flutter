@@ -1,12 +1,16 @@
+import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class DrawerCustom extends StatelessWidget {
+
+class DrawerCustom extends ConsumerWidget {
   const DrawerCustom({
     Key? key, required this.size,
   }) : super(key: key);
 final Size size;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status= ref.watch(showEstatus);
     return Container(height: size.height,width: size.width*0.6, 
     decoration:  BoxDecoration(
       borderRadius:const BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)), color: Theme.of(context).primaryColor),
@@ -74,7 +78,7 @@ final Size size;
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-          Text('estatus: Auxiliar',style: TextStyle(color:Colors.white, fontSize: 20),),
+          Text('estatus: $status',style: const TextStyle(color:Colors.white, fontSize: 20),),
         ],),
       )
     ]),);

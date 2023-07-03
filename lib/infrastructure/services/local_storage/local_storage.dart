@@ -16,8 +16,19 @@ class LocalStorage {
     return prefs.getBool('isLoggedIn') ?? false;
   }
 
+
   Future<void> setLoggedIn(bool value) async {
     await initializePrefs();
     await prefs.setBool('isLoggedIn', value);
+  }
+
+  Future<String> getEstatus() async {
+    await initializePrefs();
+    return prefs.getString('status') ?? 'vacio';
+  }
+
+  Future<void> setEstatus(String value) async {
+    await initializePrefs();
+    await prefs.setString('status', value);
   }
 }

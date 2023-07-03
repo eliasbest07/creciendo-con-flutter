@@ -72,7 +72,10 @@ class NavBar extends StatelessWidget {
                     return Center(child:  Container(
                       height: 50, width:50,
                       color: Colors.transparent,
-                      child:const CircularProgressIndicator()));
+                      child:const Padding(
+                        padding:  EdgeInsets.symmetric(horizontal:5.0),
+                        child:  CircularProgressIndicator(),
+                      )));
                   }
                 },
                 ),)),
