@@ -1,4 +1,4 @@
-import 'package:TaskFlow/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/domain/repositories/usuario_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -13,7 +13,7 @@ class UsuarioService implements UsuarioRepository {
   Future<void> gastarPuntos(String userId, int cantidad) async {
     final DatabaseReference usuarioRef = db.ref().child("users").child(userId);
 
-    DatabaseEvent databaseEvent = await usuarioRef.child("puntos").once(); 
+    DatabaseEvent databaseEvent = await usuarioRef.child("puntos").once();
     int puntosActuales = (databaseEvent.snapshot.value as int?) ?? 0;
 
     if (puntosActuales >= cantidad) {
@@ -45,18 +45,18 @@ class UsuarioService implements UsuarioRepository {
       throw GetUserFailed("Error al obtener el usuario actual: $e");
     }
   }
-  
+
   @override
-  Stream<int> obtenerPuntos() async*{
-    yield* db // return 
-          .ref()
-          .child("users")
-          .child(auth.currentUser!.uid)
-          .child('puntos')
-          .onValue
-          .map((event) {   
-            final puntos = event.snapshot.value as int;
-    return puntos;
+  Stream<int> obtenerPuntos() async* {
+    yield* db // return
+        .ref()
+        .child("users")
+        .child(auth.currentUser!.uid)
+        .child('puntos')
+        .onValue
+        .map((event) {
+      final puntos = event.snapshot.value as int;
+      return puntos;
     });
   }
 }

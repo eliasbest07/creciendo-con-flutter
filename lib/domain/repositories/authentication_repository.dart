@@ -1,5 +1,4 @@
-
-import 'package:TaskFlow/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 abstract class AuthenticationRepository {

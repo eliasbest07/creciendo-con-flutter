@@ -3,162 +3,192 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-import '../../domain/entities/proyecto_entity.dart';
+import '../../domain/entities/proyecto/proyecto_entity.dart';
 import '../widgets/widgets.dart';
 
 class ProjectDetailScreen extends StatelessWidget {
+  const ProjectDetailScreen(
+      {Key? key, required this.project, required this.cacheManager})
+      : super(key: key);
 
-  const ProjectDetailScreen({Key? key, required this.project, required this.cacheManager}) : super(key: key);
-  
   final Proyecto project;
   final CacheManager cacheManager;
-  
 
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
-    final primaryColor=Theme.of(context).primaryColor;
+    final primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       backgroundColor: const Color(0xffF6F9FF),
       resizeToAvoidBottomInset: false,
       extendBody: true,
       appBar: PreferredSize(
-          preferredSize: const Size.fromHeight(155.0),
-          child:  Container(height: 155,
+        preferredSize: const Size.fromHeight(155.0),
+        child: Container(
+          height: 155,
           width: double.infinity,
           decoration: BoxDecoration(
             color: primaryColor,
-            borderRadius: const BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)
+            borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20)),
           ),
-        ),
-        child: Column(children: [
-          const SizedBox(height: 70),
-          Padding(
-            padding: const EdgeInsets.only(left:15.0,right: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-              Column(
+          child: Column(children: [
+            const SizedBox(height: 70),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, right: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  SizedBox(height: 40, width: 250,
-                    child:Text(project.nombre,style:const TextStyle(color: Colors.white,fontSize: 24),)
+                  Column(
+                    children: [
+                      SizedBox(
+                          height: 40,
+                          width: 250,
+                          child: Text(
+                            project.nombre,
+                            style: const TextStyle(
+                                color: Colors.white, fontSize: 24),
+                          )),
+                      Row(children: [
+                        Container(
+                          height: 30,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.green),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.calendar_month_sharp,
+                                color: Colors.white,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                project.fechaInicio.toString().substring(0, 10),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 12),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          height: 30,
+                          width: 120,
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Colors.yellow),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.calendar_today,
+                                color: Colors.black,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                project.fechaEstablecida
+                                    .toString()
+                                    .substring(0, 10),
+                                style: const TextStyle(
+                                    color: Colors.black, fontSize: 12),
+                              )
+                            ],
+                          ),
+                        )
+                      ]),
+                    ],
                   ),
-                  Row(
-                    children: [Container(
-                      height: 30,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: Colors.green
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.calendar_month_sharp,color: Colors.white,),
-                          const SizedBox(width: 5,),
-                          Text(project.fechaInicio.toString().substring(0,10)  ,style:const TextStyle(color: Colors.white,fontSize: 12),)
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 20,),
-                  Container(
-                    height: 30,
-                    width: 120,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.yellow
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.calendar_today,color: Colors.black,),
-                        const SizedBox(width: 5,),
-                        Text(project.fechaEstablecida.toString().substring(0,10) ,style:const TextStyle(color: Colors.black,fontSize: 12),)
-                      ],
-                    ),
-                  )
-                    ]
-                  ),
+                  SizedBox(
+                      height: 70,
+                      width: 70,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            height: 200,
+                            width: 160,
+                            child: FutureBuilder(
+                              future: cacheManager.getSingleFile(
+                                project.icon,
+                              ),
+                              builder: (BuildContext context,
+                                  AsyncSnapshot<File> snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Center(
+                                    child: Text('No se pudo cargar la imagen'),
+                                  );
+                                }
+                                if (!snapshot.hasData) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(
+                                      color: Color.fromARGB(255, 252, 214, 143),
+                                    ),
+                                  );
+                                }
+                                final imageFile = snapshot.data!;
+                                return Image.file(imageFile);
+                              },
+                            ),
+                          )))
                 ],
               ),
-              SizedBox(height: 70,width: 70,
-          child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: SizedBox(
-                        height: 200,
-                        width: 160,
-                        child: FutureBuilder(
-                          future: cacheManager.getSingleFile(
-                            project.icon,
-                          ),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<File> snapshot) {
-                            if (snapshot.hasError) {
-                              return const Center(
-                                child: Text('No se pudo cargar la imagen'),
-                              );
-                            }
-                            if (!snapshot.hasData) {
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                  color: Color.fromARGB(255, 252, 214, 143),
-                                ),
-                              );
-                            }
-                            final imageFile = snapshot.data!;
-                            return Image.file(imageFile);
-                          },
-                        ),
-                      ))
-          )
-            ],),
-          ),
-          
-        ]),
-      ),
+            ),
+          ]),
+        ),
       ),
       drawer: SizedBox(
-        height: height * 0.7,
+          height: height * 0.7,
           width: width * 0.7,
-          child: DrawerCustom(size:Size(width,height) )),
-      floatingActionButton: NavBar(primaryColor: primaryColor,width:width , ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
+          child: DrawerCustom(size: Size(width, height))),
+      floatingActionButton: NavBar(
+        primaryColor: primaryColor,
+        width: width,
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height:150,
-              width:double.infinity,
+              height: 150,
+              width: double.infinity,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: 10, // lista de Comentarios
                 itemBuilder: (context, index) {
                   return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      height: 120,
-                      width: 220,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color.fromARGB(74, 46, 46, 46),
-                            offset: Offset(0.0, 2.0),
-                            blurRadius: 7.0,
-                          )
-                        ],
-                      ),
-                      child: Center(
-                        child: Text('Comentario $index'),
-                      ),
-                    )
-                  );
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: 120,
+                        width: 220,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromARGB(74, 46, 46, 46),
+                              offset: Offset(0.0, 2.0),
+                              blurRadius: 7.0,
+                            )
+                          ],
+                        ),
+                        child: Center(
+                          child: Text('Comentario $index'),
+                        ),
+                      ));
                 },
               ),
-              ),
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
               child: Container(
@@ -245,7 +275,7 @@ class ProjectDetailScreen extends StatelessWidget {
                   ),
                   children: [
                     ListView.builder(
-                      itemCount: 10,//collaborators.length,
+                      itemCount: 10, //collaborators.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         // final collaborator = collaborators[index];
@@ -279,7 +309,8 @@ class ProjectDetailScreen extends StatelessWidget {
                                   // color: colorEstado,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
-                                child: Text( 'role',
+                                child: Text(
+                                  'role',
                                   // collaborator['role'],
                                   style: TextStyle(
                                       fontSize: 9, color: Colors.white),
@@ -408,7 +439,7 @@ class ProjectDetailScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-                    const SizedBox(height: 300),
+                      const SizedBox(height: 300),
                     ],
                   )
                 ],

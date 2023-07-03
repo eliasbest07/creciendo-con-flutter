@@ -1,19 +1,19 @@
-class ProyectoAuxiliar {
+class ProyectoAuxliliar {
   String proyectoAuxiliarId;
 
-  ProyectoAuxiliar({
+  ProyectoAuxliliar({
     required this.proyectoAuxiliarId,
   });
 
-  ProyectoAuxiliar copyWith({
+  ProyectoAuxliliar copyWith({
     String? proyectoAuxiliarId,
   }) =>
-      ProyectoAuxiliar(
+      ProyectoAuxliliar(
         proyectoAuxiliarId: proyectoAuxiliarId ?? this.proyectoAuxiliarId,
       );
 
-  factory ProyectoAuxiliar.fromJson(Map<String, dynamic> json) =>
-      ProyectoAuxiliar(
+  factory ProyectoAuxliliar.fromJson(Map<dynamic, dynamic> json) =>
+      ProyectoAuxliliar(
         proyectoAuxiliarId: json["proyectoAuxiliarId"],
       );
 

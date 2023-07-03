@@ -1,7 +1,7 @@
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/proyecto_entity.dart';
+import '../../domain/entities/proyecto/proyecto_entity.dart';
 import '../../infrastructure/services/proyecto_service.dart';
 
 class ProyectoProvider extends StateNotifier<List<Proyecto>> {
@@ -9,7 +9,7 @@ class ProyectoProvider extends StateNotifier<List<Proyecto>> {
   ProyectoProvider() : super([]) {
     init();
   }
-  
+
   TextEditingController inputName = TextEditingController();
   void init() {
     state = List<Proyecto>.empty();

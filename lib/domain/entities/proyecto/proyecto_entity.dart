@@ -1,6 +1,6 @@
-import 'package:TaskFlow/domain/entities/comentario_entity.dart';
-import 'package:TaskFlow/domain/entities/meta_entity.dart';
-import 'package:TaskFlow/domain/entities/usuarioProyecto_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/comentario_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
 
 class Proyecto {
   String? id;

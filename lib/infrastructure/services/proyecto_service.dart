@@ -1,16 +1,17 @@
-import 'package:TaskFlow/domain/entities/meta_entity.dart';
-import 'package:TaskFlow/domain/entities/proyectoUser_entity.dart';
-import 'package:TaskFlow/domain/entities/proyecto_entity.dart';
-import 'package:TaskFlow/domain/entities/tarea_entity.dart';
-import 'package:TaskFlow/domain/entities/usuarioProyecto_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario/proyectoAuxiliar_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario/proyectoLider_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
 import 'package:TaskFlow/domain/exceptions/exceptions.dart';
 import 'package:TaskFlow/domain/repositories/proyecto_repository.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
-import '../../domain/entities/comentario_entity.dart';
-import '../../domain/entities/usuario_entity.dart';
+import '../../domain/entities/proyecto/comentario_entity.dart';
+import '../../domain/entities/usuario/usuario_entity.dart';
 
 class ProyectoService implements ProyectoRepository {
   FirebaseDatabase db = FirebaseDatabase.instance;
@@ -37,12 +38,13 @@ class ProyectoService implements ProyectoRepository {
 
         final UsuariosProyecto userPy =
             UsuariosProyecto(usuarioId: userId, rol: "Lider");
-        final ProyectoUser pyUser = ProyectoUser(proyectoUserId: proyectoId);
+        final ProyectoLider pyLider =
+            ProyectoLider(proyectoLiderId: proyectoId);
 
         // Actualizar el proyecto con el ID generado
         proyecto.id = proyectoId;
         await _guardarProyecto(proyecto, proyectoRef);
-        await _almacenarProyectoUsuario(proyectoRef, userPy, userId, pyUser);
+        await _almacenarProyectoUsuario(proyectoRef, userPy, userId, pyLider);
 
         return true;
       }
@@ -73,7 +75,7 @@ class ProyectoService implements ProyectoRepository {
       DatabaseReference proyectoRef,
       UsuariosProyecto usuariosProyecto,
       String userId,
-      ProyectoUser pyUser) async {
+      ProyectoLider pyLider) async {
     await proyectoRef
         .child("listUserProyecto")
         .push()
@@ -82,7 +84,7 @@ class ProyectoService implements ProyectoRepository {
     //Agregar el ID del proyecto a la lista listProyectos del usuario
     final DatabaseReference usuarioRef =
         db.ref().child("users").child(userId).child("listProyecto");
-    await usuarioRef.push().set(pyUser.toJson());
+    await usuarioRef.push().set(pyLider.toJson());
   }
 
   Future<void> _guardarProyecto(
@@ -428,5 +430,234 @@ class ProyectoService implements ProyectoRepository {
     } catch (e) {
       throw ProyectDeleteFailed("Error al eliminar proyecto: $e");
     }
+  }
+
+  @override
+  Future<bool> ingresarComoAuxiliar(String projectId, String userId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(projectId);
+
+      await _verificarProyectoExiste(proyectoRef);
+      await _verificarUsuarioProyecto(proyectoRef, userId);
+
+      await _agregarUsuarioAuxiliar(userId, proyectoRef);
+      return true;
+    } catch (e) {
+      print(e.toString());
+    }
+    return false;
+  }
+
+  @override
+  Future<bool> verificarUsuarioEnProyecto(
+      String proyectoId, String userId) async {
+    try {
+      final DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+
+      DatabaseEvent databaseEvent = await proyectoRef.once();
+      Map<dynamic, dynamic>? proyectoData =
+          databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
+
+      if (proyectoData != null) {
+        if (proyectoData['listUserProyecto'] != null) {
+          Map<dynamic, dynamic> listUserProyectoData =
+              proyectoData['listUserProyecto'] as Map<dynamic, dynamic>;
+
+          bool usuarioEnProyecto = listUserProyectoData.values.any((userData) {
+            return userData['usuarioId'] == userId;
+          });
+
+          return usuarioEnProyecto;
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return false;
+  }
+
+  Future<void> _agregarUsuarioAuxiliar(
+      String userId, DatabaseReference proyectoRef) async {
+    //Obtener proyectoId
+    String proyectoId = proyectoRef.key!;
+    //Almacenar usuario en listUserProyecto
+    UsuariosProyecto auxiliar =
+        UsuariosProyecto(usuarioId: userId, rol: "Auxiliar");
+    await proyectoRef.child("listUserProyecto").push().set(auxiliar.toJson());
+
+    //Almacenar usuario en listProyectoAuxiliar
+    ProyectoAuxliliar pyAux = ProyectoAuxliliar(proyectoAuxiliarId: proyectoId);
+    final DatabaseReference usuarioRef =
+        db.ref().child("users").child(userId).child("listProyectoAuxiliar");
+    await usuarioRef.push().set(pyAux.toJson());
+  }
+
+  Future<void> _verificarUsuarioProyecto(
+      DatabaseReference proyectoRef, String userId) async {
+    DatabaseEvent databaseEvent = await proyectoRef
+        .child("listUserProyecto")
+        .orderByChild("usuarioId")
+        .equalTo(userId)
+        .once();
+    if (databaseEvent.snapshot.exists) {
+      throw Exception("El usuario ya está en el proyecto");
+    }
+  }
+
+  Future<void> _verificarProyectoExiste(DatabaseReference proyectoRef) async {
+    DatabaseEvent databaseEvent = await proyectoRef.once();
+    if (!databaseEvent.snapshot.exists) {
+      throw ProyectSearchFailed("El proyecto no existe");
+    }
+  }
+
+/* Nota : Solo usar estos roles : Lider, Lider_Backend, Lider_UI, Lider_Code, Sublider_Backend,
+  Sublider_UI, Sublider_Code, Auxiliar */
+  @override
+  Future<bool> cambiarRol(
+      String proyectoId, String usuarioId, String nuevoRol) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseReference usuarioProyectoRef =
+          proyectoRef.child("listUserProyecto");
+
+      DatabaseEvent databaseEvent = await usuarioProyectoRef.once();
+      if (databaseEvent.snapshot.value != null) {
+        Map<dynamic, dynamic> usuarioProyectoData =
+            databaseEvent.snapshot.value as Map<dynamic, dynamic>;
+
+        String? usuarioProyectoKey =
+            _buscarUsuarioEnProyecto(usuarioProyectoData, usuarioId);
+        if (usuarioProyectoKey != null) {
+          await _actualizarRolUsuario(
+              usuarioProyectoRef, usuarioProyectoKey, nuevoRol);
+          await actualizarListasUsuario(usuarioId, nuevoRol, proyectoId);
+          return true;
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return false;
+  }
+
+  Future<void> actualizarListasUsuario(
+      String usuarioId, String nuevoRol, String proyectoId) async {
+    DatabaseReference usuarioRef = db.ref().child("users").child(usuarioId);
+    DatabaseEvent usuarioSnapshot = await usuarioRef.once();
+
+    if (usuarioSnapshot.snapshot.value != null) {
+      if (esRolLider(nuevoRol) || esRolSublider(nuevoRol)) {
+        await _agregarAListaProyectoLider(usuarioId, proyectoId);
+        await _eliminarDeListaProyectoAuxiliar(usuarioId, proyectoId);
+      } else if (esRolAuxiliar(nuevoRol)) {
+        await _agregarAListaProyectoAuxiliar(usuarioId, proyectoId);
+        await _eliminarDeListaProyectoLider(usuarioId, proyectoId);
+      }
+    }
+  }
+
+  Future<void> _agregarAListaProyectoLider(
+      String usuarioId, String proyectoId) async {
+    try {
+      final ProyectoLider pyLider = ProyectoLider(proyectoLiderId: proyectoId);
+      DatabaseReference listaProyectoLiderRef =
+          db.ref().child("users").child(usuarioId).child("listProyectoLider");
+      listaProyectoLiderRef.push().set(pyLider.toJson());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future<void> _agregarAListaProyectoAuxiliar(
+      String usuarioId, String proyectoId) async {
+    final ProyectoAuxliliar pyAux =
+        ProyectoAuxliliar(proyectoAuxiliarId: proyectoId);
+    DatabaseReference listaProyectoAuxiliarRef =
+        db.ref().child("users").child(usuarioId).child("listProyectoAuxiliar");
+    listaProyectoAuxiliarRef.push().set(pyAux.toJson());
+  }
+
+  Future<void> _eliminarDeListaProyectoLider(
+      String usuarioId, String proyectoId) async {
+    DatabaseReference listaProyectoLiderRef =
+        db.ref().child("users").child(usuarioId).child("listProyectoLider");
+    DatabaseEvent snapshot = await listaProyectoLiderRef.once();
+
+    if (snapshot.snapshot.value != null) {
+      Map<dynamic, dynamic> proyectos =
+          snapshot.snapshot.value as Map<dynamic, dynamic>;
+      String? proyectoKey;
+      proyectos.forEach((key, value) {
+        if (value["proyectoLiderId"] == proyectoId) {
+          proyectoKey = key;
+        }
+      });
+      if (proyectoKey != null) {
+        listaProyectoLiderRef.child(proyectoKey!).remove();
+      }
+    }
+  }
+
+  Future<void> _eliminarDeListaProyectoAuxiliar(
+      String usuarioId, String proyectoId) async {
+    DatabaseReference listaProyectoAuxiliarRef =
+        db.ref().child("users").child(usuarioId).child("listProyectoAuxiliar");
+    DatabaseEvent snapshot = await listaProyectoAuxiliarRef.once();
+
+    if (snapshot.snapshot.value != null) {
+      Map<dynamic, dynamic> proyectos =
+          snapshot.snapshot.value as Map<dynamic, dynamic>;
+      String? proyectoKey;
+      proyectos.forEach((key, value) {
+        if (value["proyectoAuxiliarId"] == proyectoId) {
+          proyectoKey = key;
+        }
+      });
+      if (proyectoKey != null) {
+        listaProyectoAuxiliarRef.child(proyectoKey!).remove();
+      }
+    }
+  }
+
+  bool esRolLider(String rol) {
+    return rol == "Lider" ||
+        rol == "Lider_Backend" ||
+        rol == "Lider_UI" ||
+        rol == "Lider_Codigo";
+  }
+
+  bool esRolSublider(String rol) {
+    return rol == "Sublider_Backend" ||
+        rol == "Sublider_UI" ||
+        rol == "Sublider_Codigo";
+  }
+
+  bool esRolAuxiliar(String rol) {
+    return rol == "Auxiliar";
+  }
+
+  String? _buscarUsuarioEnProyecto(
+      Map<dynamic, dynamic> usuarioProyectoData, String usuarioId) {
+    String? usuarioProyectoKey;
+    usuarioProyectoData.forEach((key, value) {
+      UsuariosProyecto usuariosProyecto = UsuariosProyecto.fromJson(value);
+      if (usuariosProyecto.usuarioId == usuarioId) {
+        usuarioProyectoKey = key;
+      }
+    });
+    return usuarioProyectoKey;
+  }
+
+  Future<void> _actualizarRolUsuario(DatabaseReference usuarioProyectoRef,
+      String usuarioProyectoKey, String nuevoRol) async {
+    await usuarioProyectoRef
+        .child(usuarioProyectoKey)
+        .child("rol")
+        .set(nuevoRol);
   }
 }
