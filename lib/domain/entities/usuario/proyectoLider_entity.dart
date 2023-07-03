@@ -12,7 +12,7 @@ class ProyectoLider {
         proyectoLiderId: proyectoLiderId ?? this.proyectoLiderId,
       );
 
-  factory ProyectoLider.fromJson(Map<String, dynamic> json) => ProyectoLider(
+  factory ProyectoLider.fromJson(Map<dynamic, dynamic> json) => ProyectoLider(
         proyectoLiderId: json["proyectoLiderId"],
       );
 
