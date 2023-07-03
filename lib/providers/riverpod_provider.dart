@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../presentation/controllers/login_controller.dart';
 import '../presentation/controllers/proyecto_controller.dart';
 import '../domain/entities/login.dart';
-import '../domain/entities/proyecto_entity.dart';
+import '../domain/entities/proyecto/proyecto_entity.dart';
 
 final loadingProvider = StateProvider<bool>((ref) => false);
 final showClave =

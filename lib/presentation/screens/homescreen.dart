@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:TaskFlow/presentation/screens/screens.dart';
@@ -7,6 +6,9 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../infrastructure/services/local_storage/local_storage.dart';
+
+
+
 import '../../infrastructure/services/usuario_service.dart';
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
@@ -23,7 +25,7 @@ class HomeScreen extends ConsumerWidget {
 
     final LoginController controller = ref.watch(loginController.notifier);
     final listaProject = ref.watch(listaProyectos);
-    
+
     // esto es para que se cargue la imagen en cache
     final CacheManager cacheManager = CacheManager(
       Config(
@@ -32,6 +34,7 @@ class HomeScreen extends ConsumerWidget {
             const Duration(days: 7), // La imagen caducará después de 7 días
       ),
     );
+
 
     final primaryColor=Theme.of(context).primaryColor;
     
@@ -48,45 +51,56 @@ class HomeScreen extends ConsumerWidget {
     }
   });
 
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-
-        backgroundColor:Colors.white ,
-        title: Text('TaskFlow',style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () async {
-              await controller.cerrarSesion();
-              if (context.mounted) {
-                Navigator.pushReplacementNamed(context, 'login');
-              }
-            },
-            icon: Icon(Icons.exit_to_app, color: Colors.black,),
-          )
-          ]
-      ),
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.white,
+          title: const Text('TaskFlow',
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold)),
+          actions: <Widget>[
+            IconButton(
+              onPressed: () async {
+                await controller.cerrarSesion();
+                if (context.mounted) {
+                  Navigator.pushReplacementNamed(context, 'login');
+                }
+              },
+              icon: const Icon(
+                Icons.exit_to_app,
+                color: Colors.black,
+              ),
+            )
+          ]),
       drawer: SizedBox(
-        height: height * 0.7,
+          height: height * 0.7,
           width: width * 0.7,
           child: DrawerCustom(
             size: Size(height, width),
           )),
-      body: Stack(
-        children: [   Column(
+      body: Stack(children: [
+        Column(
           children: [
             SizedBox(
               height: height * 0.02,
             ),
-          const Padding(
-            padding:  EdgeInsets.only(left: 10.0),
-            child: Row(
-                children:  [
-                  Text('Tus Metas y tareas', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+            const Padding(
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                children: [
+                  Text('Tus Metas y tareas',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
-          ),
+            ),
             SizedBox(
               height: height * 0.02,
             ),
@@ -107,26 +121,29 @@ class HomeScreen extends ConsumerWidget {
                         );
                       },
                       child: Container(
-                        width: height * 0.18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                            border:const Border.fromBorderSide(
+                          width: height * 0.18,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: const Border.fromBorderSide(
                               BorderSide(
                                 width: 4,
-                                color:   Color.fromARGB(255, 147, 216, 207),
+                                color: Color.fromARGB(255, 147, 216, 207),
                               ),
                             ),
-                        ),
-                        child: Stack(children: [
-                          Container(
-                            height: 40,
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(155, 147, 216, 207),
-                          borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                            ),
-                        ),
-                        ],)
-                      ),
+                          ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 40,
+                                decoration: const BoxDecoration(
+                                  color: Color.fromARGB(155, 147, 216, 207),
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10)),
+                                ),
+                              ),
+                            ],
+                          )),
                     ),
                   );
                 },
@@ -136,14 +153,19 @@ class HomeScreen extends ConsumerWidget {
               height: height * 0.02,
             ),
             const Padding(
-            padding:  EdgeInsets.only(left: 10.0),
-            child: Row(
-                children:  [
-                  Text('Proyectos para unirte', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                children: [
+                  Text('Proyectos para unirte',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
-          ),
-          SizedBox(
+            ),
+            SizedBox(
               height: height * 0.13,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -153,57 +175,59 @@ class HomeScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        listaProject[index].fechaInicio= DateTime.parse("2023-06-06");
-                        listaProject[index].fechaEstablecida= DateTime.parse("2023-08-06");
+                        listaProject[index].fechaInicio =
+                            DateTime.parse("2023-06-06");
+                        listaProject[index].fechaEstablecida =
+                            DateTime.parse("2023-08-06");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => ProjectDetailScreen(
-                              cacheManager: cacheManager,
-                              project: listaProject[index]),
+                                cacheManager: cacheManager,
+                                project: listaProject[index]),
                           ),
                         );
                       },
                       child: Container(
-                        width: height * 0.11,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                            border:const Border.fromBorderSide(
+                          width: height * 0.11,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: const Border.fromBorderSide(
                               BorderSide(
                                 width: 4,
-                                color:   Color.fromARGB(255, 147, 216, 207),
+                                color: Color.fromARGB(255, 147, 216, 207),
                               ),
                             ), // listaProject[index].icon
-                        ),
-                        child: ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: SizedBox(
-                        height: 200,
-                        width: 160,
-                        child: FutureBuilder(
-                          future: cacheManager.getSingleFile(
-                            listaProject[index].icon,
                           ),
-                          builder: (BuildContext context,
-                              AsyncSnapshot<File> snapshot) {
-                            if (snapshot.hasError) {
-                              return const Center(
-                                child: Text('No se pudo cargar la imagen'),
-                              );
-                            }
-                            if (!snapshot.hasData) {
-                              return  Center(
-                                child: CircularProgressIndicator(
-                                  color: primaryColor,
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20),
+                              child: SizedBox(
+                                height: 200,
+                                width: 160,
+                                child: FutureBuilder(
+                                  future: cacheManager.getSingleFile(
+                                    listaProject[index].icon,
+                                  ),
+                                  builder: (BuildContext context,
+                                      AsyncSnapshot<File> snapshot) {
+                                    if (snapshot.hasError) {
+                                      return const Center(
+                                        child:
+                                            Text('No se pudo cargar la imagen'),
+                                      );
+                                    }
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          color: primaryColor,
+                                        ),
+                                      );
+                                    }
+                                    final imageFile = snapshot.data!;
+                                    return Image.file(imageFile);
+                                  },
                                 ),
-                              );
-                            }
-                            final imageFile = snapshot.data!;
-                            return Image.file(imageFile);
-                          },
-                        ),
-                      ))
-                      ),
+                              ))),
                     ),
                   );
                 },
@@ -213,22 +237,22 @@ class HomeScreen extends ConsumerWidget {
               height: height * 0.02,
             ),
             const Padding(
-            padding:  EdgeInsets.only(left: 10.0),
-            child: Row(
-                children:  [
-                  Text('Noticias', textAlign: TextAlign.left, style: TextStyle(color: Colors.black, fontSize: 22, fontWeight: FontWeight.bold)),
+              padding: EdgeInsets.only(left: 10.0),
+              child: Row(
+                children: [
+                  Text('Noticias',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)),
                 ],
               ),
-          ),
+            ),
           ],
-          
-        ), 
-    
-        ]
-      ),
-          bottomNavigationBar:NavBar(primaryColor: primaryColor, width: width) ,
+        ),
+      ]),
+      bottomNavigationBar: NavBar(primaryColor: primaryColor, width: width),
     );
   }
 }
-
-

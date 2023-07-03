@@ -1,4 +1,4 @@
-import 'package:TaskFlow/domain/entities/usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/domain/exceptions/exceptions.dart';
 import 'package:TaskFlow/domain/repositories/authentication_repository.dart';
 import 'package:TaskFlow/infrastructure/services/local_storage/local_storage.dart';
