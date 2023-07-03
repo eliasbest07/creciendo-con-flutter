@@ -159,141 +159,115 @@ class ProjectDetailScreen extends StatelessWidget {
                 },
               ),
               ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(24, 46, 46, 46),
-                      offset: Offset(0.0, 2.0),
-                      blurRadius: 20.0,
-                    )
-                  ],
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const CircleAvatar(
-                      radius: 25,
-                      backgroundImage: NetworkImage(
-                          'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1176&q=80'),
-                    ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'JORGE MORENO GIRALDO',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 5),
-                        Row(
-                          children: [
-                            Image.network(
-                              'https://cdn-icons-png.flaticon.com/512/625/625394.png',
-                              width: 25,
-                            ),
-                            Image.network(
-                              'https://cdn-icons-png.flaticon.com/512/625/625393.png',
-                              width: 25,
-                            ),
-                            Image.network(
-                              'https://cdn-icons-png.flaticon.com/512/625/625393.png',
-                              width: 25,
-                            ),
-                          ],
+              const Padding(
+                padding: EdgeInsets.only(left:20.0),
+                child: Text('Responsables:',style: TextStyle(fontSize: 16),),
+              ),
+            SizedBox(
+              height: 130,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+                  child: Container(
+                    width: 300,
+                    height: 130,
+                    padding: const EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Color.fromARGB(24, 46, 46, 46),
+                          offset: Offset(0.0, 2.0),
+                          blurRadius: 20.0,
                         )
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-              child: Container(
-                width: double.infinity,
-                //padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Color.fromARGB(24, 46, 46, 46),
-                      offset: Offset(0.0, 2.0),
-                      blurRadius: 20.0,
-                    )
-                  ],
-                ),
-                child: ExpansionTile(
-                  expandedCrossAxisAlignment: CrossAxisAlignment.start,
-                  childrenPadding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  title: const Row(
-                    children: [
-                      Icon(Icons.person_search_rounded),
-                      SizedBox(width: 5),
-                      Text(
-                        'Colaboradores',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  children: [
-                    ListView.builder(
-                      itemCount: 10,//collaborators.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        // final collaborator = collaborators[index];
-
-                        // Color? colorEstado;
-                        // switch (collaborator['role']) {
-                        //   case 'Sublíder':
-                        //     colorEstado = Colors.red;
-                        //     break;
-                        //   case 'Auxiliar':
-                        //     colorEstado = Colors.blue;
-                        //     break;
-                        //   default:
-                        // }
-
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: Row(
-                            children: [
-                              // CircleAvatar(
-                              //   radius: 15,
-                              //   backgroundImage:
-                              //       NetworkImage(collaborator['photoProfile']),
-                              // ),
-                              const SizedBox(width: 5),
-                              Text('collaboratorname'),
-                              Spacer(),
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
-                                  // color: colorEstado,
-                                  borderRadius: BorderRadius.circular(20),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: Text('Lider de Backend',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const CircleAvatar(
+                              radius: 25,
+                              backgroundImage: NetworkImage(
+                                  'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1176&q=80'),
+                            ),
+                            const SizedBox(width: 10),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Hugo Grados Changanaqui',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
                                 ),
-                                child: Text( 'role',
-                                  // collaborator['role'],
-                                  style: TextStyle(
-                                      fontSize: 9, color: Colors.white),
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      },
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    Image.network(
+                                      'https://cdn-icons-png.flaticon.com/512/625/625394.png',
+                                      width: 25,
+                                    ),
+                                    Image.network(
+                                      'https://cdn-icons-png.flaticon.com/512/625/625393.png',
+                                      width: 25,
+                                    ),
+                                    Image.network(
+                                      'https://cdn-icons-png.flaticon.com/512/625/625393.png',
+                                      width: 25,
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                );}
               ),
             ),
+                const Padding(
+                padding: EdgeInsets.only(left:20.0,top: 20),
+                child: Text('Auxiliares:',style: TextStyle(fontSize: 16),),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 10.0),
+                child: SizedBox(
+                  height: 100,
+                  width: double.infinity,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                    return const Padding(
+                      padding:  EdgeInsets.all(8.0),
+                      child:  Column(
+                        children: [
+                          CircleAvatar(
+                                      radius: 25,
+                                      backgroundImage: NetworkImage(
+                                          'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1176&q=80'),
+                                    ),
+                                    SizedBox(
+                                      height: 30,
+                                      width: 60,
+                                      child: Text('Nombre Nombre Nombre Nombre'))
+                        ],
+                      ),
+                    );
+                  },)
+                ),
+              ),
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15),
@@ -329,13 +303,56 @@ class ProjectDetailScreen extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       itemBuilder: (context, index) {
                         return Container(
-                          padding: const EdgeInsets.all(20),
+                          width: 150,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: Colors.amber,
                           ),
                           alignment: Alignment.center,
-                          child: Text('Meta #$index'),
+                          child: Stack(
+                            children:  [
+                              
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+
+                                Container(
+                                  height:30,
+                                  width: double.infinity,
+                                  decoration:const BoxDecoration(
+                                    borderRadius: BorderRadius.only(topLeft:  Radius.circular(20), topRight: Radius.circular(20)),
+                                    color: Color.fromARGB(255, 102, 180, 106),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10.0,top:5 ),
+                                    child: Text('2023-06-06'),
+                                  ),
+                                  ),
+                                  SizedBox(height: 30,child: Padding(
+                                    padding: const EdgeInsets.only(left:10.0, top:5),
+                                    child: Text('2023-07-01'),
+                                  ),),
+                              ],
+                            ), 
+                              Positioned(
+                                right: 5,
+                                top: 5,
+                                child: Container(height: 50, width: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  shape: BoxShape.circle, 
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator(
+                                    value: 0.7,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                                ),
+                              ) 
+                            ]
+                          )
                         );
                       },
                       separatorBuilder: (context, index) {

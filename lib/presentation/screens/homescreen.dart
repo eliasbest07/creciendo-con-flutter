@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../infrastructure/services/local_storage/local_storage.dart';
 import '../../infrastructure/services/usuario_service.dart';
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
-import '../drawables/nav_bar.dart';
 import '../widgets/widgets.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -19,6 +19,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+
 
     final LoginController controller = ref.watch(loginController.notifier);
     final listaProject = ref.watch(listaProyectos);
@@ -33,6 +34,20 @@ class HomeScreen extends ConsumerWidget {
     );
 
     final primaryColor=Theme.of(context).primaryColor;
+    
+
+  LocalStorage().getEstatus().then((value) {
+    if(value == 'vacio'){
+      UsuarioService().obtenerUsuario().then((value) {
+        LocalStorage().setEstatus(value.rol).then((_) {
+          ref.read(showEstatus.notifier).state=value.rol;
+        });
+      });
+    }else{
+      ref.read(showEstatus.notifier).state=value;
+    }
+  });
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(

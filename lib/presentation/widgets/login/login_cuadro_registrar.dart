@@ -255,7 +255,7 @@ class CuadroRegistro extends StatelessWidget {
                       controllerAnim.showMensaje.forward();
                       return;
                     }
-                    if (controllerLogin.inputControllerPassword.text.length <
+                    if (controllerLogin.inputControllerPasswordRegister.text.length <
                         6) {
                       ref.read(showMensaje.notifier).state =
                           'La clave debe ser mayor a 6 digitos 🧐';
