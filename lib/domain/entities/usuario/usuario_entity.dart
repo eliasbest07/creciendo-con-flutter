@@ -7,7 +7,7 @@ class Usuario {
   String email;
   String nombre;
   String rol;
-  String? avatar;
+  String avatar;
   int? puntos;
   DateTime fechaRegistro;
   List<Medalla>? listMedalla = [];
@@ -19,7 +19,7 @@ class Usuario {
       required this.email,
       required this.nombre,
       required this.rol,
-      this.avatar,
+      required this.avatar,
       required this.puntos,
       required this.fechaRegistro,
       this.listMedalla,

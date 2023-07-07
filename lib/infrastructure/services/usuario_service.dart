@@ -58,6 +58,23 @@ class UsuarioService implements UsuarioRepository {
       throw GetUserFailed("Error al obtener el usuario actual: $e");
     }
   }
+
+//obtiene lista de todos los usuarios, por ejemlo: auxiliares
+Stream<List<Usuario>> obtenerUsuarios() {
+  final DatabaseReference usuariosRef = db.ref().child("users");
+
+  return usuariosRef.onValue.asyncExpand((event) async* {
+    final data = event.snapshot.value as Map<dynamic, dynamic>;
+
+    List<Usuario> usuarios = [];
+    data.forEach((key, value) {
+      usuarios.add(Usuario.fromJson(value));
+    });
+
+    yield usuarios;
+  });
+}
+
   
 
   @override
