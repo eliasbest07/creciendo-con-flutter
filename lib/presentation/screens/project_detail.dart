@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
+import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
@@ -272,32 +274,49 @@ class ProjectDetailScreen extends StatelessWidget {
                 child: Text('Auxiliares:',style: TextStyle(fontSize: 16),),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10.0),
-                child: SizedBox(
-                  height: 100,
-                  width: double.infinity,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: (context, index) {
-                    return const Padding(
-                      padding:  EdgeInsets.all(8.0),
-                      child:  Column(
-                        children: [
-                          CircleAvatar(
-                                      radius: 25,
-                                      backgroundImage: NetworkImage(
-                                          'https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1176&q=80'),
-                                    ),
-                                    SizedBox(
-                                      height: 30,
-                                      width: 60,
-                                      child: Text('Nombre Nombre Nombre Nombre'))
-                        ],
-                      ),
-                    );
-                  },)
+  padding: const EdgeInsets.only(left: 10.0),
+  child: SizedBox(
+    height: 100,
+    width: double.infinity,
+    child: StreamBuilder<List<Usuario>>(
+      stream: UsuarioService().obtenerUsuarios(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final usuarios = snapshot.data!;
+          return ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: usuarios.length,
+            itemBuilder: (context, index) {
+              final usuario = usuarios[index];
+
+              return Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      radius: 25,
+                      backgroundImage: NetworkImage(usuario.avatar),
+                    ),
+                    SizedBox(
+                      height: 30,
+                      width: 60,
+                      child: Text(usuario.nombre),
+                    ),
+                  ],
                 ),
-              ),
+              );
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text('Error al cargar usuarios');
+        }
+
+        return CircularProgressIndicator();
+      },
+    ),
+  ),
+),
+
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 15),
