@@ -54,13 +54,10 @@ class MyApp extends StatelessWidget {
         'newTask': (_) => const  NewTaskScreen(),
         'login': (_) => const SplashPage()
       },
-      theme: Theme.of(context).copyWith(
-        primaryColor:
-            const Color.fromARGB(255, 10, 53, 103), // primari Color theme
-        colorScheme: Theme.of(context).colorScheme.copyWith(
-              primary: const Color.fromARGB(255, 10, 53, 103),
-            ),
-      ),
+      theme: ThemeData(primaryColor: const Color.fromARGB(255, 10, 53, 103),
+          colorScheme: Theme.of(context).colorScheme.copyWith(
+            primary: const Color.fromARGB(255, 10, 53, 103),
+          ), fontFamily: 'Accolade' ),
     );
   }
 }
