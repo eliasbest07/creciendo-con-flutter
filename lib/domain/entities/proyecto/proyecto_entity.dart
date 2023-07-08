@@ -17,6 +17,8 @@ class Proyecto {
       required this.icon,
       required this.nombre,
       this.listMeta,
+      this.fechaInicio,
+      this.fechaEstablecida,
       this.listComentarioPy,
       this.listUserProyecto});
 
@@ -37,6 +39,10 @@ class Proyecto {
         id: json["id"],
         icon: json["icon"],
         nombre: json["nombre"],
+        fechaInicio: json["fechaInicio"] != null
+            ? DateTime.parse(json["fechaInicio"])
+            : null,
+            fechaEstablecida: json["fechaEstablecida"] != null ? DateTime.parse(json["fechaEstablecida"]) : null,
         listMeta: json["listMeta"] != null
             ? (json['listMeta'] as Map<dynamic, dynamic>)
                 .values

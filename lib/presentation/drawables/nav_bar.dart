@@ -15,8 +15,8 @@ class NavBarShape extends CustomPainter {
 
     // path.quadraticBezierTo(size.width * 0.35, 0.5, size.width * 0.35, 0);
     // path.quadraticBezierTo(size.width * 0.40, 0, size.width * 0.395, 18); //primera curba
-    path.lineTo(size.width * 0.1, 0);
-    path.arcToPoint( Offset(size.width * 0.35, 0), clockwise: false, radius: const  Radius.circular(2));
+    path.lineTo( 40.1, 0);
+    path.arcToPoint( const Offset( 136.35, 0), clockwise: false, radius: const  Radius.circular(2));
     // path.quadraticBezierTo(size.width * 0.20, size.height * 0.52,
     //     size.width * 0.45, size.height * 0.50);
 

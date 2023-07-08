@@ -37,7 +37,7 @@ class ProyectoService implements ProyectoRepository {
         await _actualizarIDsMetasProyecto(proyectoRef, proyecto);
 
         final UsuariosProyecto userPy =
-            UsuariosProyecto(usuarioId: userId, rol: "Lider");
+            UsuariosProyecto(usuarioId: userId, rol: "Lider",nombre: userId);
         final ProyectoLider pyLider =
             ProyectoLider(proyectoLiderId: proyectoId);
 
@@ -485,7 +485,7 @@ class ProyectoService implements ProyectoRepository {
     String proyectoId = proyectoRef.key!;
     //Almacenar usuario en listUserProyecto
     UsuariosProyecto auxiliar =
-        UsuariosProyecto(usuarioId: userId, rol: "Auxiliar");
+        UsuariosProyecto(usuarioId: userId, rol: "Auxiliar", nombre: '');
     await proyectoRef.child("listUserProyecto").push().set(auxiliar.toJson());
 
     //Almacenar usuario en listProyectoAuxiliar

@@ -21,6 +21,7 @@ class ProjectDetailScreen extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
     final height = MediaQuery.of(context).size.height;
     final primaryColor = Theme.of(context).primaryColor;
+    //final List<Usuario> colaboradores = ;
     return Scaffold(
       backgroundColor: const Color(0xffF6F9FF),
       resizeToAvoidBottomInset: false,
@@ -86,7 +87,7 @@ class ProjectDetailScreen extends StatelessWidget {
                           width: 120,
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(30),
-                              color: Colors.yellow),
+                              color: const Color.fromARGB(255, 255, 235, 59)),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -199,8 +200,9 @@ class ProjectDetailScreen extends StatelessWidget {
               height: 130,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: 10,
+                itemCount: project.listUserProyecto?.length ?? 0,
                 itemBuilder: (context, index) {
+                   //project.listUserProyecto
                 return Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: Container(
@@ -220,11 +222,11 @@ class ProjectDetailScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        Padding(
+                         Padding(
                           padding: const EdgeInsets.only(bottom: 8.0),
                           child: Align(
                             alignment: Alignment.topLeft,
-                            child: Text('Lider de Backend',style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
+                            child: Text(project.listUserProyecto![index].rol,style:const  TextStyle(fontSize: 16, fontWeight: FontWeight.bold),)),
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,9 +240,10 @@ class ProjectDetailScreen extends StatelessWidget {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  'Hugo Grados Changanaqui',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                 Text(
+                                  project.listUserProyecto![index].nombre,
+                                  style: const  TextStyle(fontWeight: FontWeight.bold, overflow: TextOverflow.clip),
+                                  overflow: TextOverflow.visible,
                                 ),
                                 const SizedBox(height: 5),
                                 Row(
@@ -267,6 +270,16 @@ class ProjectDetailScreen extends StatelessWidget {
                     ),
                   ),
                 );}
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical:10.0),
+              child: Center(
+                child: MaterialButton(
+                  color: primaryColor,
+                  onPressed: (){
+              
+                },child: Text('Unirme al proyecto como Auxiliar', style: TextStyle(color: Colors.white),),),
               ),
             ),
                 const Padding(
@@ -332,7 +345,7 @@ class ProjectDetailScreen extends StatelessWidget {
                     blurRadius: 20.0,
                   )
                 ],
-                color: Colors.white,
+                color: Color.fromARGB(255, 218, 216, 216),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -346,60 +359,104 @@ class ProjectDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   SizedBox(
-                    height: 60,
+                    height: 200,
+                    width: double.infinity,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       itemBuilder: (context, index) {
                         return Container(
-                          width: 150,
+                          width: 270,
+                          height: 200,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
-                            color: Colors.amber,
+                            color: Color.fromARGB(255, 243, 242, 242),
                           ),
-                          alignment: Alignment.center,
                           child: Stack(
                             children:  [
-                              
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-
-                                Container(
+                              Positioned(
+                                top:10,
+                                left: 5,
+                                child: Container(
                                   height:30,
-                                  width: double.infinity,
+
                                   decoration:const BoxDecoration(
-                                    borderRadius: BorderRadius.only(topLeft:  Radius.circular(20), topRight: Radius.circular(20)),
+                                    borderRadius: BorderRadius.all(Radius.circular(20)),
                                     color: Color.fromARGB(255, 102, 180, 106),
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left: 10.0,top:5 ),
-                                    child: Text('2023-06-06'),
+                                    padding: const EdgeInsets.only(left:8.0,right: 8.0),
+                                    child: Center(child: Text('UX/UI',style: TextStyle(color: Colors.white),)),
                                   ),
                                   ),
-                                  SizedBox(height: 30,child: Padding(
-                                    padding: const EdgeInsets.only(left:10.0, top:5),
-                                    child: Text('2023-07-01'),
-                                  ),),
-                              ],
-                            ), 
+                              ),
                               Positioned(
-                                right: 5,
-                                top: 5,
-                                child: Container(height: 50, width: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle, 
+                                right: 15,
+                                top: 10,
+                                child: const Row(children: [
+                                  Icon(Icons.calendar_month_rounded,size: 15,),
+                                  Text('07/07/2023')
+                                ],),
+                              ),
+                              Positioned(
+                                top: 60,
+                                left: 15,
+                                child: Row(
+                                  children: [
+                                    SizedBox(width: 180,height: 70,child: Text('Titulo de la meta  ', maxLines: 3,overflow: TextOverflow.ellipsis),),
+                                    Stack(
+                                      children: [
+                                        Container(height: 60, width: 60,
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(255, 218, 216, 216),
+                                          shape: BoxShape.circle, 
+                                        ),
+                                        child: CircularProgressIndicator(
+                                          value: 0.7,
+                                          color: Theme.of(context).primaryColor,
+                                          strokeWidth: 6,
+                                        ),
+                                        ),
+                                        Positioned(
+                                          top:4,
+                                          left: 4,
+                                          child: Container(height: 52, width: 52,
+                                          decoration: BoxDecoration(
+                                            color: Color.fromARGB(255, 255, 255, 255),
+                                            shape: BoxShape.circle, 
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text('70',style: TextStyle(fontSize: 20),),
+                                              Text('%',style: TextStyle(fontSize: 10),),
+                                            ],
+                                          ),
+                                          ),
+                                        ),
+                                   
+                                      ],
+                                    ),
+                                  ],
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: CircularProgressIndicator(
-                                    value: 0.7,
-                                    color: Theme.of(context).primaryColor,
+                              ),
+                                   Positioned(
+                                right: 15,
+                                bottom: 10,
+                                child: Container(
+                                   decoration:const BoxDecoration(
+                                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                                    color: Color.fromARGB(255, 255, 235, 59),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(3.0),
+                                    child: const Row(children: [
+                                      Icon(Icons.calendar_today,size: 15,),
+                                      Text('07/07/2023')
+                                    ],),
                                   ),
                                 ),
-                                ),
-                              ) 
+                              ),
                             ]
                           )
                         );
