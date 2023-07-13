@@ -1,4 +1,6 @@
 import 'package:TaskFlow/presentation/dialog/new_project_dialog.dart';
+import 'package:TaskFlow/presentation/screens/list_goal_screen.dart';
+import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,9 +16,14 @@ class ListProjectScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mis proyectos'),
-        leading: IconButton(onPressed: (){
-          Navigator.pop(context);
-        }, icon:const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white,)),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            )),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -37,15 +44,53 @@ class ListProjectScreen extends ConsumerWidget {
           )
         ],
       ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: NavBar(
+        primaryColor: Theme.of(context).primaryColor,
+        width: size.width,
+      ),
       body: SingleChildScrollView(
         child: Column(children: [
           const SizedBox(height: 20),
-          Container(height: 40, width: size.width*0.6,
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 103, 159, 228),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Center(
+                      child: Text(
+                    'Soy Lider',
+                    style: TextStyle(color: Colors.white),
+                  )),
+                ),
+              ),
+              SizedBox(
+                width: 40,
+              ),
+              Container(
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Center(
+                      child: Text(
+                    'Soy Auxiliar',
+                    style: TextStyle(color: Colors.white),
+                  )),
+                ),
+              ),
+            ],
           ),
-          child:const Center(child: Text('10',style: TextStyle(color: Colors.white),)),),
           const SizedBox(height: 20),
           SizedBox(
             height: size.height * 0.7,
@@ -96,7 +141,16 @@ class ListProjectScreen extends ConsumerWidget {
                           MaterialButton(
                               color: Theme.of(context).primaryColor,
                               onPressed: () {
-                                Navigator.pushNamed(context, 'ListGoals');
+                                print('ID Project ${listaProject[index].id }');
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ListGoalScreen(
+                                          projectID:
+                                              listaProject[index].id ?? 'null'),
+                                    ));
+
+                                // Navigator.pushNamed(context, 'ListGoals');
                               },
                               child: const Text(
                                 'ir a  Metas',
@@ -105,7 +159,7 @@ class ListProjectScreen extends ConsumerWidget {
                           MaterialButton(
                             color: Theme.of(context).primaryColor,
                             onPressed: () {},
-                            child: const Text('ir a  Tareas',
+                            child: const Text('Configuraciones',
                                 style: TextStyle(color: Colors.white)),
                           ),
                         ],

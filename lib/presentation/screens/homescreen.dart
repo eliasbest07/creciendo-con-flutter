@@ -56,10 +56,10 @@ class HomeScreen extends ConsumerWidget {
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
           title: const Text('TaskFlow',
               style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold)),
           actions: <Widget>[
@@ -204,7 +204,7 @@ class HomeScreen extends ConsumerWidget {
                               child: SizedBox(
                                 height: 200,
                                 width: 160,
-                                child: FutureBuilder(
+                                child:  listaProject[index].icon == 'vacio' ? const Icon(Icons.account_balance_rounded) : FutureBuilder(
                                   future: cacheManager.getSingleFile(
                                     listaProject[index].icon,
                                   ),

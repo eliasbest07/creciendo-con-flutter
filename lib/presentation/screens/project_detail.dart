@@ -278,7 +278,7 @@ class ProjectDetailScreen extends StatelessWidget {
                 child: MaterialButton(
                   color: primaryColor,
                   onPressed: (){
-              
+                     
                 },child: Text('Unirme al proyecto como Auxiliar', style: TextStyle(color: Colors.white),),),
               ),
             ),

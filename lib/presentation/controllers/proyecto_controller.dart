@@ -12,8 +12,9 @@ class ProyectoProvider extends StateNotifier<List<Proyecto>> {
 
   TextEditingController inputName = TextEditingController();
   void init() {
-    state = List<Proyecto>.empty();
-    cargarProyectos();
+    //state = List<Proyecto>.empty();
+    state = [Proyecto(icon: 'vacio', nombre: 'prueba',id: 'test01')];
+    //cargarProyectos();
     //Cargar los elementos de la lista desde el Backend
     //Firebase.obtenerTodoLosProjectosDelUsuario(IDusuario)
   }
