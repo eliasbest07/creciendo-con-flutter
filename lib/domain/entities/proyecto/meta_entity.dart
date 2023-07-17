@@ -3,9 +3,11 @@ import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
 
 class Meta {
   String? id;
+  String proyectoID = '';
   String nombre;
   double? porcentaje;
   String item;
+  List<String> campos = [];
   DateTime? fechaCreada;
   DateTime fechaEstablecida;
   List<Tarea>? listTarea = [];
@@ -15,6 +17,7 @@ class Meta {
       {this.id,
       required this.nombre,
       this.porcentaje,
+      this.proyectoID = '',
       required this.item,
       this.fechaCreada,
       required this.fechaEstablecida,
@@ -26,6 +29,7 @@ class Meta {
       'id': id,
       'nombre': nombre,
       'porcentaje': porcentaje,
+      'proyectoID': proyectoID,
       'item': item,
       'fechaCreada': fechaCreada?.toIso8601String(),
       'fechaEstablecida': fechaEstablecida.toIso8601String(),
@@ -42,6 +46,7 @@ class Meta {
           ? double.parse(json['porcentaje'].toString())
           : null,
       item: json['item'],
+      proyectoID: json['proyectoID'],
       fechaCreada: json['fechaCreada'] != null
           ? DateTime.parse(json['fechaCreada'])
           : null,

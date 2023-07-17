@@ -11,6 +11,8 @@ import 'presentation/screens/screens.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  //Esto es para Riverpod
   runApp(const ProviderScope(child: MyApp()));
 } // para usar Riverpod
 
@@ -23,7 +25,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     //final LocalStorage localStorage = LocalStorage();
     // //final FirebaseAuth auth = FirebaseAuth.instance;
     // return FutureBuilder<bool>(
@@ -47,17 +48,19 @@ class MyApp extends StatelessWidget {
           : 'home', // inicial rutas y screens.dart
       routes: {
         'home': (_) => const HomeScreen(),
-        'ListProject':  (_) => const ListProjectScreen(),
-        'ListGoals':  (_) => const ListGoalScreen(),
-        'ListTasks': (_) => const  ListTaskScreen(),
-        'newGoal': (_) => const  NewGoalScreen(),
-        'newTask': (_) => const  NewTaskScreen(),
+        'ListProject': (_) => const ListProjectScreen(),
+        //  'ListGoals':  (_) => const ListGoalScreen(),
+        'ListTasks': (_) => const ListTaskScreen(),
+        // 'newGoal': (_) => const  NewGoalScreen(),
+        'newTask': (_) => const NewTaskScreen(),
         'login': (_) => const SplashPage()
       },
-      theme: ThemeData(primaryColor: const Color.fromARGB(255, 10, 53, 103),
+      theme: ThemeData(
+          primaryColor: const Color.fromARGB(255, 10, 53, 103),
           colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: const Color.fromARGB(255, 10, 53, 103),
-          ), fontFamily: 'Accolade' ),
+                primary: const Color.fromARGB(255, 10, 53, 103),
+              ),
+          fontFamily: 'Accolade'),
     );
   }
 }

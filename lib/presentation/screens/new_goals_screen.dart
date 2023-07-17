@@ -1,11 +1,18 @@
+import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class NewGoalScreen extends StatelessWidget {
+import '../../providers/riverpod_provider.dart';
 
-  const NewGoalScreen({Key? key}) : super(key: key);
-  
+class NewGoalScreen extends ConsumerWidget {
+  const NewGoalScreen({Key? key, required this.projectID}) : super(key: key);
+  final String projectID;
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final controllerMeta = ref.watch(listaMetasMyProyecto.notifier);
+    final mapMeta = ref.watch(listaMetasMyProyecto);
+    controllerMeta.addProyecto(projectID);
+    final listMeta = mapMeta[projectID];
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -52,8 +59,8 @@ Widget build(BuildContext context) {
                   borderRadius: BorderRadius.circular(11),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      width: 2, color:  Color(0xff455A64)),
+                  borderSide:
+                      const BorderSide(width: 2, color: Color(0xff455A64)),
                   borderRadius: BorderRadius.circular(11),
                 ),
                 filled: true,
@@ -84,6 +91,7 @@ Widget build(BuildContext context) {
                       //   activeFront = false;
                       //   activeBack = false;
                       // });
+                      controllerMeta.setType('UI');
                     },
                     child: Container(
                       height: 60,
@@ -91,7 +99,9 @@ Widget build(BuildContext context) {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color: true ? Colors.blue : Colors.transparent,
+                          color: listMeta?.last.item == 'UI'
+                              ? Colors.blue
+                              : Colors.transparent,
                           width: 2,
                         ),
                       ),
@@ -104,6 +114,7 @@ Widget build(BuildContext context) {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
+                      controllerMeta.setType('FRONT');
                       // setState(() {
                       //   activeUI = false;
                       //   activeFront = !activeFront;
@@ -116,7 +127,9 @@ Widget build(BuildContext context) {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color: true ? Colors.blue : Colors.transparent,
+                          color: listMeta?.last.item == 'FRONT'
+                              ? Colors.blue
+                              : Colors.transparent,
                           width: 2,
                         ),
                       ),
@@ -129,11 +142,7 @@ Widget build(BuildContext context) {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      // setState(() {
-                      //   activeUI = false;
-                      //   activeFront = false;
-                      //   activeBack = !activeBack;
-                      // });
+                      controllerMeta.setType('BACK');
                     },
                     child: Container(
                       height: 60,
@@ -141,7 +150,9 @@ Widget build(BuildContext context) {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color: true ? Colors.blue : Colors.transparent,
+                          color: listMeta?.last.item  == 'BACK'
+                              ? Colors.blue
+                              : Colors.transparent,
                           width: 2,
                         ),
                       ),
@@ -162,6 +173,20 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100));
+                if (pickedDate != null) {
+                  // String formattedDate=DateFormat("dd/MM/yyyy").format(pickedDate);
+                  // setState(() {
+                  //   _fechaInicioController.text=formattedDate.toString();
+                  // });
+                } //when click we have to show the datepicker
+              },
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide:
@@ -177,8 +202,8 @@ Widget build(BuildContext context) {
                   borderRadius: BorderRadius.circular(11),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      width: 2, color:  Color(0xff455A64)),
+                  borderSide:
+                      const BorderSide(width: 2, color: Color(0xff455A64)),
                   borderRadius: BorderRadius.circular(11),
                 ),
                 filled: true,
@@ -198,6 +223,20 @@ Widget build(BuildContext context) {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
+              readOnly: true,
+              onTap: () async {
+                DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100));
+                if (pickedDate != null) {
+                  // String formattedDate=DateFormat("dd/MM/yyyy").format(pickedDate);
+                  // setState(() {
+                  //   _fechaInicioController.text=formattedDate.toString();
+                  // });
+                } //when click we have to show the datepicker
+              },
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide:
@@ -213,8 +252,8 @@ Widget build(BuildContext context) {
                   borderRadius: BorderRadius.circular(11),
                 ),
                 border: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      width: 2, color:  Color(0xff455A64)),
+                  borderSide:
+                      const BorderSide(width: 2, color: Color(0xff455A64)),
                   borderRadius: BorderRadius.circular(11),
                 ),
                 filled: true,
@@ -235,27 +274,37 @@ Widget build(BuildContext context) {
             const SizedBox(height: 7.0),
             SizedBox(
               height: 60,
-              child: Container(
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: const Color.fromARGB(255, 65, 170, 255),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.add,
-                      color: Colors.white,
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ListTaskScreen(), // metaID: metaID
                     ),
-                    SizedBox(width: 5),
-                    Text(
-                      'AGREGAR',
-                      style: TextStyle(
+                  );
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromARGB(255, 65, 170, 255),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add,
                         color: Colors.white,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: 5),
+                      Text(
+                        'AGREGAR',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -309,7 +358,7 @@ Widget build(BuildContext context) {
                               padding: const EdgeInsets.all(8),
                               decoration: const BoxDecoration(
                                 // borderRadius: borderRadius,
-                                color:  Color.fromARGB(255, 65, 170, 255),
+                                color: Color.fromARGB(255, 65, 170, 255),
                               ),
                               child: const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -332,7 +381,7 @@ Widget build(BuildContext context) {
                           return GestureDetector(
                             onLongPress: () {
                               // setState(() {
-                                // comentarios.removeAt(index - 1);
+                              // comentarios.removeAt(index - 1);
                               // });
                               // print(comentarios.length);
                             },
@@ -341,7 +390,7 @@ Widget build(BuildContext context) {
                               padding: const EdgeInsets.all(10),
                               decoration: const BoxDecoration(
                                 // borderRadius: borderRadius,
-                                color:  Color(0xfff0f0f0),
+                                color: Color(0xfff0f0f0),
                               ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

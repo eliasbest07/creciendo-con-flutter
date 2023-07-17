@@ -157,6 +157,7 @@ class NewTaskScreen extends StatelessWidget {
                           firstDate: DateTime(2000), 
                           lastDate: DateTime(2100)); 
                         if(pickedDate!=null){
+                          
                           // String formattedDate=DateFormat("dd/MM/yyyy").format(pickedDate);
                           // setState(() {
                           //   _fechaInicioController.text=formattedDate.toString();

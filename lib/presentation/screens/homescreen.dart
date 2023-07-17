@@ -7,8 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../infrastructure/services/local_storage/local_storage.dart';
 
-
-
 import '../../infrastructure/services/usuario_service.dart';
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
@@ -22,7 +20,6 @@ class HomeScreen extends ConsumerWidget {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
-
     final LoginController controller = ref.watch(loginController.notifier);
     final listaProject = ref.watch(listaProyectos);
 
@@ -35,31 +32,30 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
 
+    final primaryColor = Theme.of(context).primaryColor;
 
-    final primaryColor=Theme.of(context).primaryColor;
-    
-
-  LocalStorage().getEstatus().then((value) {
-    if(value == 'vacio'){
-      UsuarioService().obtenerUsuario().then((value) {
-        LocalStorage().setEstatus(value.rol).then((_) {
-          ref.read(showEstatus.notifier).state=value.rol;
+    LocalStorage().getNombre().then((value) {
+      if (value == 'vacio') {
+        UsuarioService().obtenerUsuario().then((value) {
+          LocalStorage().setEstatus(value.rol).then((_) {
+            ref.read(showEstatus.notifier).state = value.rol;
+            ref.read(showNombre.notifier).state = value.nombre;
+          });
         });
-      });
-    }else{
-      ref.read(showEstatus.notifier).state=value;
-    }
-  });
-
+      } else {
+        ref.read(showEstatus.notifier).state = value;
+        ref.read(showNombre.notifier).state = value;
+      }
+    });
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
+          backgroundColor: Theme.of(context).primaryColor,
           title: const Text('TaskFlow',
               style: TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold)),
           actions: <Widget>[
@@ -204,29 +200,31 @@ class HomeScreen extends ConsumerWidget {
                               child: SizedBox(
                                 height: 200,
                                 width: 160,
-                                child: FutureBuilder(
-                                  future: cacheManager.getSingleFile(
-                                    listaProject[index].icon,
-                                  ),
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<File> snapshot) {
-                                    if (snapshot.hasError) {
-                                      return const Center(
-                                        child:
-                                            Text('No se pudo cargar la imagen'),
-                                      );
-                                    }
-                                    if (!snapshot.hasData) {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          color: primaryColor,
+                                child: listaProject[index].icon == 'vacio'
+                                    ? const Icon(Icons.account_balance_rounded)
+                                    : FutureBuilder(
+                                        future: cacheManager.getSingleFile(
+                                          listaProject[index].icon,
                                         ),
-                                      );
-                                    }
-                                    final imageFile = snapshot.data!;
-                                    return Image.file(imageFile);
-                                  },
-                                ),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<File> snapshot) {
+                                          if (snapshot.hasError) {
+                                            return const Center(
+                                              child: Text(
+                                                  'No se pudo cargar la imagen'),
+                                            );
+                                          }
+                                          if (!snapshot.hasData) {
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                color: primaryColor,
+                                              ),
+                                            );
+                                          }
+                                          final imageFile = snapshot.data!;
+                                          return Image.file(imageFile);
+                                        },
+                                      ),
                               ))),
                     ),
                   );

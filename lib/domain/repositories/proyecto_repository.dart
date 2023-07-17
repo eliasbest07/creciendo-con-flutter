@@ -21,7 +21,8 @@ abstract class ProyectoRepository {
   Future<Meta?> buscarMeta(String proyectoId, String metaId);
   Future<Tarea?> buscarTarea(String proyectoId, String metaId, String tareaId);
 
-  Future<bool> ingresarComoAuxiliar(String projectId, String userId);
+  Future<bool> ingresarComoAuxiliar(
+      String projectId, String userId, String nombre);
   Future<bool> verificarUsuarioEnProyecto(String proyectoId, String userId);
   /* Nota : Solo usar estos roles : Lider, Lider_Backend, Lider_UI, Lider_Code, Sublider_Backend,
   Sublider_UI, Sublider_Code, Auxiliar */
