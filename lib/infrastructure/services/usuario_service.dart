@@ -1,3 +1,4 @@
+import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/domain/repositories/usuario_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -46,7 +47,7 @@ class UsuarioService implements UsuarioRepository {
     }
   }
 
-    Future<Usuario> obtenerUsuario() async {
+  Future<Usuario> obtenerUsuario() async {
     try {
       final DatabaseReference usuarioRef =
           db.ref().child("users").child(auth.currentUser!.uid);
@@ -60,22 +61,37 @@ class UsuarioService implements UsuarioRepository {
   }
 
 //obtiene lista de todos los usuarios, por ejemlo: auxiliares
-Stream<List<Usuario>> obtenerUsuarios() {
-  final DatabaseReference usuariosRef = db.ref().child("users");
+  Stream<List<Usuario>> obtenerUsuarios() {
+    final DatabaseReference usuariosRef = db.ref().child("users");
 
-  return usuariosRef.onValue.asyncExpand((event) async* {
-    final data = event.snapshot.value as Map<dynamic, dynamic>;
+    return usuariosRef.onValue.asyncExpand((event) async* {
+      final data = event.snapshot.value as Map<dynamic, dynamic>;
 
-    List<Usuario> usuarios = [];
-    data.forEach((key, value) {
-      usuarios.add(Usuario.fromJson(value));
+      List<Usuario> usuarios = [];
+      data.forEach((key, value) {
+        usuarios.add(Usuario.fromJson(value));
+      });
+
+      yield usuarios;
     });
+  }
 
-    yield usuarios;
-  });
-}
+  //Obtener usuarios del proyecto con ID
+  Stream<List<UsuariosProyecto>> obtenerUsuariosProyecto(String id) {
+    final DatabaseReference usuariosRef =
+        db.ref().child("proyecto").child(id).child('listUserProyecto');
 
-  
+    return usuariosRef.onValue.asyncExpand((event) async* {
+      final data = event.snapshot.value as Map<dynamic, dynamic>;
+
+      List<UsuariosProyecto> usuarios = [];
+      data.forEach((key, value) {
+        usuarios.add(UsuariosProyecto.fromJson(value));
+      });
+
+      yield usuarios;
+    });
+  }
 
   @override
   Stream<int> obtenerPuntos() async* {

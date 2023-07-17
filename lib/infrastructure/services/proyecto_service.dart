@@ -36,8 +36,8 @@ class ProyectoService implements ProyectoRepository {
         await _actualizarIDsComentariosProyecto(proyectoRef, proyecto);
         await _actualizarIDsMetasProyecto(proyectoRef, proyecto);
 
-        final UsuariosProyecto userPy =
-            UsuariosProyecto(usuarioId: userId, rol: "Lider",nombre: userId);
+        final UsuariosProyecto userPy = UsuariosProyecto(
+            usuarioId: userId, rol: "Lider", nombre: userId, avatar: '');
         final ProyectoLider pyLider =
             ProyectoLider(proyectoLiderId: proyectoId);
 
@@ -433,7 +433,8 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<bool> ingresarComoAuxiliar(String projectId, String userId) async {
+  Future<bool> ingresarComoAuxiliar(
+      String projectId, String userId, String nombre) async {
     try {
       DatabaseReference proyectoRef =
           db.ref().child("proyecto").child(projectId);
@@ -441,7 +442,7 @@ class ProyectoService implements ProyectoRepository {
       await _verificarProyectoExiste(proyectoRef);
       await _verificarUsuarioProyecto(proyectoRef, userId);
 
-      await _agregarUsuarioAuxiliar(userId, proyectoRef);
+      await _agregarUsuarioAuxiliar(userId, proyectoRef, nombre);
       return true;
     } catch (e) {
       print(e.toString());
@@ -480,18 +481,23 @@ class ProyectoService implements ProyectoRepository {
   }
 
   Future<void> _agregarUsuarioAuxiliar(
-      String userId, DatabaseReference proyectoRef) async {
+      String userId, DatabaseReference proyectoRef, String nombre) async {
     //Obtener proyectoId
     String proyectoId = proyectoRef.key!;
     //Almacenar usuario en listUserProyecto
-    UsuariosProyecto auxiliar =
-        UsuariosProyecto(usuarioId: userId, rol: "Auxiliar", nombre: '');
+    UsuariosProyecto auxiliar = UsuariosProyecto(
+        usuarioId: userId,
+        rol: "Auxiliar",
+        nombre: nombre,
+        avatar:
+            'https://img.freepik.com/psd-premium/avatar-dibujos-animados-3d-hombre-barbudo_1020-5121.jpg');
     await proyectoRef.child("listUserProyecto").push().set(auxiliar.toJson());
 
     //Almacenar usuario en listProyectoAuxiliar
     ProyectoAuxliliar pyAux = ProyectoAuxliliar(proyectoAuxiliarId: proyectoId);
     final DatabaseReference usuarioRef =
         db.ref().child("users").child(userId).child("listProyectoAuxiliar");
+
     await usuarioRef.push().set(pyAux.toJson());
   }
 
