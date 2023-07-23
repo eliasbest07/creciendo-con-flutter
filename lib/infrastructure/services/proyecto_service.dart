@@ -9,7 +9,6 @@ import 'package:TaskFlow/domain/repositories/proyecto_repository.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import '../../domain/entities/proyecto/comentario_entity.dart';
 import '../../domain/entities/usuario/usuario_entity.dart';
 
@@ -22,6 +21,7 @@ class ProyectoService implements ProyectoRepository {
     try {
       final FirebaseAuth auth = FirebaseAuth.instance;
       final String userId = auth.currentUser!.uid;
+      // ignore: unused_local_variable
       bool puntos = false;
       Usuario usuario = await obtenerUsuarioActual(userId);
 
@@ -291,6 +291,21 @@ class ProyectoService implements ProyectoRepository {
     return null;
   }
 
+    @override
+  Future<List<Meta>> obtenerMetas(String proyectoId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseEvent databaseEvent =
+          await proyectoRef.child("listMeta").once();
+
+      return _procesarTodasMetaSnapshot(databaseEvent.snapshot);
+    } catch (e) {
+      print(e.toString());
+    }
+    return [];
+  }
+
   @override
   Future<Tarea?> buscarTarea(
       String proyectoId, String metaId, String tareaId) async {
@@ -383,6 +398,26 @@ class ProyectoService implements ProyectoRepository {
       return null;
     } catch (e) {
       throw MetaSearchFailed("Error al buscar meta: $e");
+    }
+  }
+
+    List<Meta> _procesarTodasMetaSnapshot(DataSnapshot metaSnapshot) {
+      List<Meta> responmetas = [];
+    try {
+      if (metaSnapshot.value != null) {
+          Map<dynamic, dynamic>? proyectosData =
+          metaSnapshot.value as Map<dynamic, dynamic>?;
+          
+          
+        proyectosData?.forEach((proyectoId, proyectoData) {
+          Meta? proyecto = Meta.fromJson(proyectoData);
+          //proyecto.id = proyectoId;
+          responmetas.add(proyecto);
+        });
+      }
+      return responmetas;
+    } catch (e) {
+      throw GetAllProyectsFailed("Error al cargar proyectos: $e");
     }
   }
 
