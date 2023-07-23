@@ -9,7 +9,7 @@ class Meta {
   String item;
   List<String> campos = [];
   DateTime? fechaCreada;
-  DateTime fechaEstablecida;
+  DateTime? fechaEstablecida;
   List<Tarea>? listTarea = [];
   List<Comentario>? listComentarioMeta = [];
 
@@ -32,7 +32,7 @@ class Meta {
       'proyectoID': proyectoID,
       'item': item,
       'fechaCreada': fechaCreada?.toIso8601String(),
-      'fechaEstablecida': fechaEstablecida.toIso8601String(),
+      'fechaEstablecida': fechaEstablecida?.toIso8601String(),
       'listTarea': listTarea?.map((tarea) => tarea.toJson()).toList(),
       'listComentarioMeta':
           listComentarioMeta?.map((comentario) => comentario.toJson()).toList(),

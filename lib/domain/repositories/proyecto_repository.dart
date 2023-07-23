@@ -19,6 +19,7 @@ abstract class ProyectoRepository {
 
   Future<Proyecto?> buscarProyecto(String proyectoId);
   Future<Meta?> buscarMeta(String proyectoId, String metaId);
+  Future<List<Meta?>> obtenerMetas(String proyectoId);
   Future<Tarea?> buscarTarea(String proyectoId, String metaId, String tareaId);
 
   Future<bool> ingresarComoAuxiliar(

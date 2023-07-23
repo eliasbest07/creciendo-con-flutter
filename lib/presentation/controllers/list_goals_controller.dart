@@ -5,6 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 class MetasController extends StateNotifier<Map<String, List<Meta>>> {
   // Lista de metas del id del proyecto
   TextEditingController nameGoal = TextEditingController();
+  TextEditingController fechaCreadaController = TextEditingController();
+  TextEditingController fechaEstimadaController = TextEditingController();
+  DateTime? fechaCreada;
+  DateTime? fechaEstablecida;
   String type = '';
   String proyectoActual = '';
 
@@ -25,9 +29,8 @@ class MetasController extends StateNotifier<Map<String, List<Meta>>> {
         Meta(nombre: '', item: 'item', fechaEstablecida: DateTime.timestamp());
     porDefinir.item = typeIn;
     type = typeIn;
-     state = {
+    state = {
       proyectoActual: [porDefinir]
-      };
-    
+    };
   }
 }

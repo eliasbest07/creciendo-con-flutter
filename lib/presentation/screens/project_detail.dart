@@ -1,7 +1,7 @@
 import 'dart:io';
-
 import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
-import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
+//import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
+import 'package:TaskFlow/infrastructure/services/acortadores_string.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../domain/entities/proyecto/proyecto_entity.dart';
 import '../widgets/widgets.dart';
@@ -31,7 +32,13 @@ class ProjectDetailScreen extends ConsumerWidget {
 
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String userId = auth.currentUser!.uid;
+
+    final size = MediaQuery.of(context).size;
     //final List<Usuario> colaboradores = ;
+
+    //instancia del servicio: clase acortador de palabras
+    Acortador acortador = Acortador();
+
     return Scaffold(
       backgroundColor: const Color(0xffF6F9FF),
       resizeToAvoidBottomInset: false,
@@ -210,7 +217,7 @@ class ProjectDetailScreen extends ConsumerWidget {
               ),
             ),
             SizedBox(
-              height: 130,
+              height: size.height*0.15,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: project.listUserProyecto?.length ?? 0,
@@ -218,9 +225,9 @@ class ProjectDetailScreen extends ConsumerWidget {
                     //project.listUserProyecto
                     return Padding(
                       padding:
-                          const EdgeInsets.only(left: 15, right: 15, top: 15),
+                          const EdgeInsets.only(left: 5, right: 5, top: 5),
                       child: Container(
-                        width: 300,
+                        width: size.width*0.80,
                         height: 130,
                         padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
@@ -259,12 +266,15 @@ class ProjectDetailScreen extends ConsumerWidget {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      project.listUserProyecto![index].nombre,
-                                      style: const TextStyle(
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        project.listUserProyecto![index].nombre,
+                                        style: const TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          overflow: TextOverflow.clip),
-                                      overflow: TextOverflow.visible,
+                                        ),
+                                        overflow: TextOverflow.fade,
+                                      ),
                                     ),
                                     const SizedBox(height: 5),
                                     Row(
@@ -308,8 +318,8 @@ class ProjectDetailScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
               child: SizedBox(
-                height: 100,
-                width: double.infinity,
+                height: size.height*0.10,
+                width: size.width,
                 child: StreamBuilder<List<UsuariosProyecto>>(
                   stream: UsuarioService().obtenerUsuariosProyecto(project.id!),
                   builder: (context, snapshot) {
@@ -329,14 +339,12 @@ class ProjectDetailScreen extends ConsumerWidget {
                                   radius: 25,
                                   backgroundImage: NetworkImage(usuario.avatar),
                                 ),
-                                SizedBox(
-                                  height: 30,
-                                  width: 60,
-                                  child: Text(
-                                    usuario.nombre,
+                                Text(
+                                    acortador.getFirstWord(usuario.nombre),                                    
                                     textAlign: TextAlign.center,
+                                    style: TextStyle(fontSize: 10),
                                   ),
-                                ),
+                                
                               ],
                             ),
                           );
@@ -352,7 +360,7 @@ class ProjectDetailScreen extends ConsumerWidget {
               ),
             ),
             Container(
-              width: double.infinity,
+              width: size.width,
               margin: const EdgeInsets.only(top: 15),
               decoration: const BoxDecoration(
                 borderRadius: BorderRadius.only(
@@ -569,6 +577,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                                           ),
                                         );
                                       }
+                                      return const SizedBox();
                                     },
                                   ),
                                 )
@@ -693,6 +702,8 @@ class _BotonUnirseState extends State<BotonUnirse> {
           child: MaterialButton(
             color: widget.primaryColor,
             onPressed: () {
+
+              try{
               ProyectoService().ingresarComoAuxiliar(
                   widget.project.id!, widget.userId, widget.nombre);
 
@@ -704,6 +715,19 @@ class _BotonUnirseState extends State<BotonUnirse> {
                   avatar: '',
                 ),
               );
+                Fluttertoast.showToast(
+                  msg: "Te has unido con éxito", // message
+                  toastLength: Toast.LENGTH_SHORT, // length
+                  gravity: ToastGravity.BOTTOM, // location
+                );
+              }catch(error){
+                Fluttertoast.showToast(
+                  msg: "Error al unirse", // message
+                  toastLength: Toast.LENGTH_SHORT, // length
+                  gravity: ToastGravity.CENTER, // location
+                );
+              }
+
 
               setState(() {});
             },

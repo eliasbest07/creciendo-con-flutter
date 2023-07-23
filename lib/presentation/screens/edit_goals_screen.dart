@@ -1,34 +1,25 @@
-//import 'package:TaskFlow/domain/repositories/proyecto_repository.dart';
-import 'package:TaskFlow/infrastructure/services/acortadores_string.dart';
-import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../domain/entities/proyecto/meta_entity.dart';
 import '../../providers/riverpod_provider.dart';
 
-class NewGoalScreen extends ConsumerWidget {
-  const NewGoalScreen({Key? key, required this.projectID}) : super(key: key);
+class EditGoalScreen extends ConsumerWidget {
+  const EditGoalScreen( {Key? key, required this.projectID,required this.porEditar}) : super(key: key);
   final String projectID;
-
+  final Meta porEditar;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    print('porEditar: ${porEditar.nombre}');
     final controllerMeta = ref.watch(listaMetasMyProyecto.notifier);
     final mapMeta = ref.watch(listaMetasMyProyecto);
     controllerMeta.addProyecto(projectID);
-    if (mapMeta[projectID] == null) {
-      mapMeta[projectID] != [];
-    }
     final listMeta = mapMeta[projectID];
-
-    ProyectoService proyecto = ProyectoService();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'NUEVA META',
+          'EDITAR META',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w800,
@@ -37,47 +28,7 @@ class NewGoalScreen extends ConsumerWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () {
-              //saving goal object
-              // validar que ingreso un nombre
-              // validar que selecion un tipo controllerMeta.type
-              // validar que selecion una fecha de comienzo
-              // validar que selecion una fecha de fin
-
-              bool camposCompletos = false;
-
-              if (controllerMeta.nameGoal.text.isEmpty ||
-                  controllerMeta.type == '' ||
-                  controllerMeta.fechaCreada == null ||
-                  controllerMeta.fechaEstablecida == null) {
-                camposCompletos = false;
-                Fluttertoast.showToast(
-                  msg: "Debes llenar todos los campos", // message
-                  toastLength: Toast.LENGTH_SHORT, // length
-                  gravity: ToastGravity.BOTTOM, // location
-                );
-              } else {
-                Fluttertoast.showToast(
-                  msg: "Meta guardada con éxito", // message
-                  toastLength: Toast.LENGTH_SHORT, // length
-                  gravity: ToastGravity.BOTTOM, // location
-                );
-                Navigator.pop(context);
-                camposCompletos = true;
-              }
-
-              if (camposCompletos) {
-                Meta meta = Meta(
-                  nombre: controllerMeta.nameGoal.text,
-                  item: controllerMeta.type,
-                  proyectoID: projectID,
-                  fechaCreada: controllerMeta.fechaCreada,
-                  fechaEstablecida: controllerMeta.fechaEstablecida,
-                );
-                listMeta?.add(meta);
-                proyecto.guardarMeta(projectID, meta);
-              }
-            },
+            onPressed: () {},
             icon: const Icon(Icons.check),
           )
         ],
@@ -87,6 +38,7 @@ class NewGoalScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const Text('Lista de Tareas'),
             const Text(
               'Nombre:',
               style: TextStyle(
@@ -96,7 +48,6 @@ class NewGoalScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
-              controller: controllerMeta.nameGoal,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide:
@@ -226,7 +177,6 @@ class NewGoalScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
-              controller: controllerMeta.fechaCreadaController,
               readOnly: true,
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
@@ -239,10 +189,7 @@ class NewGoalScreen extends ConsumerWidget {
                   // setState(() {
                   //   _fechaInicioController.text=formattedDate.toString();
                   // });
-                  controllerMeta.fechaCreada = pickedDate;
-                  controllerMeta.fechaCreadaController.text =
-                      controllerMeta.fechaCreada.toString();
-                } //when click we have to show the datepickpickedDateer
+                } //when click we have to show the datepicker
               },
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
@@ -280,7 +227,6 @@ class NewGoalScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
-              controller: controllerMeta.fechaEstimadaController,
               readOnly: true,
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
@@ -289,14 +235,10 @@ class NewGoalScreen extends ConsumerWidget {
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100));
                 if (pickedDate != null) {
-                  Acortador acortarFecha = Acortador();
-                  controllerMeta.fechaEstablecida = pickedDate;
                   // String formattedDate=DateFormat("dd/MM/yyyy").format(pickedDate);
                   // setState(() {
                   //   _fechaInicioController.text=formattedDate.toString();
                   // });
-                  controllerMeta.fechaEstimadaController.text = acortarFecha
-                      .getFirstWord(controllerMeta.fechaEstablecida.toString());
                 } //when click we have to show the datepicker
               },
               decoration: InputDecoration(
@@ -370,108 +312,8 @@ class NewGoalScreen extends ConsumerWidget {
                 ),
               ),
             ),
-/*             const SizedBox(height: 15),
-            const Text(
-              'Lista de comentarios:',
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 16,
-              ),
-            ),
+            const SizedBox(height: 15),
             const SizedBox(height: 7.0),
-            SizedBox(
-              child: true
-                  ? Container(
-                      height: 60,
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: const Color.fromARGB(255, 65, 170, 255),
-                      ),
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                          SizedBox(width: 5),
-                          Text(
-                            'AGREGAR',
-                            style: TextStyle(
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  // ignore: dead_code
-                  : SizedBox(
-                      height: 80,
-                      child: ListView.separated(
-                        itemCount: 1,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return Container(
-                              height: 90,
-                              alignment: Alignment.center,
-                              padding: const EdgeInsets.all(8),
-                              decoration: const BoxDecoration(
-                                // borderRadius: borderRadius,
-                                color: Color.fromARGB(255, 65, 170, 255),
-                              ),
-                              child: const Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.white,
-                                  ),
-                                  SizedBox(width: 5),
-                                  Text(
-                                    'AGREGAR',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          }
-                          return GestureDetector(
-                            onLongPress: () {
-                              // setState(() {
-                              // comentarios.removeAt(index - 1);
-                              // });
-                              // print(comentarios.length);
-                            },
-                            child: Container(
-                              width: 170,
-                              padding: const EdgeInsets.all(10),
-                              decoration: const BoxDecoration(
-                                // borderRadius: borderRadius,
-                                color: Color(0xfff0f0f0),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Comentario $index :'),
-                                  const SizedBox(height: 5),
-                                  // Text(comentarios[index - 1], maxLines: 2),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (BuildContext context, int index) {
-                          return const SizedBox(width: 10);
-                        },
-                      ),
-                    ),
-            ),
-           */
           ],
         ),
       ),
