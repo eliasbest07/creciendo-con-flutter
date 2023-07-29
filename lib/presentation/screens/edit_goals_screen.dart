@@ -1,4 +1,5 @@
 import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
+import 'package:TaskFlow/presentation/screens/new_task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,16 +7,20 @@ import '../../domain/entities/proyecto/meta_entity.dart';
 import '../../providers/riverpod_provider.dart';
 
 class EditGoalScreen extends ConsumerWidget {
-  const EditGoalScreen( {Key? key, required this.projectID,required this.porEditar}) : super(key: key);
+  const EditGoalScreen(
+      {Key? key, required this.projectID, required this.porEditar})
+      : super(key: key);
   final String projectID;
   final Meta porEditar;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    print('porEditar: ${porEditar.nombre}');
-    final controllerMeta = ref.watch(listaMetasMyProyecto.notifier);
-    final mapMeta = ref.watch(listaMetasMyProyecto);
-    controllerMeta.addProyecto(projectID);
-    final listMeta = mapMeta[projectID];
+    //print('porEditar: ${porEditar.nombre}');
+
+    final controllerEdita = ref.watch(editGoal.notifier);
+    controllerEdita.nameGoal.text = porEditar.nombre;
+    controllerEdita.fechaCreadaController.text = porEditar.fechaCreada.toString();
+    controllerEdita.fechaEstimadaController.text = porEditar.fechaEstablecida.toString();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -48,6 +53,7 @@ class EditGoalScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
+              controller: controllerEdita.nameGoal,
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderSide:
@@ -95,7 +101,7 @@ class EditGoalScreen extends ConsumerWidget {
                       //   activeFront = false;
                       //   activeBack = false;
                       // });
-                      controllerMeta.setType('UI');
+                     // controllerMeta.setType('UI');
                     },
                     child: Container(
                       height: 60,
@@ -103,7 +109,7 @@ class EditGoalScreen extends ConsumerWidget {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color: listMeta?.last.item == 'UI'
+                          color:  true //listMeta?.last.item == 'UI'
                               ? Colors.blue
                               : Colors.transparent,
                           width: 2,
@@ -118,7 +124,7 @@ class EditGoalScreen extends ConsumerWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      controllerMeta.setType('FRONT');
+                     // controllerMeta.setType('FRONT');
                       // setState(() {
                       //   activeUI = false;
                       //   activeFront = !activeFront;
@@ -131,7 +137,7 @@ class EditGoalScreen extends ConsumerWidget {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color: listMeta?.last.item == 'FRONT'
+                          color: true //listMeta?.last.item == 'FRONT'
                               ? Colors.blue
                               : Colors.transparent,
                           width: 2,
@@ -146,7 +152,7 @@ class EditGoalScreen extends ConsumerWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                      controllerMeta.setType('BACK');
+                      //controllerMeta.setType('BACK');
                     },
                     child: Container(
                       height: 60,
@@ -154,7 +160,7 @@ class EditGoalScreen extends ConsumerWidget {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color: listMeta?.last.item == 'BACK'
+                          color: true //listMeta?.last.item == 'BACK'
                               ? Colors.blue
                               : Colors.transparent,
                           width: 2,
@@ -177,6 +183,7 @@ class EditGoalScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
+              controller: controllerEdita.fechaCreadaController,
               readOnly: true,
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
@@ -227,6 +234,7 @@ class EditGoalScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 7.0),
             TextFormField(
+              controller: controllerEdita.fechaEstimadaController,
               readOnly: true,
               onTap: () async {
                 DateTime? pickedDate = await showDatePicker(
@@ -283,7 +291,7 @@ class EditGoalScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ListTaskScreen(), // metaID: metaID
+                      builder: (context) => NewTaskScreen() // ListTaskScreen(), // metaID: metaID
                     ),
                   );
                 },

@@ -3,6 +3,7 @@ import 'package:TaskFlow/presentation/controllers/animation_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../presentation/controllers/auxiliar_proyecto_controller.dart';
+import '../presentation/controllers/edit_goal_controller.dart';
 import '../presentation/controllers/list_goals_controller.dart';
 import '../presentation/controllers/login_controller.dart';
 import '../presentation/controllers/proyecto_controller.dart';
@@ -35,3 +36,5 @@ final loginController =
 
 final animationController =
     StateNotifierProvider<AnimController, void>((ref) => AnimController(null));
+
+final editGoal =  StateNotifierProvider<EditGoalController, Meta>((ref) => EditGoalController());
