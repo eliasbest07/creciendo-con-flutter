@@ -1,11 +1,33 @@
+import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
+import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-class NewTaskScreen extends StatelessWidget {
-  const NewTaskScreen({Key? key}) : super(key: key);
+import '../../providers/riverpod_provider.dart';
+
+class NewTaskScreen extends ConsumerWidget {
+  const NewTaskScreen(
+      {Key? key, required this.proyectoId, required this.metaId, required this.name, required this.descripcion, required this.fechaInicio, required this.fechaEstablecida, required this.prioridad})
+      : super(key: key);
+  final String proyectoId;
+  final String metaId;
+  final String name;
+  final String descripcion;
+  final DateTime? fechaInicio;
+  final DateTime? fechaEstablecida;
+  final int prioridad;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final newTaskController = ref.watch(newTask.notifier);
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    final TextEditingController controllerNombre = TextEditingController();
+    final TextEditingController controllerDescription = TextEditingController();
+    final TextEditingController controllerPrioridad =
+        TextEditingController(); // por cambiar
+
+    ProyectoService proyecto = ProyectoService();
 
     return Scaffold(
         appBar: AppBar(
@@ -20,8 +42,18 @@ class NewTaskScreen extends StatelessWidget {
           actions: [
             IconButton(
               onPressed: () {
-                if(_formKey.currentState!.validate()){
+                if (_formKey.currentState!.validate()) {
                   print('true');
+                  crearTarea(
+                          _formKey,
+                          context,
+                          controllerNombre.text,
+                          controllerDescription.text,
+                          newTaskController.convertirFecha(
+                              newTaskController.controllerFechaInicio.text),
+                          newTaskController.convertirFecha(newTaskController
+                              .controllerFechaEstablecida.text),
+                          int.parse(controllerPrioridad.text));
                 }
               },
               icon: const Icon(Icons.check),
@@ -38,7 +70,7 @@ class NewTaskScreen extends StatelessWidget {
                 children: [
                   const SizedBox(height: 20.0),
                   TextFormField(
-                    controller: TextEditingController(), // _nombreController,
+                    controller: controllerNombre,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.task),
                       hintText: 'Ingrese un nombre.',
@@ -53,8 +85,7 @@ class NewTaskScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   TextFormField(
-                    controller:
-                        TextEditingController(), //_descripcionController,
+                    controller: controllerDescription,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.description),
                       hintText: 'Ingrese una descripción.',
@@ -67,101 +98,46 @@ class NewTaskScreen extends StatelessWidget {
                       return null;
                     },
                   ),
-                  //const SizedBox(height: 16.0),
-                  // TextFormField(
-                  //   controller: TextEditingController(),//_comentarioController,
-                  //   decoration: const InputDecoration(
-                  //     icon: Icon(Icons.comment),
-                  //     labelText: 'Comentarios',
-                  //     hintText: 'Ingrese comentarios.',
-                  //   ),
-                  //   validator: (value) {
-                  //     return null;
-                  //   },
-                  // ),
-                  //const SizedBox(height: 16.0),
-                  // TypeAheadField<String>(
-                  //   getImmediateSuggestions: false,
-                  //   textFieldConfiguration: const TextFieldConfiguration(
-                  //     decoration: InputDecoration(
-                  //         labelText: 'Usuario',
-                  //         icon: Icon(Icons.person),
-                  //         hintText: 'Seleccione un usuario.'),
-                  //   ),
-                  //   suggestionsCallback: (String pattern) async {
-                  //     return _usuarios
-                  //         .where((item) =>
-                  //             item.toLowerCase().startsWith(pattern.toLowerCase()))
-                  //         .toList();
-                  //   },
-                  //   itemBuilder: (context, String suggestion) {
-                  //     return ListTile(
-                  //       title: Text(suggestion),
-                  //     );
-                  //   },
-                  //   itemSeparatorBuilder: (context, index) {
-                  //     return Divider();
-                  //   },
-                  //   onSuggestionSelected: (String suggestion) {
-                  //     print("Suggestion selected");
-                  //   },
-                  // ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: newTaskController.controllerFechaInicio,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, ingrese una Fecha de Inicio';
+                      }
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                        icon: Icon(Icons.date_range), //icon of text field
+                        labelText: 'Fecha Inicio *',
+                        hintText: 'Seleccione una fecha' //label text of field
+                        ),
 
-                  /* TextFormField(
-                controller: _usuarioController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.person),
-                  labelText: 'Usuario',
-                  hintText: 'Ingrese un usuario.',
-                ),
-                validator: (value) {
-                  return null;
-                },
-              ), 
-              */
-                  /*InkWell(
-                onTap: _showDatePicker1,
-                child: InputDecorator(
-                  decoration: const InputDecoration(
-                    icon: Icon(Icons.date_range),
-                    labelText: 'Fecha creada  *',
-                    hintText: 'Ingrese una fecha.',
+                    readOnly: true, // when true user cannot edit text
+                    onTap: () async {
+                      DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100));
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormat("dd/MM/yyyy").format(pickedDate);
+                        newTaskController.controllerFechaInicio.text =
+                            formattedDate.toString();
+                        newTaskController.actualizarEstado(true); //setState
+                      }
+                    },
                   ),
-                  child: Text(
-                    _fechaCreadaSeleccionada != null
-                        ? "${_fechaCreadaSeleccionada!.day}/${_fechaCreadaSeleccionada!.month}/${_fechaCreadaSeleccionada!.year}"  
-                        : '',
-                  ),
-                ),
-              ),
-              */
                   const SizedBox(height: 16.0),
-                  TextField(
-                      controller:
-                          TextEditingController(), // _fechaInicioController, //editing controller of this TextField
-                      decoration: const InputDecoration(
-                          icon: Icon(Icons.date_range), //icon of text field
-                          labelText: 'Fecha Inicio *',
-                          hintText: 'Seleccione una fecha' //label text of field
-                          ),
-                      readOnly: true, // when true user cannot edit text
-                      onTap: () async {
-                        DateTime? pickedDate = await showDatePicker(
-                            context: context,
-                            initialDate: DateTime.now(),
-                            firstDate: DateTime(2000),
-                            lastDate: DateTime(2100));
-                        if (pickedDate != null) {
-                          // String formattedDate=DateFormat("dd/MM/yyyy").format(pickedDate);
-                          // setState(() {
-                          //   _fechaInicioController.text=formattedDate.toString();
-                          // });
-                        } //when click we have to show the datepicker
-                      }),
-                  const SizedBox(height: 16.0),
-                  TextField(
-                      controller:
-                          TextEditingController(), // _fechaEstablecidaController, //editing controller of this TextField
+                  TextFormField(
+                      controller: newTaskController.controllerFechaEstablecida,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Por favor, ingrese una Fecha de Culminacion';
+                        }
+                        return null;
+                      },
                       decoration: const InputDecoration(
                           icon: Icon(Icons.date_range), //icon of text field
                           labelText: 'Fecha Establecida *',
@@ -175,10 +151,11 @@ class NewTaskScreen extends StatelessWidget {
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100));
                         if (pickedDate != null) {
-                          // String formattedDate=DateFormat("dd/MM/yyyy").format(pickedDate);
-                          // setState(() {
-                          //   _fechaEstablecidaController.text=formattedDate.toString();
-                          // });
+                            String formattedDate =
+                            DateFormat("dd/MM/yyyy").format(pickedDate);
+                        newTaskController.controllerFechaEstablecida.text =
+                            formattedDate.toString();
+                        newTaskController.actualizarEstado(true); //setState
                         } //when click we have to show the datepicker
                       }),
                   // const SizedBox(height: 16.0),
@@ -198,7 +175,7 @@ class NewTaskScreen extends StatelessWidget {
                   // ),
                   const SizedBox(height: 16.0),
                   TextFormField(
-                    controller: TextEditingController(), // _nivelController,
+                    controller: controllerPrioridad,
                     decoration: const InputDecoration(
                       icon: Icon(Icons.rocket_launch),
                       labelText: 'Prioridad',
@@ -214,18 +191,16 @@ class NewTaskScreen extends StatelessWidget {
                   const SizedBox(height: 26.0),
                   ElevatedButton(
                     onPressed: () {
-                      // if (_formKey.currentState!.validate()) {
-                      //   _formKey.currentState!.save();
-
-                      //   print('Nombre: ${_nombreController.text}');
-                      //   print('Descripcion: ${_descripcionController.text}');
-                      //   if (_fechaInicioController != null) {
-                      //     print('Fecha seleccionada: ${_fechaInicioController.toString()}');
-                      //   }
-                      //   if (_fechaEstablecidaController != null) {
-                      //     print('Fecha seleccionada: ${_fechaEstablecidaController.toString()}');
-                      //   }
-                      // }
+                      crearTarea(
+                          _formKey,
+                          context,
+                          controllerNombre.text,
+                          controllerDescription.text,
+                          newTaskController.convertirFecha(
+                              newTaskController.controllerFechaInicio.text),
+                          newTaskController.convertirFecha(newTaskController
+                              .controllerFechaEstablecida.text),
+                          int.parse(controllerPrioridad.text));
                     },
                     child: const Text('Crear Tarea'),
                   ),
@@ -234,5 +209,80 @@ class NewTaskScreen extends StatelessWidget {
             ),
           ),
         ));
+  }
+
+  void crearTarea(
+      formKey,
+      BuildContext context,
+      String nombreTarea,
+      String descripcion,
+      DateTime fechaInicio,
+      DateTime fechaEstablecida,
+      int nivel) {
+
+        final size = MediaQuery.of(context).size;
+
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      //enviar datos a firebase
+      ProyectoService proyecto = ProyectoService();
+
+      Tarea tarea = Tarea(
+          nombre: nombreTarea,
+          descripcion: descripcion,
+          fechaCreada: fechaInicio,
+          fechaEstablecida: fechaEstablecida,
+          estado: 'nueva',
+          nivel: nivel);
+
+      proyecto.guardarTarea(proyectoId, metaId, tarea);
+
+      /*
+                Meta meta = Meta(
+                  nombre: controllerMeta.nameGoal.text,
+                  item: controllerMeta.type,
+                  proyectoID: projectID,
+                  fechaCreada: controllerMeta.fechaCreada,
+                  fechaEstablecida: controllerMeta.fechaEstablecida,
+                );
+                listMeta?.add(meta);
+                proyecto.guardarMeta(projectID, meta);
+
+      */
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) => Center(
+              child: Align(
+                  alignment: Alignment.center,
+                  child: Material(
+                    child: Container(
+                      width: size.width*0.45,
+                      height: size.height*0.15,
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      child:  Center(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('¡Se creo la tarea! '),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                child: MaterialButton(
+                                  elevation: 3,
+                                  color:Theme.of(context).primaryColor,
+                                onPressed: (){Navigator.pop(context); Navigator.pop(context);},
+                                child: const Text('Continuar', style: TextStyle(color: Colors.white),),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ))));
+    }
   }
 }

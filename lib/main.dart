@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         //  'ListGoals':  (_) => const ListGoalScreen(),
         'ListTasks': (_) => const ListTaskScreen(),
         // 'newGoal': (_) => const  NewGoalScreen(),
-        'newTask': (_) => const NewTaskScreen(),
+        //'newTask': (_) => const NewTaskScreen(),
         'login': (_) => const SplashPage()
       },
       theme: ThemeData(
