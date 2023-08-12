@@ -7,6 +7,7 @@ abstract class ProyectoRepository {
   Future<bool> guardarProyecto(Proyecto proyecto);
   Future<void> guardarMeta(String proyectoId, Meta meta);
   Future<void> guardarTarea(String proyectoId, String metaId, Tarea tarea);
+  Future<void> actualizarTarea(String proyectoId, String metaId, Tarea tarea);
 
   Future<void> guardarComentarioProyecto(
       String proyectoId, Comentario comentario);
@@ -21,7 +22,7 @@ abstract class ProyectoRepository {
   Future<Meta?> buscarMeta(String proyectoId, String metaId);
   Future<List<Meta?>> obtenerMetas(String proyectoId);
   Future<Tarea?> buscarTarea(String proyectoId, String metaId, String tareaId);
-  Future<List<Tarea?>> obtenerTareas(String metaId);
+  Future<List<Tarea?>> obtenerTareas(String metaId, String proyectoID);
 
   Future<bool> ingresarComoAuxiliar(
       String projectId, String userId, String nombre);

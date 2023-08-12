@@ -300,7 +300,7 @@ final size = MediaQuery.of(context).size;
                     MaterialPageRoute(
                         builder: (context) =>
                             NewTaskScreen(descripcion: '' , fechaEstablecida: null , fechaInicio: null, metaId: porEditar.id!, name: '', prioridad: 0 , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
-                             ),
+                            ),
                   );
                 },
                 child: Container(
@@ -334,14 +334,16 @@ final size = MediaQuery.of(context).size;
                 width: double.infinity,
                 child: Column(children: [
         const SizedBox(height: 20),
-        FutureBuilder( // se obtienen las metas del proyecto desde firebase y se guardan en el mapa de riverpod
-          future: proyecto.obtenerTareas(projectID),
+        FutureBuilder( // se obtienen las tareas de la meta desde firebase y se guardan en el mapa de riverpod
+          future: proyecto.obtenerTareas(porEditar.id!,projectID), // porEditar 
           builder: (context, snapshot) {
+            print('data : $snapshot');
             if (snapshot.hasData) {
               mapTarea[porEditar.id!]=snapshot.data!;
             return Expanded(
               child: ListView.builder(
-                itemCount: mapTarea[projectID]?.length ?? 0,
+                scrollDirection: Axis.horizontal,
+                itemCount: mapTarea[porEditar.id!]?.length ?? 0,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -354,16 +356,27 @@ final size = MediaQuery.of(context).size;
                               //al ser una lista de tareas, los valores serán respecto al index de esa lista de tareas
 
                               //hay que estimar como pasar estos datos, que ya me entrega firebase
-                                builder: (context) =>  NewTaskScreen(descripcion: mapTarea[projectID]![index].descripcion , fechaEstablecida: mapTarea[projectID]![index].fechaEstablecida , fechaInicio: mapTarea[projectID]![index].fechaCreada, metaId: porEditar.id!, name: mapTarea[projectID]![index].nombre, prioridad: mapTarea[projectID]![index].nivel , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
+                                builder: (context) =>  NewTaskScreen( descripcion: mapTarea[porEditar.id!]![index].descripcion,
+                                  proyectoId: projectID,
+                                  name:  mapTarea[porEditar.id!]![index].nombre,
+                                  fechaEstablecida:  mapTarea[porEditar.id!]![index].fechaEstablecida,
+                                  fechaInicio:  mapTarea[porEditar.id!]![index].fechaCreada,
+                                  metaId:  porEditar.id!,
+                                  prioridad:  mapTarea[porEditar.id!]![index].nivel,
+                                  isEdit: true,
+                                  fromMeta: porEditar,
+                                  tareaId: mapTarea[porEditar.id!]![index].id!,
+                                ),
+                                  //descripcion: mapTarea[projectID]![index].descripcion , fechaEstablecida: mapTarea[projectID]![index].fechaEstablecida , fechaInicio: mapTarea[projectID]![index].fechaCreada, metaId: porEditar.id!, name: mapTarea[projectID]![index].nombre, prioridad: mapTarea[projectID]![index].nivel , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
                               ),
                             );
                       },
                       child:Container(
                       height: 100,
-                      width: double.infinity,
+                      width: 250,
                       decoration: const BoxDecoration(
                         borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Color.fromARGB(255, 255, 245, 216)),child: Text(mapTarea[projectID]?[index].nombre ?? 'No hay metas')
+                        color: Color.fromARGB(255, 255, 245, 216)),child: Text(mapTarea[porEditar.id!]?[index].nombre ?? 'No hay metas')
                     ), 
                     )
                   );
@@ -371,20 +384,11 @@ final size = MediaQuery.of(context).size;
               ),
             );
             } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
+              return Text("${snapshot.error}", style: const  TextStyle(color: Colors.black),);
             }
             return const CircularProgressIndicator();
           },
-      ),],),
-                
-                
-                
-                
-                
-                
-                
-                
-                
+      ),],),                                                                                                                                        
                 /* ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {

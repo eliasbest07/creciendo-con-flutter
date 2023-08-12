@@ -117,6 +117,24 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
+  Future<void> actualizarTarea(
+      String proyectoId, String metaId, Tarea tarea) async {
+    try {
+      DatabaseReference metaRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoId)
+          .child("listMeta")
+          .child(metaId);
+      DatabaseReference tareaRef = metaRef.child("listTarea").child(tarea.id!);
+
+      await tareaRef.set(tarea.toJson());
+    } catch (e) {
+      throw TareaStorageFailed("Error al almacenar tarea: $e");
+    }
+  }
+
+  @override
   Future<void> guardarTarea(
       String proyectoId, String metaId, Tarea tarea) async {
     try {
@@ -307,10 +325,10 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<List<Tarea>> obtenerTareas(String metaId) async{
+  Future<List<Tarea>> obtenerTareas(String metaId, String proyectoID) async{
     try {
       DatabaseReference proyectoRef =
-          db.ref().child("meta").child(metaId);
+          db.ref().child("proyecto").child(proyectoID).child('listMeta').child(metaId);
       DatabaseEvent databaseEvent =
           await proyectoRef.child("listTarea").once();
 
