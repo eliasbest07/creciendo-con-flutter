@@ -117,6 +117,24 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
+  Future<void> actualizarTarea(
+      String proyectoId, String metaId, Tarea tarea) async {
+    try {
+      DatabaseReference metaRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoId)
+          .child("listMeta")
+          .child(metaId);
+      DatabaseReference tareaRef = metaRef.child("listTarea").child(tarea.id!);
+
+      await tareaRef.set(tarea.toJson());
+    } catch (e) {
+      throw TareaStorageFailed("Error al almacenar tarea: $e");
+    }
+  }
+
+  @override
   Future<void> guardarTarea(
       String proyectoId, String metaId, Tarea tarea) async {
     try {
@@ -307,6 +325,20 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
+  Future<List<Tarea>> obtenerTareas(String metaId, String proyectoID) async{
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoID).child('listMeta').child(metaId);
+      DatabaseEvent databaseEvent =
+          await proyectoRef.child("listTarea").once();
+
+      return _procesarTodasTareasSnapshot(databaseEvent.snapshot);
+    } catch (e) {
+      print(e.toString());
+    }
+    return [];
+  }
+  @override
   Future<Tarea?> buscarTarea(
       String proyectoId, String metaId, String tareaId) async {
     try {
@@ -418,6 +450,25 @@ class ProyectoService implements ProyectoRepository {
       return responmetas;
     } catch (e) {
       throw GetAllProyectsFailed("Error al cargar proyectos: $e");
+    }
+  }
+
+    List<Tarea> _procesarTodasTareasSnapshot(DataSnapshot tareaSnapshot) {
+      List<Tarea> responmetas = [];
+    try {
+      if (tareaSnapshot.value != null) {
+          Map<dynamic, dynamic>? metasData =
+          tareaSnapshot.value as Map<dynamic, dynamic>?;
+                    
+        metasData?.forEach((metaId, metaData) {
+          Tarea? meta = Tarea.fromJson(metaData);
+          //proyecto.id = proyectoId;
+          responmetas.add(meta);
+        });
+      }
+      return responmetas;
+    } catch (e) {
+      throw GetAllProyectsFailed("Error al cargar metas: $e");
     }
   }
 
@@ -701,4 +752,6 @@ class ProyectoService implements ProyectoRepository {
         .child("rol")
         .set(nuevoRol);
   }
+  
+
 }

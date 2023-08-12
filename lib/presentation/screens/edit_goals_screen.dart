@@ -1,3 +1,4 @@
+import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
 import 'package:TaskFlow/presentation/screens/new_task_screen.dart';
 import 'package:flutter/material.dart';
@@ -14,13 +15,19 @@ class EditGoalScreen extends ConsumerWidget {
   final Meta porEditar;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //print('porEditar: ${porEditar.nombre}');
+        final mapTarea = ref.watch(listaTareaMyMeta);
+
+    ProyectoService proyecto = ProyectoService();
+    print('porEditar: ${porEditar.id}');
 
     final controllerEdita = ref.watch(editGoal.notifier);
     controllerEdita.nameGoal.text = porEditar.nombre;
-    controllerEdita.fechaCreadaController.text = porEditar.fechaCreada.toString();
-    controllerEdita.fechaEstimadaController.text = porEditar.fechaEstablecida.toString();
+    controllerEdita.fechaCreadaController.text =
+        porEditar.fechaCreada.toString();
+    controllerEdita.fechaEstimadaController.text =
+        porEditar.fechaEstablecida.toString();
 
+final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -101,7 +108,7 @@ class EditGoalScreen extends ConsumerWidget {
                       //   activeFront = false;
                       //   activeBack = false;
                       // });
-                     // controllerMeta.setType('UI');
+                      // controllerMeta.setType('UI');
                     },
                     child: Container(
                       height: 60,
@@ -109,7 +116,7 @@ class EditGoalScreen extends ConsumerWidget {
                         color: const Color(0xfff0f0f0),
                         borderRadius: BorderRadius.circular(11),
                         border: Border.all(
-                          color:  true //listMeta?.last.item == 'UI'
+                          color: true //listMeta?.last.item == 'UI'
                               ? Colors.blue
                               : Colors.transparent,
                           width: 2,
@@ -124,7 +131,7 @@ class EditGoalScreen extends ConsumerWidget {
                 Expanded(
                   child: GestureDetector(
                     onTap: () {
-                     // controllerMeta.setType('FRONT');
+                      // controllerMeta.setType('FRONT');
                       // setState(() {
                       //   activeUI = false;
                       //   activeFront = !activeFront;
@@ -291,8 +298,9 @@ class EditGoalScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewTaskScreen() // ListTaskScreen(), // metaID: metaID
-                    ),
+                        builder: (context) =>
+                            NewTaskScreen(descripcion: '' , fechaEstablecida: null , fechaInicio: null, metaId: porEditar.id!, name: '', prioridad: 0 , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
+                            ),
                   );
                 },
                 child: Container(
@@ -321,7 +329,107 @@ class EditGoalScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 15),
-            const SizedBox(height: 7.0),
+            SizedBox(
+                height: size.height*0.15,
+                width: double.infinity,
+                child: Column(children: [
+        const SizedBox(height: 20),
+        FutureBuilder( // se obtienen las tareas de la meta desde firebase y se guardan en el mapa de riverpod
+          future: proyecto.obtenerTareas(porEditar.id!,projectID), // porEditar 
+          builder: (context, snapshot) {
+            print('data : $snapshot');
+            if (snapshot.hasData) {
+              mapTarea[porEditar.id!]=snapshot.data!;
+            return Expanded(
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: mapTarea[porEditar.id!]?.length ?? 0,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                              context,
+                              MaterialPageRoute( // mapMeta[projectID][index]
+                              //al tocar en una tarea, abro pantalla con los datos cargados de esa tarea
+                              //al ser una lista de tareas, los valores serán respecto al index de esa lista de tareas
+
+                              //hay que estimar como pasar estos datos, que ya me entrega firebase
+                                builder: (context) =>  NewTaskScreen( descripcion: mapTarea[porEditar.id!]![index].descripcion,
+                                  proyectoId: projectID,
+                                  name:  mapTarea[porEditar.id!]![index].nombre,
+                                  fechaEstablecida:  mapTarea[porEditar.id!]![index].fechaEstablecida,
+                                  fechaInicio:  mapTarea[porEditar.id!]![index].fechaCreada,
+                                  metaId:  porEditar.id!,
+                                  prioridad:  mapTarea[porEditar.id!]![index].nivel,
+                                  isEdit: true,
+                                  fromMeta: porEditar,
+                                  tareaId: mapTarea[porEditar.id!]![index].id!,
+                                ),
+                                  //descripcion: mapTarea[projectID]![index].descripcion , fechaEstablecida: mapTarea[projectID]![index].fechaEstablecida , fechaInicio: mapTarea[projectID]![index].fechaCreada, metaId: porEditar.id!, name: mapTarea[projectID]![index].nombre, prioridad: mapTarea[projectID]![index].nivel , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
+                              ),
+                            );
+                      },
+                      child:Container(
+                      height: 100,
+                      width: 250,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(15)),
+                        color: Color.fromARGB(255, 255, 245, 216)),child: Text(mapTarea[porEditar.id!]?[index].nombre ?? 'No hay metas')
+                    ), 
+                    )
+                  );
+                },
+              ),
+            );
+            } else if (snapshot.hasError) {
+              return Text("${snapshot.error}", style: const  TextStyle(color: Colors.black),);
+            }
+            return const CircularProgressIndicator();
+          },
+      ),],),                                                                                                                                        
+                /* ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        
+                        width: 150,
+                        color: Colors.red,
+                        child: Column(children: [
+                      /*     //nommbre, 
+                                    Text(
+                        'Nombre: \n${controllerEdita.nameGoal}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                        ),
+                      ),
+                     //fecha establecida, 
+
+                       Text(
+                        'Fecha de creación:\n${controllerEdita.fechaCreadaController}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+                      //fecha final
+                       Text(
+                          'Fecha de culminación:${controllerEdita.fechaEstimadaController}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16,
+                          ),
+                        ), */
+                      ],)
+                      ),
+                    );
+                  },
+                ) */),
+          
           ],
         ),
       ),
