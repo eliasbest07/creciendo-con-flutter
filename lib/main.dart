@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
           colorScheme: Theme.of(context).colorScheme.copyWith(
                 primary: const Color.fromARGB(255, 10, 53, 103),
               ),
-          fontFamily: 'Accolade'),
+          fontFamily: 'Poppins'),
     );
   }
 }

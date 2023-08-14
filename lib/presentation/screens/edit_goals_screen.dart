@@ -1,5 +1,4 @@
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
-import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
 import 'package:TaskFlow/presentation/screens/new_task_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -118,7 +117,7 @@ final size = MediaQuery.of(context).size;
                         border: Border.all(
                           color: true //listMeta?.last.item == 'UI'
                               ? Colors.blue
-                              : Colors.transparent,
+                              : Colors.transparent, // TODO este es el campo, se obtiene de una lista desde el backend
                           width: 2,
                         ),
                       ),
@@ -146,7 +145,7 @@ final size = MediaQuery.of(context).size;
                         border: Border.all(
                           color: true //listMeta?.last.item == 'FRONT'
                               ? Colors.blue
-                              : Colors.transparent,
+                              : Colors.transparent, // TODO este es el campo, se obtiene de una lista desde el backend
                           width: 2,
                         ),
                       ),
@@ -169,7 +168,7 @@ final size = MediaQuery.of(context).size;
                         border: Border.all(
                           color: true //listMeta?.last.item == 'BACK'
                               ? Colors.blue
-                              : Colors.transparent,
+                              : Colors.transparent, // TODO este es el campo, se obtiene de una lista desde el backend
                           width: 2,
                         ),
                       ),
