@@ -56,7 +56,7 @@ class NewTaskScreen extends ConsumerWidget {
     newTaskController.controllerFechaEstablecida.text =fechafinal;
   }
 
-    ProyectoService proyecto = ProyectoService();
+    //ProyectoService proyecto = ProyectoService();
 
     return Scaffold(
         appBar: AppBar(
