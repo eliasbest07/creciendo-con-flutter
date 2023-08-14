@@ -1,6 +1,8 @@
 import 'package:TaskFlow/presentation/screens/splash_page.dart';
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import 'infrastructure/services/local_storage/local_storage.dart';
@@ -11,7 +13,15 @@ Future<void> main() async {
   await Firebase.initializeApp();
 
   //Esto es para Riverpod
-  runApp(const ProviderScope(child: MyApp()));
+  //runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    DevicePreview(
+      enabled: !kReleaseMode,
+      builder: (context) => const ProviderScope(
+        child: MyApp(),
+      ),
+    ),
+  );
 } // para usar Riverpod
 
 Future initilizeApp(BuildContext? context) async {
@@ -39,6 +49,11 @@ class MyApp extends StatelessWidget {
     //       print('usuario logeado? : $isLoggedIn');
     final FirebaseAuth auth = FirebaseAuth.instance;
     return MaterialApp(
+      //devicePrevie
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      //devicePreview
       debugShowCheckedModeBanner: false,
       title: 'TaskFlow', //Titulo
       initialRoute: auth.currentUser == null
