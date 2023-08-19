@@ -104,7 +104,19 @@ class ListProjectScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            const ListProjectWidget(),
+            ListProjectWidget( 
+              listProject:listaProject ,
+              onMetas: ( idProject ){
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        ListGoalScreen(
+                            projectID: idProject ?? 'null'),
+                  )
+                );
+              }, 
+              onConfiguraciones: (){}),
             // SizedBox(
             //   height: size.height * 0.7,
             //   width: double.infinity,
@@ -309,16 +321,16 @@ class ListProjectScreen extends ConsumerWidget {
             //                           color: Colors.white,
             //                           onPressed: () {
             //                             //print('ID Project ${listaProject[index].id }');
-            //                             Navigator.push(
-            //                                 context,
-            //                                 MaterialPageRoute(
-            //                                   builder: (context) =>
-            //                                       ListGoalScreen(
-            //                                           projectID:
-            //                                               listaProject[index]
-            //                                                       .id ??
-            //                                                   'null'),
-            //                                 ));
+                                        // Navigator.push(
+                                        //     context,
+                                        //     MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           ListGoalScreen(
+                                        //               projectID:
+                                        //                   listaProject[index]
+                                        //                           .id ??
+                                        //                       'null'),
+                                        //     ));
             //                             // Navigator.pushNamed(context, 'ListGoals');
             //                           },
             //                           child: const Text(
