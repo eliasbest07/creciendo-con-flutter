@@ -109,12 +109,12 @@ class HomeScreen extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const GoalDetailScreen(),
-                          ),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => const GoalDetailScreen(),
+                        //   ),
+                        // );
                       },
                       child: Container(
                           width: height * 0.18,
