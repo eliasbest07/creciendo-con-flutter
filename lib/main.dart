@@ -14,13 +14,18 @@ Future<void> main() async {
 
   //Esto es para Riverpod
   //runApp(const ProviderScope(child: MyApp()));
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => const ProviderScope(
+  //       child: MyApp(),
+  //     ),
+  //   ),
+  // );
   runApp(
-    DevicePreview(
-      enabled: !kReleaseMode,
-      builder: (context) => const ProviderScope(
+    const ProviderScope(
         child: MyApp(),
       ),
-    ),
   );
 } // para usar Riverpod
 

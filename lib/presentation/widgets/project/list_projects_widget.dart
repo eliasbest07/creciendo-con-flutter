@@ -1,15 +1,23 @@
+import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
 import 'package:flutter/material.dart';
 
 class ListProjectWidget extends StatelessWidget {
-  const ListProjectWidget({super.key});
+  const ListProjectWidget({super.key, 
+    required this.listProject, 
+    required this.onMetas, 
+    required this.onConfiguraciones});
+
+  final List<Proyecto> listProject;
+  final Function onMetas;
+  final Function onConfiguraciones;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.separated(
-        itemCount: 6,
+        itemCount: listProject.length,
         itemBuilder: (context, index) {
-          return _CardProject();
+          return _CardProject( project: listProject[index], onMetas: ()=> onMetas(listProject[index].id), onConfiguraciones: ()=> onConfiguraciones(),);
         },
         separatorBuilder: (context, index) => const SizedBox(height: 10.0),
       ),
@@ -18,8 +26,17 @@ class ListProjectWidget extends StatelessWidget {
 }
 
 class _CardProject extends StatelessWidget {
+  const _CardProject( { 
+    required this.project, 
+    required this.onMetas, 
+    required this.onConfiguraciones});
+
+  final Proyecto project;
+  final Function onMetas;
+  final Function onConfiguraciones;
   @override
   Widget build(BuildContext context) {
+    
     //final size = MediaQuery.of(context).size;
 
     final borderRadius = BorderRadius.circular(20.0);
@@ -49,34 +66,33 @@ class _CardProject extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Column(
+                Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'TASKFLOW',
-                      style: TextStyle(
+                    Text(project.nombre,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    _InfoCard(
+                    const _InfoCard(
                       title: 'Estado:',
                       labelChip: 'Activo',
                       colorChip: Colors.green,
                     ),
-                    _InfoCard(
+                    const _InfoCard(
                       title: 'Creado por:',
                       labelChip: 'Elias Best',
                       colorChip: Colors.blue,
                     ),
                   ],
                 ),
-                _PhotoProject(),
+                _PhotoProject(urlImage: project.icon),
               ],
             ),
           ),
           const SizedBox(height: 10.0),
-          _Buttons(),
+          _Buttons(onMeta:()=> onMetas(), onConfiguracion: ()=> onConfiguraciones(), ),
         ],
       ),
     );
@@ -84,6 +100,10 @@ class _CardProject extends StatelessWidget {
 }
 
 class _Buttons extends StatelessWidget {
+  const _Buttons({required this.onMeta, required this.onConfiguracion});
+
+  final Function onMeta;
+  final Function onConfiguracion;
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -102,7 +122,7 @@ class _Buttons extends StatelessWidget {
                     color: Colors.grey), // Borde gris en el lado derecho
               ),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () => onMeta(),
               child: const Text(
                 'Ir a  Metas',
                 style: TextStyle(color: Colors.black),
@@ -117,7 +137,7 @@ class _Buttons extends StatelessWidget {
                 top: BorderSide(color: Colors.grey),
               ),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: () => onConfiguracion(),
               child: const Text(
                 'Configuraciones',
                 style: TextStyle(color: Colors.black),
@@ -181,11 +201,11 @@ class _InfoCard extends StatelessWidget {
 }
 
 class _PhotoProject extends StatelessWidget {
+  const _PhotoProject({required this.urlImage});
+  final String urlImage;
   @override
   Widget build(BuildContext context) {
-    const urlImage =
-        'https://cdn.discordapp.com/attachments/1112021237858828378/1125129276203745320/bf8bd3b3-2438-46e8-8a2a-2363f5ba9ee9.png';
-
+    
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),

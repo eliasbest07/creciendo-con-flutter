@@ -33,7 +33,7 @@ class Tarea {
           .toList(),
       'usuarioAsignado': usuarioAsignado,
       'fechaCreada': fechaCreada?.toIso8601String(),
-      'fechaEstablecida': fechaEstablecida?.toIso8601String(),
+      'fechaEstablecida': fechaEstablecida.toIso8601String(),
       'estado': estado,
       'nivel': nivel,
     };
