@@ -1,4 +1,5 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/presentation/drawables/filter_icon.dart';
 import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:flutter/material.dart';
@@ -103,65 +104,84 @@ class GoalDetailScreen extends StatelessWidget {
               ),
               SizedBox(
                 height: size.height*0.62,
-                child: ListView.builder(
-                  controller: listTask,
-                  itemCount: 5,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: index==4 ? const EdgeInsets.only(bottom:320.0,top: 8,left: 8,right: 8) : const EdgeInsets.all(8.0),
-                      child: Container( 
-                        height: 125,  decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(74, 46, 46, 46),
-                              offset: Offset(0.0, 2.0),
-                              blurRadius: 7.0,
-                            )
-                          ],
-                        ),
-                        child:Padding(
-                          padding: const EdgeInsets.only(top:8.0,left: 8.0, right: 20, bottom: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                            SizedBox(
-                              width: size.width*0.75,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                Text('Nombre de la tarea Nombre de la tarea Nombre de la tareaNombre de la tarea Nombre de la tarea', maxLines: 2, overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 18)),
-                                const SizedBox(height: 5),
-                                Row(
-                                  children: [
-                                    const Text('Estado:',style: TextStyle(color: Colors.grey)),
-                                    const SizedBox(width: 10),
-                                    MaterialButton(
-                                    
-                                      color: Theme.of(context).primaryColor,
-                                      shape: const StadiumBorder(),
-                                      onPressed: (){},
-                                    child: const Center( child: Padding(
-                                      padding: EdgeInsets.symmetric(horizontal:8.0),
-                                  
-                                      child: Text('Auto Asignar', style: TextStyle(color: Colors.white),),
-                                    ))
-                                      
-                                      )
-                                  ],
+                child: FutureBuilder(
+                  future: ProyectoService().obtenerTareas(meta.id!,meta.proyectoID),
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData){
+                    List<Tarea> listTarea=  snapshot.data ?? [];
+                    return ListView.builder(
+                    controller: listTask,
+                    itemCount: listTarea.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: index==listTarea.length-1 ? const EdgeInsets.only(bottom:320.0,top: 8,left: 8,right: 8) : const EdgeInsets.all(8.0),
+                        child: GestureDetector(
+                          onTap:(){
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      TaskDetailScreen(tarea: listTarea[index])),
+                              );
+                          },
+                          child: Container( 
+                            height: 125,  decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(74, 46, 46, 46),
+                                  offset: Offset(0.0, 2.0),
+                                  blurRadius: 7.0,
                                 )
-                              ]),
+                              ],
                             ),
-                              Center(child: Container( 
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 1), shape: BoxShape.circle),),)
-                          ],),
-                        )
-                      ),
-                    );
-                  }
+                            child:Padding(
+                              padding: const EdgeInsets.only(top:8.0,left: 8.0, right: 20, bottom: 8),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                SizedBox(
+                                  width: size.width*0.75,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                    Text(listTarea[index].nombre, maxLines: 2, overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 18)),
+                                    const SizedBox(height: 5),
+                                    Row(
+                                      children: [
+                                        const Text('Estado:',style: TextStyle(color: Colors.grey)),
+                                        const SizedBox(width: 10),
+                                        MaterialButton(
+                                        
+                                          color: Theme.of(context).primaryColor,
+                                          shape: const StadiumBorder(),
+                                          onPressed: (){},
+                                        child: const Center( child: Padding(
+                                          padding: EdgeInsets.symmetric(horizontal:8.0),
+                                      
+                                          child: Text('Auto Asignar', style: TextStyle(color: Colors.white),),
+                                        ))
+                                          
+                                          )
+                                      ],
+                                    )
+                                  ]),
+                                ),
+                                  Center(child: Container( 
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 1), shape: BoxShape.circle),),)
+                              ],),
+                            )
+                          ),
+                        ),
+                      );
+                    }
+                  );}
+                  return const Center(child: CircularProgressIndicator());
+                  },
+                  
                 )
               )
             
