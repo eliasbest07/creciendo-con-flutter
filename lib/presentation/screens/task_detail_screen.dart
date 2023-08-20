@@ -41,7 +41,30 @@ class TaskDetailScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
+            SizedBox(
+              height: 100,
+              child: ListView.separated(
+                itemCount: 12,
+                scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.only(left: 15.0),
+                itemBuilder: (_, index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Colors.white,
+                    ),
+                    width: 300,
+                    padding: const EdgeInsets.all(15),
+                    alignment: Alignment.center,
+                    child: Text('COMENTARIO $index'),
+                  );
+                },
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+              ),
+            ),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Column(
@@ -191,28 +214,7 @@ class TaskDetailScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            SizedBox(
-              height: 100,
-              child: ListView.separated(
-                itemCount: 12,
-                scrollDirection: Axis.horizontal,
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.only(left: 15.0),
-                itemBuilder: (_, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.white,
-                    ),
-                    width: 300,
-                    padding: const EdgeInsets.all(15),
-                    alignment: Alignment.center,
-                    child: Text('COMENTARIO $index'),
-                  );
-                },
-                separatorBuilder: (_, __) => const SizedBox(width: 10),
-              ),
-            )
+           
           ],
         ),
       ),
