@@ -7,6 +7,7 @@ abstract class ProyectoRepository {
   Future<bool> guardarProyecto(Proyecto proyecto);
   Future<void> guardarMeta(String proyectoId, Meta meta);
   Future<void> guardarTarea(String proyectoId, String metaId, Tarea tarea);
+  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId});
   Future<void> actualizarTarea(String proyectoId, String metaId, Tarea tarea);
 
   Future<void> guardarComentarioProyecto(
