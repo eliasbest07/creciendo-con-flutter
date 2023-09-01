@@ -1,6 +1,7 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
 import 'package:TaskFlow/presentation/controllers/animation_controller.dart';
+import 'package:TaskFlow/presentation/controllers/task_detail_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../presentation/controllers/auxiliar_proyecto_controller.dart';
@@ -45,5 +46,8 @@ final animationController =
 
 final editGoal = StateNotifierProvider<EditGoalController, Meta>(
     (ref) => EditGoalController());
+
+final tareaDetails = StateNotifierProvider<TaskDetailController, bool>(
+    (ref) => TaskDetailController());
 
 final newTask = StateNotifierProvider<NewTaskController, bool> ((ref) => NewTaskController());

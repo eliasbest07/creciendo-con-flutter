@@ -2,18 +2,24 @@ import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/presentation/drawables/filter_icon.dart';
 import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
+import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/entities/proyecto/tarea_entity.dart';
 import 'screens.dart';
 
-class GoalDetailScreen extends StatelessWidget {
+class GoalDetailScreen extends ConsumerWidget {
   const GoalDetailScreen({super.key, required this.meta});
   final Meta meta;
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
     final ScrollController listTask = ScrollController();
+
+    final tarea= ref.watch(tareaDetails.notifier);
+    tarea.goalID=meta.id!;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 246, 249, 255),
@@ -125,7 +131,7 @@ class GoalDetailScreen extends StatelessWidget {
                               );
                           },
                           child: Container( 
-                            height: 125,  decoration: BoxDecoration(
+                            decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
                               boxShadow: const [
@@ -152,18 +158,16 @@ class GoalDetailScreen extends StatelessWidget {
                                       children: [
                                         const Text('Estado:',style: TextStyle(color: Colors.grey)),
                                         const SizedBox(width: 10),
-                                        MaterialButton(
+                                        Container(
+                                          padding: const EdgeInsets.only(top:2, left: 10, bottom: 2, right: 10),
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(30),
+                                            color: Theme.of(context).primaryColor
+                                          ),
+                                          child: Text(listTarea[index].estado, style:const TextStyle(color: Colors.white),)),
                                         
-                                          color: Theme.of(context).primaryColor,
-                                          shape: const StadiumBorder(),
-                                          onPressed: (){},
-                                        child: const Center( child: Padding(
-                                          padding: EdgeInsets.symmetric(horizontal:8.0),
-                                      
-                                          child: Text('Auto Asignar', style: TextStyle(color: Colors.white),),
-                                        ))
                                           
-                                          )
+                                          
                                       ],
                                     )
                                   ]),
@@ -191,7 +195,7 @@ class GoalDetailScreen extends StatelessWidget {
             bottom: 135,
             left: 0,
             right: 0,
-            child: ListTasks(meta: meta, scrollController: listTask,maximoTamanio: 200, minimoTamanio: 100,)
+            child: CardGoalDetail(meta: meta, scrollController: listTask,maximoTamanio: 200, minimoTamanio: 100,)
           )
         ],
       ),
@@ -199,8 +203,8 @@ class GoalDetailScreen extends StatelessWidget {
   }
 }
 
-class ListTasks extends StatefulWidget {
-  const ListTasks({
+class CardGoalDetail extends StatefulWidget {
+  const CardGoalDetail({
     super.key,
     required this.meta, required this.scrollController, required this.maximoTamanio, required this.minimoTamanio,
   });
@@ -211,10 +215,10 @@ class ListTasks extends StatefulWidget {
   final Meta meta;
 
   @override
-  State<ListTasks> createState() => _ListTasksState();
+  State<CardGoalDetail> createState() => _CardGoalDetailState();
 }
 
-class _ListTasksState extends State<ListTasks> {
+class _CardGoalDetailState extends State<CardGoalDetail> {
   double tamanio =0;
   @override
   void initState() {

@@ -36,6 +36,10 @@ class ProjectDetailScreen extends ConsumerWidget {
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String userId = auth.currentUser!.uid;
 
+    final tarea= ref.watch(tareaDetails.notifier);
+    tarea.currentUserID=userId;
+    tarea.projectoID=project.id!;
+
     final size = MediaQuery.of(context).size;
     //final List<Usuario> colaboradores = ;
 

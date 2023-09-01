@@ -117,6 +117,18 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
+  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId}) async{
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      DatabaseReference metaRef = proyectoRef.child("listMeta").child(metaId).child('listTarea').child(tareaID);
+      metaRef.child('usuarioAsignado').set(userId);
+    } catch (e) {
+      throw MetaStorageFailed("Error al asignar usuario a la tarea: $e");
+    }
+  }
+
+  @override
   Future<void> actualizarTarea(
       String proyectoId, String metaId, Tarea tarea) async {
     try {
