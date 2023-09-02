@@ -66,37 +66,49 @@ class ListProjectScreen extends ConsumerWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 103, 159, 228),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Center(
-                            child: Text(
-                          'Soy lider',
-                          style: TextStyle(color: Colors.white),
-                        )),
+                    child: GestureDetector(
+                      onTap: () {
+                        //TODO: llama metodo soy lider
+                        //TODO: situa color claro y pone en oscuro el otro gesture
+                      },
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 103, 159, 228),
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Center(
+                              child: Text(
+                            'Soy lider',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 8.0),
                   Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Center(
-                            child: Text(
-                          'Soy auxiliar',
-                          style: TextStyle(color: Colors.white),
-                        )),
+                    child: GestureDetector(
+                      onTap: () {
+                        //TODO: llama metodo soy auxiliar
+                        //TODO: situa color claro y pone en oscuro el otro gesture
+                      },
+                      child: Container(
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Center(
+                              child: Text(
+                            'Soy auxiliar',
+                            style: TextStyle(color: Colors.white),
+                          )),
+                        ),
                       ),
                     ),
                   ),
