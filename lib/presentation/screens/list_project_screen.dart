@@ -1,8 +1,11 @@
+import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:TaskFlow/presentation/dialog/new_project_dialog.dart';
 import 'package:TaskFlow/presentation/screens/list_goal_screen.dart';
 import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 
 import '../../providers/riverpod_provider.dart';
 import '../widgets/project/list_projects_widget.dart';
@@ -12,8 +15,12 @@ class ListProjectScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final listaProject = ref.watch(listaProyectos);
+    //final listaProject = ref.watch(listaProyectos);
     final size = MediaQuery.of(context).size;
+    final listProyecto = ref.watch(listProject);
+     final proyectRole = ref.watch(listProject.notifier);
+   
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 246, 249, 255),
@@ -67,8 +74,15 @@ class ListProjectScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {
-                        //TODO: llama metodo soy lider
+                      onTap: () async{
+
+                       // ref.read(listProject.notifier).state = [];
+                      //  List<ProyectoByRol> lider = await ProyectoService().obtenerProyectosByRol('Lider');
+                       // print(lider[0].nombre);
+                       // ref.read(listProject.notifier).state = lider;
+                      proyectRole.role=true; // lider
+                        showListByRol("Lider", ref);
+
                         //TODO: situa color claro y pone en oscuro el otro gesture
                       },
                       child: Container(
@@ -92,8 +106,10 @@ class ListProjectScreen extends ConsumerWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
-                        //TODO: llama metodo soy auxiliar
+                        showListByRol("Auxiliar", ref);
+                         proyectRole.role=false; // auxiliar
                         //TODO: situa color claro y pone en oscuro el otro gesture
+                        
                       },
                       child: Container(
                         height: 40,
@@ -117,7 +133,8 @@ class ListProjectScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             ListProjectWidget( 
-              listProject:listaProject ,
+              isLider: proyectRole.role,
+              listProject:listProyecto ,
               onMetas: ( idProject ){
                 Navigator.push(
                   context,
@@ -258,7 +275,7 @@ class ListProjectScreen extends ConsumerWidget {
             //                         width: 55,
             //                         child: ClipRRect(
             //                             borderRadius: BorderRadius.circular(10),
-            //                             child: Image.network(
+            //                             child: CachedNetworkImage(
             //                                 listaProject[index].icon)),
             //                       ),
             //                       const SizedBox(height: 15)
@@ -381,6 +398,12 @@ class ListProjectScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+  
+  Future<void> showListByRol(String role, WidgetRef ref) async {
+    ref.read(listProject.notifier).state = [];
+    List<ProyectoByRol> rol = await ProyectoService().obtenerProyectosByRol(role);
+    ref.read(listProject.notifier).state = rol;
   }
 }
 

@@ -1,4 +1,4 @@
-class UsuarioProyecto{
+class ProyectoByRol{
   String nombre='';
   String creadopor='';
   String estado='';
@@ -6,7 +6,7 @@ class UsuarioProyecto{
   String proyectoId='';
 
   
-  UsuarioProyecto({
+  ProyectoByRol({
     required this.nombre,
     required this.creadopor,
     required this.estado,
@@ -24,8 +24,8 @@ class UsuarioProyecto{
     };
   }
 
-  factory UsuarioProyecto.fromJson(Map<dynamic, dynamic> json) {
-    return UsuarioProyecto(
+  factory ProyectoByRol.fromJson(Map<dynamic, dynamic> json) {
+    return ProyectoByRol(
       nombre: json['nombre'],
       creadopor: json['creadopor'],
       estado: json['estado'],

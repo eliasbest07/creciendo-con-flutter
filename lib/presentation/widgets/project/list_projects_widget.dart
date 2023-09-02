@@ -1,15 +1,19 @@
-import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../../../domain/entities/proyecto/usuario_proyecto_entity.dart';
 
 class ListProjectWidget extends StatelessWidget {
   const ListProjectWidget({super.key, 
     required this.listProject, 
     required this.onMetas, 
-    required this.onConfiguraciones});
+    required this.onConfiguraciones, 
+    required this.isLider});
 
-  final List<Proyecto> listProject;
+  final List<ProyectoByRol> listProject;
   final Function onMetas;
   final Function onConfiguraciones;
+  final bool isLider;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class ListProjectWidget extends StatelessWidget {
       child: ListView.separated(
         itemCount: listProject.length,
         itemBuilder: (context, index) {
-          return _CardProject( project: listProject[index], onMetas: ()=> onMetas(listProject[index].id), onConfiguraciones: ()=> onConfiguraciones(),);
+          return _CardProject( isLider:isLider, project: listProject[index], onMetas: ()=> onMetas(listProject[index].proyectoId), onConfiguraciones: ()=> onConfiguraciones(),);
         },
         separatorBuilder: (context, index) => const SizedBox(height: 10.0),
       ),
@@ -29,11 +33,14 @@ class _CardProject extends StatelessWidget {
   const _CardProject( { 
     required this.project, 
     required this.onMetas, 
-    required this.onConfiguraciones});
+    required this.onConfiguraciones, 
+    required this.isLider});
 
-  final Proyecto project;
+  final ProyectoByRol project;
   final Function onMetas;
   final Function onConfiguraciones;
+   final bool isLider;
+
   @override
   Widget build(BuildContext context) {
     
@@ -75,24 +82,25 @@ class _CardProject extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    const _InfoCard(
+                    _InfoCard(
                       title: 'Estado:',
-                      labelChip: 'Activo',
+                      labelChip: project.estado,
                       colorChip: Colors.green,
                     ),
-                    const _InfoCard(
+                    _InfoCard(
                       title: 'Creado por:',
-                      labelChip: 'Elias Best',
+                      labelChip: project.creadopor,
                       colorChip: Colors.blue,
                     ),
                   ],
                 ),
-                _PhotoProject(urlImage: project.icon),
+                _PhotoProject(urlImage: project.icono),
               ],
             ),
           ),
           const SizedBox(height: 10.0),
-          _Buttons(onMeta:()=> onMetas(), onConfiguracion: ()=> onConfiguraciones(), ),
+           isLider ? _Buttons(onMeta:()=> onMetas(), onConfiguracion: ()=> onConfiguraciones(), ) : 
+           const SizedBox( width:10),
         ],
       ),
     );
@@ -221,9 +229,9 @@ class _PhotoProject extends StatelessWidget {
       height: 88,
       width: 88,
       padding: const EdgeInsets.all(15),
-      child: Image.network(
-        urlImage,
-        fit: BoxFit.cover,
+
+child: urlImage == 'vacio' ? const SizedBox(width:10) : CachedNetworkImage(
+        imageUrl: urlImage,
       ),
     );
   }

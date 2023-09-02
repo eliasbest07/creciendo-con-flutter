@@ -2,6 +2,7 @@ import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -158,7 +159,7 @@ class TaskDetailScreen extends ConsumerWidget {
                               radius: 30,
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(50),
-                                child: Image.network(user.avatar,))) :
+                                child: CachedNetworkImage(imageUrl: user.avatar,))) :
                             const CircleAvatar(
                                 radius: 30,
                                 child: Icon(Icons.person)),
@@ -173,15 +174,15 @@ class TaskDetailScreen extends ConsumerWidget {
                                 const SizedBox(height: 5),
                                 Row(
                                   children: [
-                                    Image.network(
+                                    CachedNetworkImage(imageUrl:
                                       'https://cdn-icons-png.flaticon.com/512/625/625394.png',
                                       width: 25,
                                     ),
-                                    Image.network(
+                                    CachedNetworkImage(imageUrl:
                                       'https://cdn-icons-png.flaticon.com/512/625/625393.png',
                                       width: 25,
                                     ),
-                                    Image.network(
+                                    CachedNetworkImage(imageUrl:
                                       'https://cdn-icons-png.flaticon.com/512/625/625393.png',
                                       width: 25,
                                     ),
