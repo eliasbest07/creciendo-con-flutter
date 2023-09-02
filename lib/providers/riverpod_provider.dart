@@ -1,5 +1,6 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
 import 'package:TaskFlow/presentation/controllers/animation_controller.dart';
 import 'package:TaskFlow/presentation/controllers/task_detail_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -35,8 +36,8 @@ final listaMetasMyProyecto =
 final listaMetasDetalleProyecto =
     StateNotifierProvider<MetasController, Map<String, List<Meta>>>(
         (ref) => MetasController({}));
-final listAuxiliarPoyecto =
-    StateNotifierProvider<ProyectoAuxiliar, List<ProyectoAuxiliar>>(
+final listProject =
+    StateNotifierProvider<ProyectoAuxiliar, List<ProyectoByRol>>(
         (ref) => ProyectoAuxiliar());
 final loginController =
     StateNotifierProvider<LoginController, Login>((ref) => LoginController());

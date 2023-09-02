@@ -2,6 +2,7 @@ import 'package:TaskFlow/domain/entities/proyecto/comentario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
 
 abstract class ProyectoRepository {
   Future<bool> guardarProyecto(Proyecto proyecto);
@@ -24,6 +25,7 @@ abstract class ProyectoRepository {
   Future<List<Meta?>> obtenerMetas(String proyectoId);
   Future<Tarea?> buscarTarea(String proyectoId, String metaId, String tareaId);
   Future<List<Tarea?>> obtenerTareas(String metaId, String proyectoID);
+  Future<List<ProyectoByRol>> obtenerProyectosByRol(String rol);
 
   Future<bool> ingresarComoAuxiliar(
       String projectId, String userId, String nombre);

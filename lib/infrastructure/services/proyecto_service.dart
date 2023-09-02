@@ -1,4 +1,5 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/proyectoAuxiliar_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/proyectoLider_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
@@ -261,6 +262,7 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
+  @override
   Future<List<Proyecto>> obtenerTodosProyectos() async {
     try {
       DatabaseReference proyectosRef = db.ref().child("proyecto");
@@ -275,6 +277,46 @@ class ProyectoService implements ProyectoRepository {
       print(e.toString());
     }
     return [];
+  }
+
+  @override
+  Future<List<ProyectoByRol>> obtenerProyectosByRol(String rol) async {
+
+    try {
+      DatabaseReference proyectosRef;
+
+      if(rol.contains('Lider')){
+        proyectosRef = db.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("listProyectoLider");
+      }else{
+        proyectosRef = db.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("listProyectoAuxiliar");
+      }
+
+      DatabaseEvent databaseEvent = await proyectosRef.once();
+
+      List<ProyectoByRol> proyectos = [];
+      Map<dynamic, dynamic>? proyectosData =
+          databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
+
+      return _cargarProyectosByRol(proyectosData, proyectos);
+    } catch (e) {
+      print(e.toString());
+    }
+    return [];
+  }
+
+    List<ProyectoByRol> _cargarProyectosByRol(
+      Map<dynamic, dynamic>? proyectosData, List<ProyectoByRol> proyectos) {
+    try {
+      if (proyectosData != null) {
+        proyectosData.forEach((proyectoId, proyectoData) {
+          ProyectoByRol? proyecto = ProyectoByRol.fromJson(proyectoData);
+          proyectos.add(proyecto);
+        });
+      }
+      return proyectos;
+    } catch (e) {
+      throw GetAllProyectsFailed("Error al cargar proyectos by ID: $e");
+    }
   }
 
   List<Proyecto> _cargarProyectos(
@@ -764,6 +806,7 @@ class ProyectoService implements ProyectoRepository {
         .child("rol")
         .set(nuevoRol);
   }
+  
   
 
 }

@@ -7,6 +7,7 @@ import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:TaskFlow/presentation/screens/goal_detail_screen.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -286,16 +287,18 @@ class ProjectDetailScreen extends ConsumerWidget {
                                     const SizedBox(height: 5),
                                     Row(
                                       children: [
-                                        Image.network(
-                                          'https://cdn-icons-png.flaticon.com/512/625/625394.png',
+                                      CachedNetworkImage(
+                                          imageUrl:'https://cdn-icons-png.flaticon.com/512/625/625393.png',                            
                                           width: 25,
                                         ),
-                                        Image.network(
-                                          'https://cdn-icons-png.flaticon.com/512/625/625393.png',
+
+                                        CachedNetworkImage(
+                                          imageUrl: 'https://cdn-icons-png.flaticon.com/512/625/625393.png',
                                           width: 25,
                                         ),
-                                        Image.network(
-                                          'https://cdn-icons-png.flaticon.com/512/625/625393.png',
+
+                                        CachedNetworkImage(
+                                          imageUrl: 'https://cdn-icons-png.flaticon.com/512/625/625393.png',
                                           width: 25,
                                         ),
                                       ],
