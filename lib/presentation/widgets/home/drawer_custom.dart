@@ -10,12 +10,14 @@ class DrawerCustom extends ConsumerWidget {
   const DrawerCustom({
     Key? key, required this.size,
   }) : super(key: key);
-final Size size;
+
+ final Size size;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final status= ref.watch(showEstatus);
 
-        final usuarioService = UsuarioService();
+    final usuarioService = UsuarioService();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String userId = auth.currentUser!.uid;
 
@@ -24,97 +26,97 @@ final Size size;
       borderRadius:const BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)), color: Theme.of(context).primaryColor),
     child: Column(children: [
     //  const Header(),
-      const SizedBox(height: 10),
+      SizedBox(height: size.height*0.05),
       const Divider(), 
-      Padding(
-        padding: const EdgeInsets.only(left:10.0),
-        child: MaterialButton(
+      MaterialButton(
           color: Theme.of(context).primaryColor,
           onPressed: (){
             Navigator.pushNamed(context,'ListProject');
           },
-          child:const ListTile(leading:  Icon(Icons.poll_rounded,color: Colors.white, size: 40,),title: const Text('Proyectos',style: TextStyle(color:Colors.white, fontSize: 20),)),
+          child:const ListTile(leading:  Icon(Icons.poll_rounded,color: Colors.white, size: 35,),title: Text('Proyectos',style: TextStyle(color:Colors.white, fontSize: 16),)),
         ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left:10.0, top:10),
-        child: MaterialButton(
-        
-          color: Theme.of(context).primaryColor,
-          onPressed: (){
-            // Navigator.pushNamed(context,'ListProject');
-          },
-          child:const ListTile(leading:  Icon(Icons.chat,color: Colors.white, size: 40,),title:  Text('Hilo de Comentarios',style: TextStyle(color:Colors.white, fontSize: 20),)),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left:10.0, top:10),
-        child: MaterialButton(
-        
-          color: Theme.of(context).primaryColor,
-          onPressed: (){
-            // Navigator.pushNamed(context,'ListProject');
-          },
-          child:const ListTile(leading:  Icon(Icons.trending_up_outlined,color: Colors.white, size: 40,),title:  Text('Ranking',style: TextStyle(color:Colors.white, fontSize: 20),)),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left:10.0, top:10),
-        child: MaterialButton(
-        
-          color: Theme.of(context).primaryColor,
-          onPressed: (){
-            // Navigator.pushNamed(context,'ListProject');
-          },
-          child:const ListTile(leading:  Icon(Icons.task,color: Colors.white, size: 40,),title:  Text('Lista de Tareas',style: TextStyle(color:Colors.white, fontSize: 20),)),
-        ),
-      ),
-      const Expanded(child: SizedBox(width: 10,)),
-Padding(
-  padding: const EdgeInsets.only(left: 10.0, top: 10),
-  child: MaterialButton(
-    color: Theme.of(context).primaryColor,
-    onPressed: () {
-      // Navigator.pushNamed(context,'ListProject');
-    },
-    child: FutureBuilder<Usuario>(
-      future: usuarioService.obtenerUsuarioActual(userId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasData) {
-            final usuario = snapshot.data!;
-            return ListTile(
-              leading: const Icon(
-                Icons.person_pin,
-                color: Colors.white,
-                size: 40,
-              ),
-              title: Text(
-                usuario.nombre,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return const Text('Error al obtener el nombre del usuario');
-          }
-        }
-        return const CircularProgressIndicator();
-      },
-    ),
-  ),
-),
 
+      const Divider(),
+      
+      MaterialButton(        
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.chat,color: Colors.white, size: 35,),title:  Text('Hilo de Comentarios',style: TextStyle(color:Colors.white, fontSize: 16),)),
+        ),
+
+      const Divider(),
+      
+      MaterialButton(        
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.trending_up_outlined,color: Colors.white, size: 35,),title:  Text('Ranking',style: TextStyle(color:Colors.white, fontSize: 16),)),
+        ),
+
+      const Divider(),
+      
+       MaterialButton(
+          color: Theme.of(context).primaryColor,
+          onPressed: (){
+            // Navigator.pushNamed(context,'ListProject');
+          },
+          child:const ListTile(leading:  Icon(Icons.task,color: Colors.white, size: 35,),title:  Text('Lista de Tareas',style: TextStyle(color:Colors.white, fontSize: 16),)),
+        ),
+
+         const Divider(),
+      
+      Expanded(child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          MaterialButton(
+            color: Theme.of(context).primaryColor,
+            onPressed: () {
+                  // Navigator.pushNamed(context,'ListProject');
+            },
+        child: FutureBuilder<Usuario>(
+              future: usuarioService.obtenerUsuarioActual(userId),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  if (snapshot.hasData) {
+                    final usuario = snapshot.data!;
+                    return ListTile(
+                      leading: const Icon(
+                        Icons.person_pin,
+                        color: Colors.white,
+                        size: 35,
+                      ),
+                      title: Text(
+                        usuario.nombre,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    );
+                  } else if (snapshot.hasError) {
+                    return const Text('Error al obtener el nombre del usuario');
+                  }
+                }
+                return const CircularProgressIndicator();
+              },
+        ),
+      ),
+      
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-          Text('estatus: $status',style: const TextStyle(color:Colors.white, fontSize: 20),),
+          Text('estatus: $status',style: const TextStyle(color:Colors.white, fontSize: 16),),
         ],),
       )
+        ],
+      ),
+),
+
     ]),);
   }
 }
@@ -123,6 +125,8 @@ class Header extends StatelessWidget {
   const Header({
     Key? key,
   }) : super(key: key);
+
+  
 
   @override
   Widget build(BuildContext context) {
