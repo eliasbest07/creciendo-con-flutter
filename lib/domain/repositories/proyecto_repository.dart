@@ -2,13 +2,14 @@ import 'package:TaskFlow/domain/entities/proyecto/comentario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
 
 abstract class ProyectoRepository {
   Future<bool> guardarProyecto(Proyecto proyecto);
   Future<void> guardarMeta(String proyectoId, Meta meta);
   Future<void> guardarTarea(String proyectoId, String metaId, Tarea tarea);
-  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId});
+  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId, required Tarea tarea});
   Future<void> actualizarTarea(String proyectoId, String metaId, Tarea tarea);
 
   Future<void> guardarComentarioProyecto(
@@ -23,6 +24,7 @@ abstract class ProyectoRepository {
   Future<Proyecto?> buscarProyecto(String proyectoId);
   Future<Meta?> buscarMeta(String proyectoId, String metaId);
   Future<List<Meta?>> obtenerMetas(String proyectoId);
+  Future<List<TareaUsuario>> obtenerTodasTareasUsuario(String userId);
   Future<Tarea?> buscarTarea(String proyectoId, String metaId, String tareaId);
   Future<List<Tarea?>> obtenerTareas(String metaId, String proyectoID);
   Future<List<ProyectoByRol>> obtenerProyectosByRol(String rol);

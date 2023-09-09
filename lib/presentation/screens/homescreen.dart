@@ -22,7 +22,7 @@ class HomeScreen extends ConsumerWidget {
 
     final LoginController controller = ref.watch(loginController.notifier);
     final listaProject = ref.watch(listaProyectos);
-
+    final listaTareas = ref.watch(listTareaUsuario);
     // esto es para que se cargue la imagen en cache
     final CacheManager cacheManager = CacheManager(
       Config(
@@ -100,10 +100,12 @@ class HomeScreen extends ConsumerWidget {
             SizedBox(
               height: height * 0.02,
             ),
+            listaTareas.isEmpty  ? const Text('Para tener tareas, primero debes unirte a un proyecto') :
             SizedBox(
               height: height * 0.2,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                itemCount: listaTareas.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
@@ -138,6 +140,17 @@ class HomeScreen extends ConsumerWidget {
                                       topRight: Radius.circular(10)),
                                 ),
                               ),
+                              Positioned(
+                                top:10,
+                                left: 7,
+                                child: Text(listaTareas[index].estado)),
+                                Positioned(
+                                top:50,
+                                left: 7,
+                                child: SizedBox(
+                                  width: height * 0.16,
+                                  height: 55,
+                                  child: Text(listaTareas[index].descripcion)))
                             ],
                           )),
                     ),

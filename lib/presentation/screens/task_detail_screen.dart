@@ -134,9 +134,10 @@ class TaskDetailScreen extends ConsumerWidget {
                                     tarea.usuarioAsignado = tareaInf.currentUserID; 
                                     tarea.estado='en proceso'; 
                                     ProyectoService().actualizarTarea(tareaInf.projectoID,tareaInf.goalID,tarea);
-                                    // ProyectoService().asignarTarea(proyectoId: tareaInf.projectoID, metaId: tareaInf.goalID, tareaID: tarea.id!, userId: tareaInf.currentUserID );
+                                    ProyectoService().asignarTarea(proyectoId: tareaInf.projectoID, metaId: tareaInf.goalID, tareaID: tarea.id!, userId: tareaInf.currentUserID, tarea:tarea );
                                     Navigator.pop(context);
                                     tareaInf.setUser();
+                                    ref.watch(listTareaUsuario.notifier).init();
                                 },
                                 child: const Text('Si',style: TextStyle( color:Colors.white)))
                               ]),

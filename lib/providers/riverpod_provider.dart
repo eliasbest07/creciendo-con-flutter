@@ -1,7 +1,9 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
 import 'package:TaskFlow/presentation/controllers/animation_controller.dart';
+import 'package:TaskFlow/presentation/controllers/taks_user_controller.dart';
 import 'package:TaskFlow/presentation/controllers/task_detail_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -53,3 +55,6 @@ final tareaDetails = StateNotifierProvider<TaskDetailController, bool>(
     (ref) => TaskDetailController());
 
 final newTask = StateNotifierProvider<NewTaskController, bool> ((ref) => NewTaskController());
+
+final listTareaUsuario =  StateNotifierProvider<TaskUserController, List<TareaUsuario>>(
+        (ref) => TaskUserController());
