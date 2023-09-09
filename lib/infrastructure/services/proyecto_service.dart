@@ -1,4 +1,5 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/proyectoAuxiliar_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/proyectoLider_entity.dart';
@@ -118,12 +119,26 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId}) async{
+  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId, required Tarea tarea}) async{
     try {
-      DatabaseReference proyectoRef =
-          db.ref().child("proyecto").child(proyectoId);
-      DatabaseReference metaRef = proyectoRef.child("listMeta").child(metaId).child('listTarea').child(tareaID);
-      metaRef.child('usuarioAsignado').set(userId);
+      // DatabaseReference proyectoRef =
+      //     db.ref().child("proyecto").child(proyectoId);
+      // DatabaseReference metaRef = proyectoRef.child("listMeta").child(metaId).child('listTarea').child(tareaID);
+      // metaRef.child('usuarioAsignado').set(userId);
+
+      Map<String,String> dirTarea={
+        "proyectoId":proyectoId,
+        "metaId":metaId,
+        "descripcion":tarea.descripcion,
+        "estado":tarea.estado,
+        "tareaid":tarea.id!,
+        "fechaEstablecida": tarea.fechaEstablecida.toIso8601String()
+      };
+      DatabaseReference userRef =
+          db.ref().child("users").child(userId).child('listaTareas').push();
+          userRef.set(dirTarea);
+
+
     } catch (e) {
       throw MetaStorageFailed("Error al asignar usuario a la tarea: $e");
     }
@@ -261,6 +276,27 @@ class ProyectoService implements ProyectoRepository {
           "Error al almacenar comentario de tarea: $e");
     }
   }
+  @override
+  Future<List<TareaUsuario>> obtenerTodasTareasUsuario( String userId) async {
+    DatabaseReference usersRef = db.ref().child("users").child(userId).child('listaTareas');
+    DatabaseEvent databaseEvent = await usersRef.once();
+    
+    Map<dynamic, dynamic>? tareasData =
+        databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
+
+    List<TareaUsuario> tareas =[];
+
+    if (tareasData != null) {
+      tareasData.forEach((proyectoId, proyectoData) {
+        TareaUsuario? inTarea = TareaUsuario.fromJson(proyectoData);
+  
+        tareas.add(inTarea);
+      });
+    }
+
+    return tareas;
+  }
+
 
   @override
   Future<List<Proyecto>> obtenerTodosProyectos() async {

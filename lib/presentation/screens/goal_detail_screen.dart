@@ -162,7 +162,7 @@ class GoalDetailScreen extends ConsumerWidget {
                                           padding: const EdgeInsets.only(top:2, left: 10, bottom: 2, right: 10),
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(30),
-                                            color: Theme.of(context).primaryColor
+                                            color: listTarea[index].estado == 'en proceso' ? const Color.fromARGB(255, 190, 113, 25) :  Theme.of(context).primaryColor
                                           ),
                                           child: Text(listTarea[index].estado, style:const TextStyle(color: Colors.white),)),
                                         
