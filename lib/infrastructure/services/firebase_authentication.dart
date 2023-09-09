@@ -68,8 +68,10 @@ class FirebaseAuthentication implements AuthenticationRepository {
           await FirebaseAuth.instance.signInWithCredential(credential);
       final User? user = userCredential.user;
 
+      print('usuario logeado?: $user');
       if (user != null) {
         storeUserNameWithGoogle(user);
+        
 
         //guardando logeo internamente en shared preferences
         final LocalStorage localStorage = LocalStorage();

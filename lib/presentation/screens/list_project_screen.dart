@@ -6,6 +6,7 @@ import 'package:TaskFlow/presentation/dialog/new_project_dialog.dart';
 import 'package:TaskFlow/presentation/screens/list_goal_screen.dart';
 import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../providers/riverpod_provider.dart';
 import '../widgets/project/list_projects_widget.dart';
@@ -19,7 +20,7 @@ class ListProjectScreen extends ConsumerWidget {
     final size = MediaQuery.of(context).size;
     final listProyecto = ref.watch(listProject);
      final proyectRole = ref.watch(listProject.notifier);
-   
+   final puntosUsuario = ref.watch(showPuntos);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -41,19 +42,35 @@ class ListProjectScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
                 onPressed: () {
-                  showDialog(
+                  //TODO: condicional para preguntar cantidad de puntos
+                  //si puntos > 100 puede abrir el dialogo, sino, muestra Toast: 'Debes tener al menos 100 puntos para esto'
+                  
+                  // double puntosUsuario = 100; // obtener puntos del usuario 
+                  if( puntosUsuario < 100){
+                    // toast 'Debes tener al menos 100 puntos para esto'
+                     Fluttertoast.showToast(
+                      msg: 'Debes tener al menos 100 puntos para esto', // message
+                      toastLength: Toast.LENGTH_SHORT, // length
+                      gravity: ToastGravity.BOTTOM, // location
+                    );
+                  }else{
+                    showDialog(
                       context: context,
                       builder: (context) => Center(
-                          child: Align(
-                              alignment: Alignment.topCenter,
-                              child: NewProjectDialog(
-                                  context: context, size: size))));
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: NewProjectDialog(
+                              context: context, size: size)
+                        )
+                      )
+                    );                
+                }
                 },
                 icon: const Icon(
                   Icons.add_box_rounded,
                   color: Colors.white,
                 )),
-          )
+          )                                   
         ],
       ),
       floatingActionButtonLocation:

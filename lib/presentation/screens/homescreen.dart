@@ -88,7 +88,7 @@ class HomeScreen extends ConsumerWidget {
               padding: EdgeInsets.only(left: 10.0),
               child: Row(
                 children: [
-                  Text('Tus Metas y tareas',
+                  Text('Tus tareas asignadas',
                       textAlign: TextAlign.left,
                       style: TextStyle(
                           color: Colors.black,
