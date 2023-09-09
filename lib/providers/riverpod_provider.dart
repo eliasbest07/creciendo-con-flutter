@@ -21,6 +21,7 @@ final showClave =
 final showMensaje = StateProvider<String>((ref) => '');
 final showEstatus = StateProvider<String>((ref) => 'Usuario');
 final showNombre = StateProvider<String>((ref) => 'Nombre');
+final showPuntos = StateProvider<double>((ref) => 0);
 final showClaveReg = StateProvider<bool>(
     (ref) => true); // para la pantalla de login en Registrar
 // final listaProyectos = StateNotifierProvider<ProyectoProvider, List<Proyecto>> ((ref) => ProyectoProvider([Proyecto()])); // es una forma

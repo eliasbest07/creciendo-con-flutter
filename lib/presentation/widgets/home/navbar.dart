@@ -1,10 +1,12 @@
-import 'package:TaskFlow/presentation/screens/homescreen.dart';
+import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:TaskFlow/presentation/screens/homescreen.dart';
 import '../../../infrastructure/services/usuario_service.dart';
 import '../../drawables/nav_bar.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends ConsumerWidget {
   const NavBar({
     super.key,
     required this.primaryColor,
@@ -15,7 +17,7 @@ class NavBar extends StatelessWidget {
   final double width;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
         height: 150,
         width: double.infinity,
@@ -65,6 +67,8 @@ class NavBar extends StatelessWidget {
                   stream: UsuarioService().obtenerPuntos(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
+                       ref.read(showPuntos.notifier).state = double.parse(snapshot.data.toString());
+                       print(snapshot.data.toString());
                       return Center(child: Text(snapshot.data.toString()));
                     } else {
                       return Center(

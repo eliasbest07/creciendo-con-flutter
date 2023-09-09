@@ -97,7 +97,7 @@ class DrawerCustom extends ConsumerWidget {
                       ),
                     );
                   } else if (snapshot.hasError) {
-                    return const Text('Error al obtener el nombre del usuario');
+                    return Text('${snapshot.error.toString()}');
                   }
                 }
                 return const CircularProgressIndicator();
