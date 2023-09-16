@@ -26,8 +26,8 @@ class ProyectoByRol{
 
   factory ProyectoByRol.fromJson(Map<dynamic, dynamic> json) {
     return ProyectoByRol(
-      nombre: json['nombre'],
-      creadopor: json['creadopor'],
+      nombre: json['nombreProyecto'],
+      creadopor: json['creadoPor'],
       estado: json['estado'],
       icono: json['icono'],
       proyectoId: json['proyectoId'],      

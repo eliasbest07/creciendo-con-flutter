@@ -1,3 +1,4 @@
+import 'package:TaskFlow/domain/entities/proyecto/add_user_project.dart';
 import 'package:TaskFlow/domain/entities/proyecto/comentario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
@@ -30,7 +31,7 @@ abstract class ProyectoRepository {
   Future<List<ProyectoByRol>> obtenerProyectosByRol(String rol);
 
   Future<bool> ingresarComoAuxiliar(
-      String projectId, String userId, String nombre);
+      String projectId, String userId, String nombre, AddUserProject addAuxiliarUser);
   Future<bool> verificarUsuarioEnProyecto(String proyectoId, String userId);
   /* Nota : Solo usar estos roles : Lider, Lider_Backend, Lider_UI, Lider_Code, Sublider_Backend,
   Sublider_UI, Sublider_Code, Auxiliar */

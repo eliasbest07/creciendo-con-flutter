@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProyectoAuxiliar extends StateNotifier<List<ProyectoByRol>>{
   // ProyectoProvider(super.state);
-  ProyectoAuxiliar() : super([]) {
-    
-  }
-  bool role=false;
+  ProyectoAuxiliar() : super([]);
+
+  bool roleIsLider=false;
+  
   
 }

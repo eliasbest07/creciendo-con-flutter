@@ -1,11 +1,11 @@
-class ListProyectoAuxiliar{
+class AddUserProject{
   String? creadoPor;
   String? estado;
   String? icono;
   String? nombreProyecto;
   String? proyectoId;
 
-    ListProyectoAuxiliar({
+    AddUserProject({
     required this.creadoPor,
     required this.estado,
     required this.icono,
@@ -13,14 +13,14 @@ class ListProyectoAuxiliar{
     required this.proyectoId
   });
 
-    ListProyectoAuxiliar copyWith({
+    AddUserProject copyWith({
       String? creadoPor,
       String? estado,
       String? icono,
       String? nombreProyecto,
       String? proyectoId,
   }) =>
-      ListProyectoAuxiliar(
+      AddUserProject(
         creadoPor: creadoPor ?? this.creadoPor,
         estado: estado ?? this.estado,
         icono: icono ?? this.icono,
@@ -28,8 +28,8 @@ class ListProyectoAuxiliar{
         proyectoId: proyectoId ?? this.proyectoId,
       );
 
-  factory ListProyectoAuxiliar.fromJson(Map<dynamic, dynamic> json) =>
-      ListProyectoAuxiliar(
+  factory AddUserProject.fromJson(Map<dynamic, dynamic> json) =>
+      AddUserProject(
         creadoPor: json["creadoPor"],
         estado: json["estado"],
         icono: json["icono"],
