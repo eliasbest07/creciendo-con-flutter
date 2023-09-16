@@ -1,4 +1,3 @@
-import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -67,7 +66,7 @@ class NavBar extends ConsumerWidget {
                   stream: UsuarioService().obtenerPuntos(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                       ref.read(showPuntos.notifier).state = double.parse(snapshot.data.toString());
+                     //  ref.read(showPuntos.notifier).state = double.parse(snapshot.data.toString());
                        print(snapshot.data.toString());
                       return Center(child: Text(snapshot.data.toString()));
                     } else {

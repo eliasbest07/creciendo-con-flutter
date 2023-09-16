@@ -19,8 +19,8 @@ class ListProjectScreen extends ConsumerWidget {
     //final listaProject = ref.watch(listaProyectos);
     final size = MediaQuery.of(context).size;
     final listProyecto = ref.watch(listProject);
-     final proyectRole = ref.watch(listProject.notifier);
-   final puntosUsuario = ref.watch(showPuntos);
+    final proyectRole = ref.watch(listProject.notifier);
+    final puntosUsuario = ref.watch(showPuntos);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -48,7 +48,7 @@ class ListProjectScreen extends ConsumerWidget {
                   // double puntosUsuario = 100; // obtener puntos del usuario 
                   if( puntosUsuario < 100){
                     // toast 'Debes tener al menos 100 puntos para esto'
-                     Fluttertoast.showToast(
+                    Fluttertoast.showToast(
                       msg: 'Debes tener al menos 100 puntos para esto', // message
                       toastLength: Toast.LENGTH_SHORT, // length
                       gravity: ToastGravity.BOTTOM, // location
@@ -97,15 +97,16 @@ class ListProjectScreen extends ConsumerWidget {
                       //  List<ProyectoByRol> lider = await ProyectoService().obtenerProyectosByRol('Lider');
                        // print(lider[0].nombre);
                        // ref.read(listProject.notifier).state = lider;
-                      proyectRole.role=true; // lider
+                      proyectRole.roleIsLider=true; // lider
                         showListByRol("Lider", ref);
 
                         //TODO: situa color claro y pone en oscuro el otro gesture
+
                       },
                       child: Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 103, 159, 228),
+                          color: proyectRole.roleIsLider ? Theme.of(context).primaryColor : const Color.fromARGB(155, 103, 159, 228),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: const Padding(
@@ -124,14 +125,14 @@ class ListProjectScreen extends ConsumerWidget {
                     child: GestureDetector(
                       onTap: () {
                         showListByRol("Auxiliar", ref);
-                         proyectRole.role=false; // auxiliar
+                         proyectRole.roleIsLider=false; // auxiliar
                         //TODO: situa color claro y pone en oscuro el otro gesture
                         
                       },
                       child: Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
+                          color: proyectRole.roleIsLider ? const Color.fromARGB(155, 103, 159, 228) :  Theme.of(context).primaryColor  ,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: const Padding(
@@ -150,7 +151,7 @@ class ListProjectScreen extends ConsumerWidget {
             ),
             const SizedBox(height: 20),
             ListProjectWidget( 
-              isLider: proyectRole.role,
+              isLider: proyectRole.roleIsLider,
               listProject:listProyecto ,
               onMetas: ( idProject ){
                 Navigator.push(

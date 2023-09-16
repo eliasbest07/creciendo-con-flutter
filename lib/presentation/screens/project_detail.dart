@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:TaskFlow/domain/entities/proyecto/add_user_project.dart';
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
 //import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
@@ -342,7 +343,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                           final usuario = usuarios[index];
 
                           return Padding(
-                            padding: EdgeInsets.all(8.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: Column(
                               children: [
                                 CircleAvatar(
@@ -352,7 +353,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                                 Text(
                                     acortador.getFirstWord(usuario.nombre),                                    
                                     textAlign: TextAlign.center,
-                                    style: TextStyle(fontSize: 10),
+                                    style:const TextStyle(fontSize: 10),
                                   ),
                                 
                               ],
@@ -734,8 +735,11 @@ class _BotonUnirseState extends State<BotonUnirse> {
             onPressed: () {
 
               try{
+              final AddUserProject auxiliarUser= AddUserProject(creadoPor: widget.project.creadopor,estado: widget.project.estado,icono: widget.project.icon,nombreProyecto: widget.project.nombre,proyectoId: widget.project.id!);
+
               ProyectoService().ingresarComoAuxiliar(
-                  widget.project.id!, widget.userId, widget.nombre);
+                  widget.project.id!, widget.userId, widget.nombre, auxiliarUser
+                  );
 
               widget.project.listUserProyecto!.add(
                 UsuariosProyecto(
@@ -745,6 +749,9 @@ class _BotonUnirseState extends State<BotonUnirse> {
                   avatar: '',
                 ),
               );
+              
+
+              // agregar al usuario proyecto como auxiliar 
                 Fluttertoast.showToast(
                   msg: "Te has unido con éxito", // message
                   toastLength: Toast.LENGTH_SHORT, // length

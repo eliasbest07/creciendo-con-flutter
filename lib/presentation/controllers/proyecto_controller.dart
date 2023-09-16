@@ -28,7 +28,7 @@ class ProyectoProvider extends StateNotifier<List<Proyecto>> {
     if (inputName.text.isEmpty) {
       return false;
     }
-    Proyecto nuevoProyecto = Proyecto(icon: "icon", nombre: inputName.text);
+    Proyecto nuevoProyecto = Proyecto(icon: "icon", nombre: inputName.text,creadopor: 'usuario',estado: 'nuevo');
 
     //Verificar si el usuario tiene suficientes puntos
     bool puntoSuf = await UsuarioService().verificarPuntosSuficientes();

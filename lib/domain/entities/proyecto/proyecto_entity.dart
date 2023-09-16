@@ -6,6 +6,8 @@ class Proyecto {
   String? id;
   String icon;
   String nombre;
+  String creadopor='';
+  String estado='';
   List<Meta>? listMeta;
   List<Comentario>? listComentarioPy;
   List<UsuariosProyecto>? listUserProyecto;
@@ -16,6 +18,8 @@ class Proyecto {
       {this.id,
       required this.icon,
       required this.nombre,
+      required this.creadopor,
+      required this.estado,
       this.listMeta,
       this.fechaInicio,
       this.fechaEstablecida,
@@ -27,6 +31,8 @@ class Proyecto {
       'id': id,
       'icon': icon,
       'nombre': nombre,
+      'creadopor': creadopor,
+      'estado':estado,
       'listMeta': listMeta?.map((meta) => meta.toJson()).toList(),
       'listComentarioPy':
           listComentarioPy?.map((comentario) => comentario.toJson()).toList(),
@@ -39,6 +45,8 @@ class Proyecto {
         id: json["id"],
         icon: json["icon"],
         nombre: json["nombre"],
+        creadopor: json["creadopor"],
+        estado: json["estado"],
         fechaInicio: json["fechaInicio"] != null
             ? DateTime.parse(json["fechaInicio"])
             : null,

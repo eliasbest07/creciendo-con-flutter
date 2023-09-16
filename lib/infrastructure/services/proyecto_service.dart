@@ -1,3 +1,4 @@
+import 'package:TaskFlow/domain/entities/proyecto/add_user_project.dart';
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuario_proyecto_entity.dart';
@@ -610,8 +611,13 @@ class ProyectoService implements ProyectoRepository {
 
   @override
   Future<bool> ingresarComoAuxiliar(
-      String projectId, String userId, String nombre) async {
+      String projectId, String userId, String nombre,  AddUserProject addAuxiliarUser ) async {
     try {
+        DatabaseReference ref =
+          db.ref().child("users").child(userId).child('listProyectoAuxiliar');
+
+        await ref.push().set(addAuxiliarUser.toJson());
+
       DatabaseReference proyectoRef =
           db.ref().child("proyecto").child(projectId);
 
@@ -659,7 +665,7 @@ class ProyectoService implements ProyectoRepository {
   Future<void> _agregarUsuarioAuxiliar(
       String userId, DatabaseReference proyectoRef, String nombre) async {
     //Obtener proyectoId
-    String proyectoId = proyectoRef.key!;
+    // String proyectoId = proyectoRef.key!;
     //Almacenar usuario en listUserProyecto
     UsuariosProyecto auxiliar = UsuariosProyecto(
         usuarioId: userId,
@@ -670,11 +676,11 @@ class ProyectoService implements ProyectoRepository {
     await proyectoRef.child("listUserProyecto").push().set(auxiliar.toJson());
 
     //Almacenar usuario en listProyectoAuxiliar
-    ProyectoAuxliliar pyAux = ProyectoAuxliliar(proyectoAuxiliarId: proyectoId);
-    final DatabaseReference usuarioRef =
-        db.ref().child("users").child(userId).child("listProyectoAuxiliar");
+    // ProyectoAuxliliar pyAux = ProyectoAuxliliar(proyectoAuxiliarId: proyectoId);
+    // final DatabaseReference usuarioRef =
+    //     db.ref().child("users").child(userId).child("listProyectoAuxiliar");
 
-    await usuarioRef.push().set(pyAux.toJson());
+    // await usuarioRef.push().set(pyAux.toJson());
   }
 
   Future<void> _verificarUsuarioProyecto(

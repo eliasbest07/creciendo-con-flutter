@@ -1,5 +1,5 @@
 import 'package:TaskFlow/domain/entities/medalla/medalla_entity.dart';
-import 'package:TaskFlow/domain/entities/usuario/proyectoAuxiliar_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/add_user_project.dart';
 import 'package:TaskFlow/domain/entities/usuario/proyectoLider_entity.dart';
 
 class Usuario {
@@ -12,7 +12,7 @@ class Usuario {
   DateTime fechaRegistro;
   List<Medalla>? listMedalla = [];
   List<ProyectoLider>? listProyectoLider = [];
-  List<ProyectoAuxliliar>? listProyectoAuxiliar = [];
+  List<AddUserProject>? listProyectoAuxiliar = [];
 
   Usuario(
       {this.uid,
@@ -70,7 +70,7 @@ class Usuario {
             ? (json['listProyectoAuxiliar'] as Map<dynamic, dynamic>)
                 .values
                 .map((listProyectoAuxiliarJson) =>
-                    ProyectoAuxliliar.fromJson(listProyectoAuxiliarJson))
+                    AddUserProject.fromJson(listProyectoAuxiliarJson))
                 .toList()
             : null,
       );

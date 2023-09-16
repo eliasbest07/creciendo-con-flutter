@@ -112,11 +112,11 @@ class HomeScreen extends ConsumerWidget {
                     child: GestureDetector(
                       onTap: () {
                         // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => const GoalDetailScreen(),
-                        //   ),
-                        // );
+                        //     context,
+                        //     MaterialPageRoute(
+                        //       builder: (context) =>
+                        //           TaskDetailScreen(tarea: listaTareas[index])),
+                        //   );
                       },
                       child: Container(
                           width: height * 0.18,
