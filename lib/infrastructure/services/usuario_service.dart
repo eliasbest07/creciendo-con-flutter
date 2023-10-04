@@ -103,6 +103,7 @@ class UsuarioService implements UsuarioRepository {
         .onValue
         .map((event) {
       final puntos = event.snapshot.value as int;
+      //TODO: pasar a riverdpod la variable puntos con el fin de poder operarlos y retornar de nuevo a firebase
       return puntos;
     });
   }
