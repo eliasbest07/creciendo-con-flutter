@@ -6,7 +6,6 @@ import 'package:TaskFlow/presentation/controllers/animation_controller.dart';
 import 'package:TaskFlow/presentation/controllers/taks_user_controller.dart';
 import 'package:TaskFlow/presentation/controllers/task_detail_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../presentation/controllers/auxiliar_proyecto_controller.dart';
 import '../presentation/controllers/edit_goal_controller.dart';
 import '../presentation/controllers/list_goals_controller.dart';

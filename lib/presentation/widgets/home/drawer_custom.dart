@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../screens/profile_screen.dart';
+
 
 class DrawerCustom extends ConsumerWidget {
   const DrawerCustom({
@@ -95,6 +97,12 @@ class DrawerCustom extends ConsumerWidget {
                           fontSize: 16,
                         ),
                       ),
+                      onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const ProfileScreen()));
+                          },
                     );
                   } else if (snapshot.hasError) {
                     return Text('${snapshot.error.toString()}');

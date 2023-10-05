@@ -120,26 +120,50 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<void> asignarTarea({ required proyectoId,required String  metaId,required String tareaID,required String userId, required Tarea tarea}) async{
+  Future<void> asignarTarea(
+      {required proyectoId,
+      required String metaId,
+      required String tareaID,
+      required String userId,
+      required Tarea tarea}) async {
     try {
       // DatabaseReference proyectoRef =
       //     db.ref().child("proyecto").child(proyectoId);
       // DatabaseReference metaRef = proyectoRef.child("listMeta").child(metaId).child('listTarea').child(tareaID);
       // metaRef.child('usuarioAsignado').set(userId);
 
-      Map<String,String> dirTarea={
-        "proyectoId":proyectoId,
-        "metaId":metaId,
-        "descripcion":tarea.descripcion,
-        "estado":tarea.estado,
-        "tareaid":tarea.id!,
+      Map<String, String> dirTarea = {
+        "proyectoId": proyectoId,
+        "metaId": metaId,
+        "descripcion": tarea.descripcion,
+        "estado": tarea.estado,
+        "nombre": tarea.nombre,
+        "tareaid": tarea.id!,
         "fechaEstablecida": tarea.fechaEstablecida.toIso8601String()
+      };
+
+      Map<String, String> participante = {
+        "nombre": 'nombre',
+        "userID": userId,
+        "role": 'rol',
+        "supervisor": 'nombre lider',
+        "fechaUnio": DateTime.now().toString()
       };
       DatabaseReference userRef =
           db.ref().child("users").child(userId).child('listaTareas').push();
-          userRef.set(dirTarea);
-
-
+      dirTarea["userTareaId"] = userRef.key.toString();
+      
+      
+      userRef.set(dirTarea);
+      userRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoId)
+          .child('listMeta')
+          .child(metaId)
+          .child('listaparticipante')
+          .push();
+      userRef.set(participante);
     } catch (e) {
       throw MetaStorageFailed("Error al asignar usuario a la tarea: $e");
     }
@@ -277,27 +301,30 @@ class ProyectoService implements ProyectoRepository {
           "Error al almacenar comentario de tarea: $e");
     }
   }
+
   @override
-  Future<List<TareaUsuario>> obtenerTodasTareasUsuario( String userId) async {
-    DatabaseReference usersRef = db.ref().child("users").child(userId).child('listaTareas');
+  Future<List<TareaUsuario>> obtenerTodasTareasUsuario(String userId) async {
+    DatabaseReference usersRef =
+        db.ref().child("users").child(userId).child('listaTareas');
+
+        
     DatabaseEvent databaseEvent = await usersRef.once();
-    
+
     Map<dynamic, dynamic>? tareasData =
         databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
 
-    List<TareaUsuario> tareas =[];
+    List<TareaUsuario> tareas = [];
 
     if (tareasData != null) {
       tareasData.forEach((proyectoId, proyectoData) {
         TareaUsuario? inTarea = TareaUsuario.fromJson(proyectoData);
-  
+
         tareas.add(inTarea);
       });
     }
 
     return tareas;
   }
-
 
   @override
   Future<List<Proyecto>> obtenerTodosProyectos() async {
@@ -318,14 +345,21 @@ class ProyectoService implements ProyectoRepository {
 
   @override
   Future<List<ProyectoByRol>> obtenerProyectosByRol(String rol) async {
-
     try {
       DatabaseReference proyectosRef;
 
-      if(rol.contains('Lider')){
-        proyectosRef = db.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("listProyectoLider");
-      }else{
-        proyectosRef = db.ref().child("users").child(FirebaseAuth.instance.currentUser!.uid).child("listProyectoAuxiliar");
+      if (rol.contains('Lider')) {
+        proyectosRef = db
+            .ref()
+            .child("users")
+            .child(FirebaseAuth.instance.currentUser!.uid)
+            .child("listProyectoLider");
+      } else {
+        proyectosRef = db
+            .ref()
+            .child("users")
+            .child(FirebaseAuth.instance.currentUser!.uid)
+            .child("listProyectoAuxiliar");
       }
 
       DatabaseEvent databaseEvent = await proyectosRef.once();
@@ -341,7 +375,7 @@ class ProyectoService implements ProyectoRepository {
     return [];
   }
 
-    List<ProyectoByRol> _cargarProyectosByRol(
+  List<ProyectoByRol> _cargarProyectosByRol(
       Map<dynamic, dynamic>? proyectosData, List<ProyectoByRol> proyectos) {
     try {
       if (proyectosData != null) {
@@ -400,13 +434,12 @@ class ProyectoService implements ProyectoRepository {
     return null;
   }
 
-    @override
+  @override
   Future<List<Meta>> obtenerMetas(String proyectoId) async {
     try {
       DatabaseReference proyectoRef =
           db.ref().child("proyecto").child(proyectoId);
-      DatabaseEvent databaseEvent =
-          await proyectoRef.child("listMeta").once();
+      DatabaseEvent databaseEvent = await proyectoRef.child("listMeta").once();
 
       return _procesarTodasMetaSnapshot(databaseEvent.snapshot);
     } catch (e) {
@@ -416,12 +449,15 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<List<Tarea>> obtenerTareas(String metaId, String proyectoID) async{
+  Future<List<Tarea>> obtenerTareas(String metaId, String proyectoID) async {
     try {
-      DatabaseReference proyectoRef =
-          db.ref().child("proyecto").child(proyectoID).child('listMeta').child(metaId);
-      DatabaseEvent databaseEvent =
-          await proyectoRef.child("listTarea").once();
+      DatabaseReference proyectoRef = db
+          .ref()
+          .child("proyecto")
+          .child(proyectoID)
+          .child('listMeta')
+          .child(metaId);
+      DatabaseEvent databaseEvent = await proyectoRef.child("listTarea").once();
 
       return _procesarTodasTareasSnapshot(databaseEvent.snapshot);
     } catch (e) {
@@ -429,6 +465,9 @@ class ProyectoService implements ProyectoRepository {
     }
     return [];
   }
+
+  Future<void> obtenerParticipantes(String poryectoID, String metaID) async {}
+
   @override
   Future<Tarea?> buscarTarea(
       String proyectoId, String metaId, String tareaId) async {
@@ -447,6 +486,17 @@ class ProyectoService implements ProyectoRepository {
     }
     return null;
   }
+
+/*     @override
+  Future<void> eliminarTarea(String proyectoId) async {
+    try {
+      DatabaseReference proyectoRef =
+          db.ref().child("proyecto").child(proyectoId);
+      await _eliminarProyect(proyectoRef);
+    } catch (e) {
+      print(e.toString());
+    }
+  } */
 
   Future<void> _actualizarIDsComentariosProyecto(
       DatabaseReference proyectoRef, Proyecto proyecto) async {
@@ -524,14 +574,13 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
-    List<Meta> _procesarTodasMetaSnapshot(DataSnapshot metaSnapshot) {
-      List<Meta> responmetas = [];
+  List<Meta> _procesarTodasMetaSnapshot(DataSnapshot metaSnapshot) {
+    List<Meta> responmetas = [];
     try {
       if (metaSnapshot.value != null) {
-          Map<dynamic, dynamic>? proyectosData =
-          metaSnapshot.value as Map<dynamic, dynamic>?;
-          
-          
+        Map<dynamic, dynamic>? proyectosData =
+            metaSnapshot.value as Map<dynamic, dynamic>?;
+
         proyectosData?.forEach((proyectoId, proyectoData) {
           Meta? proyecto = Meta.fromJson(proyectoData);
           //proyecto.id = proyectoId;
@@ -544,13 +593,13 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
-    List<Tarea> _procesarTodasTareasSnapshot(DataSnapshot tareaSnapshot) {
-      List<Tarea> responmetas = [];
+  List<Tarea> _procesarTodasTareasSnapshot(DataSnapshot tareaSnapshot) {
+    List<Tarea> responmetas = [];
     try {
       if (tareaSnapshot.value != null) {
-          Map<dynamic, dynamic>? metasData =
-          tareaSnapshot.value as Map<dynamic, dynamic>?;
-                    
+        Map<dynamic, dynamic>? metasData =
+            tareaSnapshot.value as Map<dynamic, dynamic>?;
+
         metasData?.forEach((metaId, metaData) {
           Tarea? meta = Tarea.fromJson(metaData);
           //proyecto.id = proyectoId;
@@ -609,14 +658,22 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
-  @override
-  Future<bool> ingresarComoAuxiliar(
-      String projectId, String userId, String nombre,  AddUserProject addAuxiliarUser ) async {
+/*   Future<void> _eliminarTarea(DatabaseReference proyectoRef) async {
     try {
-        DatabaseReference ref =
+      await proyectoRef.remove();
+    } catch (e) {
+      throw ProyectDeleteFailed("Error al eliminar proyecto: $e");
+    }
+  } */
+
+  @override
+  Future<bool> ingresarComoAuxiliar(String projectId, String userId,
+      String nombre, AddUserProject addAuxiliarUser) async {
+    try {
+      DatabaseReference ref =
           db.ref().child("users").child(userId).child('listProyectoAuxiliar');
 
-        await ref.push().set(addAuxiliarUser.toJson());
+      await ref.push().set(addAuxiliarUser.toJson());
 
       DatabaseReference proyectoRef =
           db.ref().child("proyecto").child(projectId);
@@ -848,7 +905,4 @@ class ProyectoService implements ProyectoRepository {
         .child("rol")
         .set(nuevoRol);
   }
-  
-  
-
 }

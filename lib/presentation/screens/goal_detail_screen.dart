@@ -5,20 +5,21 @@ import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../domain/entities/proyecto/tarea_entity.dart';
+import '../widgets/home/card_tarea.dart';
 import 'screens.dart';
 
 class GoalDetailScreen extends ConsumerWidget {
   const GoalDetailScreen({super.key, required this.meta});
   final Meta meta;
+  // falta el proyecto
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     final ScrollController listTask = ScrollController();
 
-    final tarea= ref.watch(tareaDetails.notifier);
-    tarea.goalID=meta.id!;
+    final tarea = ref.watch(tareaDetails.notifier);
+    tarea.goalID = meta.id!;
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -31,25 +32,30 @@ class GoalDetailScreen extends ConsumerWidget {
             fontWeight: FontWeight.w800,
           ),
         ),
-
         actions: [
           Container(
-            margin: const EdgeInsets.only(right:10.0, top: 10, bottom: 10),
+            margin: const EdgeInsets.only(right: 10.0, top: 10, bottom: 10),
             height: 20,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(50),
-            border: Border.all(width: 2,color: Colors.white)),
-            child: const Center(child:  Padding(
-              padding: EdgeInsets.symmetric(horizontal:9.0),
-              child: Text('Sugerir Tarea',style: TextStyle(color: Colors.white),),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(50),
+                border: Border.all(width: 2, color: Colors.white)),
+            child: const Center(
+                child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 9.0),
+              child: Text(
+                'Sugerir Tarea',
+                style: TextStyle(color: Colors.white),
+              ),
             )),
           )
         ],
       ),
-            floatingActionButton: NavBar(
+      floatingActionButton: NavBar(
         primaryColor: Theme.of(context).primaryColor,
         width: size.width,
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
       body: Stack(
         children: [
           Column(
@@ -85,118 +91,95 @@ class GoalDetailScreen extends ConsumerWidget {
                   },
                 ),
               ),
-              
               Padding(
-                padding: const EdgeInsets.only(left:8.0),
+                padding: const EdgeInsets.only(left: 8.0),
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('Lista de Tareas 05',style: TextStyle(color: Colors.grey)),
-                      IconButton(
-                        onPressed: (){
-              
-                        }, 
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Lista de Tareas 05',
+                        style: TextStyle(color: Colors.grey)),
+                    IconButton(
+                        onPressed: () {},
                         icon: SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CustomPaint(
-                              size: Size.infinite,
-                              painter: FilterIcon()
-                          )
-                        )
-                      )
-                    ],
-                  ),
+                            height: 20,
+                            width: 20,
+                            child: CustomPaint(
+                                size: Size.infinite, painter: FilterIcon())))
+                  ],
+                ),
               ),
               SizedBox(
-                height: size.height*0.62,
-                child: FutureBuilder(
-                  future: ProyectoService().obtenerTareas(meta.id!,meta.proyectoID),
-                  builder: (context, snapshot) {
-                    if(snapshot.hasData){
-                    List<Tarea> listTarea=  snapshot.data ?? [];
-                    return ListView.builder(
-                    controller: listTask,
-                    itemCount: listTarea.length,
-                    itemBuilder: (context, index) {
-                      return Padding(
-                        padding: index==listTarea.length-1 ? const EdgeInsets.only(bottom:320.0,top: 8,left: 8,right: 8) : const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap:(){
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TaskDetailScreen(tarea: listTarea[index])),
-                              );
-                          },
-                          child: Container( 
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.white,
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Color.fromARGB(74, 46, 46, 46),
-                                  offset: Offset(0.0, 2.0),
-                                  blurRadius: 7.0,
-                                )
-                              ],
-                            ),
-                            child:Padding(
-                              padding: const EdgeInsets.only(top:8.0,left: 8.0, right: 20, bottom: 8),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                SizedBox(
-                                  width: size.width*0.75,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                    Text(listTarea[index].nombre, maxLines: 2, overflow: TextOverflow.ellipsis,style: TextStyle(fontSize: 18)),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Text('Estado:',style: TextStyle(color: Colors.grey)),
-                                        const SizedBox(width: 10),
-                                        Container(
-                                          padding: const EdgeInsets.only(top:2, left: 10, bottom: 2, right: 10),
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(30),
-                                            color: listTarea[index].estado == 'en proceso' ? const Color.fromARGB(255, 190, 113, 25) :  Theme.of(context).primaryColor
-                                          ),
-                                          child: Text(listTarea[index].estado, style:const TextStyle(color: Colors.white),)),
-                                        
-                                          
-                                          
-                                      ],
-                                    )
-                                  ]),
+                  height: size.height * 0.62,
+                  child: FutureBuilder(
+                    future: ProyectoService()
+                        .obtenerTareas(meta.id!, meta.proyectoID),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<Tarea> listTarea = snapshot.data ?? [];
+                        return ListView.builder(
+                            controller: listTask,
+                            itemCount: listTarea.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: index == listTarea.length - 1
+                                    ? const EdgeInsets.only(
+                                        bottom: 320.0,
+                                        top: 8,
+                                        left: 8,
+                                        right: 8)
+                                    : const EdgeInsets.all(8.0),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      // otra forma que se me ocurre es guardar en Tarea es ide de TareaUsuario, 
+                                      //en donde el usuario dice que se asigna esa tarea
+
+                                      //encontré una forma de obtener ese id, y es con un metodo que sugiere bing
+                                      // ohh genial xd a ver
+                                      // Bro mañana continuamos, tengo que ir a dormir porque tengo examen mañana 
+                                      // mañana seguimos igual comenzamos a las 7 o 7:30 
+
+                                      // dale bro, descansa feliz noche
+
+
+                                      //segun bing, una de las formas de saber el id de TareaUsuario (padre), 
+                                      //es a traves de su hijo (cada item de tarea dentro de listaTareas)
+                                      // ya que, cada item hijo tiene "tareaid", este puede usarse para buscar entre el listado de listaTareas
+                                      // y trarse ese id padre
+
+                                      //getIdTareaUsuario(tarea.id);
+
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TaskDetailScreen(
+                                                  meta: meta,
+                                                  tarea: listTarea[index], )),
+                                    );
+                                  },
+                                  child: CardTarea(
+                                      size: size,
+                                      listTarea: listTarea,
+                                      index: index),
                                 ),
-                                  Center(child: Container( 
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 1), shape: BoxShape.circle),),)
-                              ],),
-                            )
-                          ),
-                        ),
-                      );
-                    }
-                  );}
-                  return const Center(child: CircularProgressIndicator());
-                  },
-                  
-                )
-              )
-            
+                              );
+                            });
+                      }
+                      return const Center(child: CircularProgressIndicator());
+                    },
+                  ))
             ],
           ),
           Positioned(
-            bottom: 135,
-            left: 0,
-            right: 0,
-            child: CardGoalDetail(meta: meta, scrollController: listTask,maximoTamanio: 200, minimoTamanio: 100,)
-          )
+              bottom: 135,
+              left: 0,
+              right: 0,
+              child: CardGoalDetail(
+                meta: meta,
+                scrollController: listTask,
+                maximoTamanio: 200,
+                minimoTamanio: 100,
+              ))
         ],
       ),
     );
@@ -206,7 +189,10 @@ class GoalDetailScreen extends ConsumerWidget {
 class CardGoalDetail extends StatefulWidget {
   const CardGoalDetail({
     super.key,
-    required this.meta, required this.scrollController, required this.maximoTamanio, required this.minimoTamanio,
+    required this.meta,
+    required this.scrollController,
+    required this.maximoTamanio,
+    required this.minimoTamanio,
   });
 
   final ScrollController scrollController;
@@ -219,137 +205,187 @@ class CardGoalDetail extends StatefulWidget {
 }
 
 class _CardGoalDetailState extends State<CardGoalDetail> {
-  double tamanio =0;
+  double tamanio = 0;
   @override
   void initState() {
     super.initState();
-    tamanio =widget.maximoTamanio;
-    widget.scrollController.addListener(() { 
-
-      if( tamanio > 100){
-        tamanio=tamanio-(widget.scrollController.position.pixels)*0.02;
-        setState(() {
-          
-        });
+    tamanio = widget.maximoTamanio;
+    widget.scrollController.addListener(() {
+      if (tamanio > 100) {
+        tamanio = tamanio - (widget.scrollController.position.pixels) * 0.02;
+        setState(() {});
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         setState(() {
-          tamanio=widget.maximoTamanio;
+          tamanio = widget.maximoTamanio;
         });
       },
       child: Container(
         height: tamanio,
         decoration: BoxDecoration(
-          borderRadius:BorderRadius.circular(10),
-          color: Theme.of(context).primaryColor
-        ), 
+            borderRadius: BorderRadius.circular(10),
+            color: Theme.of(context).primaryColor),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: SingleChildScrollView(
             physics: const NeverScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 3,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius:
-                            BorderRadius.circular(100),
-                        color: Colors.purple,
-                      ),
-                      alignment: Alignment.center,
-                      child:Text(
-                        widget.meta.item,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 11,
-                        ),
-                      ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 3,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(100),
+                    color: Colors.purple,
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    widget.meta.item,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 11,
                     ),
-                    const Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text('Tareas completadas 4/6',style: TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
-                            const SizedBox(width: 5),
-                            Text('75%',style: TextStyle(color: Colors.white))
-                          ]
-                        ),
-                        SizedBox(
-                          width: 200,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            child: LinearProgressIndicator(
-                              value: 0.8,
-                              color: Color.fromARGB(255, 63, 255, 70),)),
-                        )
-                      ]
-                    )
-                  
-                  ]
+                  ),
                 ),
-                const SizedBox(height: 5),
-                Text( widget.meta.nombre, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 20,fontWeight: FontWeight.w600, color: Colors.white),),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                    const Text('Creada por:', style: TextStyle(color:  Color.fromARGB(255, 136, 188, 249))),
-                    Row(children: [
-                      Container(height: 40, width: 40, decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),),
-                      const SizedBox(width: 5),
-                      Text('Nombre del usuario ', style: TextStyle(color: Colors.white),)
-                    ],),
-                    const Text('Fecha de Inicio:', style: TextStyle(color:  Color.fromARGB(255, 136, 188, 249))),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today, color: Colors.white),
-                        const SizedBox(width: 5),
-                        Text('12 Oct 2023 ', style: TextStyle(color: Colors.white),),
-                      ],
-                    )
+                const Column(children: [
+                  Row(children: [
+                    Text('Tareas completadas 4/6',
+                        style: TextStyle(
+                            color: Color.fromARGB(255, 136, 188, 249))),
+                    const SizedBox(width: 5),
+                    Text('75%', style: TextStyle(color: Colors.white))
                   ]),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  SizedBox(
+                    width: 200,
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        child: LinearProgressIndicator(
+                          value: 0.8,
+                          color: Color.fromARGB(255, 63, 255, 70),
+                        )),
+                  )
+                ])
+              ]),
+              const SizedBox(height: 5),
+              Text(
+                widget.meta.nombre,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('Creada por:',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
+                  Row(
                     children: [
-                    const Text('Participantes:', style: TextStyle(color:  Color.fromARGB(255, 136, 188, 249))),
-                      const SizedBox(height: 7),
-                    Row(children: [
+                      Container(
+                        height: 40,
+                        width: 40,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.white),
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        'Nombre del usuario ',
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ],
+                  ),
+                  const Text('Fecha de Inicio:',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today, color: Colors.white),
+                      const SizedBox(width: 5),
+                      Text(
+                        '12 Oct 2023 ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  )
+                ]),
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  const Text('Participantes:',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
+                  const SizedBox(height: 7),
+                  Row(
+                    children: [
                       Text('6', style: TextStyle(color: Colors.white)),
                       const SizedBox(width: 7),
-                      Container(
-                        height: 25, decoration: BoxDecoration(borderRadius: BorderRadius.circular(30), color:const Color.fromARGB(255, 136, 188, 249)),
-                        child: Center(child: Text('  Visualizar  ', style: TextStyle(color: Theme.of(context).primaryColor),))
+                      GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isDismissible: true,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25.0),
+                                topRight: Radius.circular(25.0),
+                              )),
+                              builder: (context) {
+                                
+                                return Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.6,
+                                  width: double.infinity,
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return Column(children: [
+                                       const Text('Lista de Participantes')
+                                      ],);
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                              height: 25,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color:
+                                      const Color.fromARGB(255, 136, 188, 249)),
+                              child: Center(
+                                  child: Text(
+                                '  Visualizar  ',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              ))))
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  const Text('Fecha Establecida:',
+                      style:
+                          TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
+                  Row(
+                    children: [
+                      const Icon(Icons.date_range, color: Colors.white),
+                      const SizedBox(width: 5),
+                      Text(
+                        '12 Oct 2023 ',
+                        style: TextStyle(color: Colors.white),
                       ),
-                    ],),
-                    const SizedBox(height: 5),
-                    const Text('Fecha Establecida:', style: TextStyle(color:  Color.fromARGB(255, 136, 188, 249))),
-                    Row(
-                      children: [
-                        const Icon(Icons.date_range, color: Colors.white),
-                        const SizedBox(width: 5),
-                        Text('12 Oct 2023 ', style: TextStyle(color: Colors.white),),
-                      ],
-                    )
-                  ])
+                    ],
+                  )
                 ])
-
-              ]
-            ),
+              ])
+            ]),
           ),
         ),
       ),
@@ -360,12 +396,10 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
 class TaskCardWidget extends StatelessWidget {
   final Size size;
   final Tarea tarea;
+  final Meta meta;
 
-  const TaskCardWidget({
-    super.key,
-    required this.size,
-    required this.tarea,
-  });
+  const TaskCardWidget(
+      {super.key, required this.size, required this.tarea, required this.meta});
 
   @override
   Widget build(BuildContext context) {
@@ -392,7 +426,7 @@ class TaskCardWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskDetailScreen(tarea: tarea),
+            builder: (context) => TaskDetailScreen(tarea: tarea, meta: meta),
           ),
         );
       },

@@ -319,6 +319,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                 userId: userId,
                 primaryColor: primaryColor,
                 nombre: nombre),
+
             const Padding(
               padding: EdgeInsets.only(left: 20.0, top: 20),
               child: Text(
@@ -414,12 +415,22 @@ class ProjectDetailScreen extends ConsumerWidget {
                         itemBuilder: (context, index) {
                           return GestureDetector(
                             onTap:(){
-                                Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => (
-                                              GoalDetailScreen( meta:metas[index] )),
-                                          ));
+                                if(project.listUserProyecto!
+              .where((element) => element.usuarioId == userId)
+              .isEmpty){
+                   Fluttertoast.showToast(
+                      msg: 'Para acceder deber tener el rol de auxiliar.', // message
+                      toastLength: Toast.LENGTH_SHORT, // length
+                      gravity: ToastGravity.BOTTOM, // location
+                    );
+              }else{
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => (
+                        GoalDetailScreen( meta:metas[index] )),
+                    ));
+              }                              
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 2),
