@@ -15,7 +15,7 @@ class GoalDetailScreen extends ConsumerWidget {
   // falta el proyecto
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
     final ScrollController listTask = ScrollController();
 
     final tarea = ref.watch(tareaDetails.notifier);
@@ -132,11 +132,29 @@ class GoalDetailScreen extends ConsumerWidget {
                                   onTap: () {
                                     Navigator.push(
                                       context,
+                                      // otra forma que se me ocurre es guardar en Tarea es ide de TareaUsuario, 
+                                      //en donde el usuario dice que se asigna esa tarea
+
+                                      //encontré una forma de obtener ese id, y es con un metodo que sugiere bing
+                                      // ohh genial xd a ver
+                                      // Bro mañana continuamos, tengo que ir a dormir porque tengo examen mañana 
+                                      // mañana seguimos igual comenzamos a las 7 o 7:30 
+
+                                      // dale bro, descansa feliz noche
+
+
+                                      //segun bing, una de las formas de saber el id de TareaUsuario (padre), 
+                                      //es a traves de su hijo (cada item de tarea dentro de listaTareas)
+                                      // ya que, cada item hijo tiene "tareaid", este puede usarse para buscar entre el listado de listaTareas
+                                      // y trarse ese id padre
+
+                                      //getIdTareaUsuario(tarea.id);
+
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               TaskDetailScreen(
                                                   meta: meta,
-                                                  tarea: listTarea[index])),
+                                                  tarea: listTarea[index], )),
                                     );
                                   },
                                   child: CardTarea(
@@ -310,17 +328,45 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                     children: [
                       Text('6', style: TextStyle(color: Colors.white)),
                       const SizedBox(width: 7),
-                      Container(
-                          height: 25,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: const Color.fromARGB(255, 136, 188, 249)),
-                          child: Center(
-                              child: Text(
-                            '  Visualizar  ',
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColor),
-                          ))),
+                      GestureDetector(
+                          onTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              isDismissible: true,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(25.0),
+                                topRight: Radius.circular(25.0),
+                              )),
+                              builder: (context) {
+                                
+                                return Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.6,
+                                  width: double.infinity,
+                                  child: ListView.builder(
+                                    itemBuilder: (context, index) {
+                                      return Column(children: [
+                                       const Text('Lista de Participantes')
+                                      ],);
+                                    },
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                              height: 25,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30),
+                                  color:
+                                      const Color.fromARGB(255, 136, 188, 249)),
+                              child: Center(
+                                  child: Text(
+                                '  Visualizar  ',
+                                style: TextStyle(
+                                    color: Theme.of(context).primaryColor),
+                              ))))
                     ],
                   ),
                   const SizedBox(height: 5),
@@ -352,12 +398,8 @@ class TaskCardWidget extends StatelessWidget {
   final Tarea tarea;
   final Meta meta;
 
-  const TaskCardWidget({
-    super.key,
-    required this.size,
-    required this.tarea,
-    required this.meta
-  });
+  const TaskCardWidget(
+      {super.key, required this.size, required this.tarea, required this.meta});
 
   @override
   Widget build(BuildContext context) {

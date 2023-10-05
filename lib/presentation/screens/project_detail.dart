@@ -430,10 +430,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                       builder: (context) => (
                         GoalDetailScreen( meta:metas[index] )),
                     ));
-              }
-
-                               
-
+              }                              
                             },
                             child: Padding(
                               padding: const EdgeInsets.symmetric(vertical: 2),

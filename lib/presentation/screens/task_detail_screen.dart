@@ -1,3 +1,6 @@
+import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
@@ -5,15 +8,18 @@ import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../domain/entities/proyecto/tarea_entity.dart';
 
 class TaskDetailScreen extends ConsumerWidget {
   final Tarea tarea;
+  final Meta meta;
+  //final TareaUsuario tareaUsuario;
 
-  const TaskDetailScreen({super.key, required this.tarea});
+// eliminar error de los required aun teniendo el const
+  TaskDetailScreen({super.key, required this.meta, required this.tarea});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -121,7 +127,7 @@ class TaskDetailScreen extends ConsumerWidget {
                                       color: Colors.transparent,
                                       child: Container(
                                         width: size.width * 0.6,
-                                        height: size.height * 0.4,
+                                        height: size.height * 0.2,
                                         decoration: BoxDecoration(
                                             borderRadius:
                                                 BorderRadius.circular(15),
@@ -142,6 +148,7 @@ class TaskDetailScreen extends ConsumerWidget {
                                                 '¿Seguro de auto asignarte esta tarea? Si la aceptas, se descontaran 2 pts, si la completas ganaras pts ',
                                                 textAlign: TextAlign.center,
                                               ),
+                                              SizedBox(height: size.height * 0.015,),
                                               MaterialButton(
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
@@ -265,7 +272,35 @@ class TaskDetailScreen extends ConsumerWidget {
                                   style: TextStyle(color: Colors.white))),
                           MaterialButton(
                               color: Colors.red,
-                              onPressed: () {},
+                              onPressed: () async {
+
+                                //abre dialogo de confirmación antes de desistir    
+                                //ese                    tarea.id es userTareaId de TareaUsuario         
+
+
+                                //tarea.id es el id de la tarea dentro del listado de listaTareas de firebase
+                                //listaTareas tiene un id, y no es tarea.id
+                                //pendiente: se debe buscar ese id de listaTareas en cuestión
+
+
+                                //segun bing, una de las formas de saber el id de TareaUsuario (padre), 
+                                //es a traves de su hijo (cada item de tarea dentro de listaTareas)
+                                // ya que, cada item hijo tiene "tareaid", este puede usarse para buscar entre el listado de listaTareas
+                                // y trarse ese id padre
+
+
+                                 
+
+                                //String idTareaUsuario = getIdTareaUsuario(tarea.id);
+                                
+                                String? idTareaUsuario = await getIdTareaUsuario(tarea.id);
+
+
+                                print('idTareaUsuario: $idTareaUsuario');
+
+
+                                showDesistirTareaDialog(context, size, idTareaUsuario);
+                              },
                               child: const Text('Desistir',
                                   style: TextStyle(color: Colors.white))),
                         ],
@@ -378,8 +413,94 @@ class TaskDetailScreen extends ConsumerWidget {
     );
   }
 
-  void restarPuntosTarea() {
-    FirebaseAuth auth = FirebaseAuth.instance;
+FirebaseAuth auth = FirebaseAuth.instance;
+
+  void restarPuntosTarea() {    
     UsuarioService().gastarPuntos(auth.currentUser!.uid, 2);
+  }
+  
+  void desistirTarea(tareaID) {   
+    UsuarioService().eliminarTarea(userId: auth.currentUser!.uid, tareaID: tareaID,);
+  }
+  
+  void showDesistirTareaDialog(BuildContext context, size, tareaID) {
+            showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (context) {
+                return Center(
+                    child: Material(
+                  color: Colors.transparent,
+                  child: Container(
+                    width: size.width * 0.6,
+                    height: size.height * 0.2,
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(15),
+                        color: Colors.white,
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color.fromARGB(
+                                74, 46, 46, 46),
+                            offset: Offset(0.0, 2.0),
+                            blurRadius: 7.0,
+                          )
+                        ]),
+                    child: Column(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            '¿Estás seguro de desistir a esta tarea?',
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: size.height * 0.015,),
+                          MaterialButton(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(
+                                          6.0)),
+                              color: Theme.of(context)
+                                  .primaryColor,
+                              onPressed: () {
+                                //TODO: crea la operación de restar 2 pts por tarea y actualiza a firebase
+                                desistirTarea(tareaID);
+                                Navigator.pop(context);
+                   
+                              },
+                              child: const Text('Si',
+                                  style: TextStyle(
+                                      color: Colors.white)))
+                        ]),
+                  ),
+                ));
+              });
+        
+  }
+
+  FirebaseDatabase db = FirebaseDatabase.instance;
+  
+  Future<String?> getIdTareaUsuario(String? tareaId) async{
+
+    String userId = auth.currentUser!.uid;
+
+    DatabaseReference usersRef = db.ref().child("users").child(userId).child('listaTareas');
+    DatabaseEvent databaseEvent = await usersRef.once();
+
+    Map<dynamic, dynamic>? tareasData =
+        databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
+
+    if (tareasData != null) {
+      String? listaTareaId;
+      tareasData.forEach((key, value) {
+        if (value['tareaid'] == tareaId) {
+          listaTareaId = key;
+        }
+      });
+      return listaTareaId;
+    } else {
+      return null;
+    }     
+
   }
 }

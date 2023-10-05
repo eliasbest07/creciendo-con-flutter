@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/entities/proyecto/tarea_usuario_entity.dart';
 import '../../infrastructure/services/local_storage/local_storage.dart';
 
 import '../../infrastructure/services/usuario_service.dart';
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
+import '../widgets/home/card_tarea.dart';
 import '../widgets/widgets.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -48,6 +50,7 @@ class HomeScreen extends ConsumerWidget {
       }
     });
 
+final size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -109,7 +112,13 @@ class HomeScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
+                    child: CardTarea(
+                        size: size,
+                        listTarea: TareaUsuario.convertirListTarea(listaTareas) ,
+                        index: index),
+                                
+                    /*
+                    GestureDetector(
                       onTap: () {
                         // Navigator.push(
                         //     context,
@@ -154,6 +163,7 @@ class HomeScreen extends ConsumerWidget {
                             ],
                           )),
                     ),
+                    */
                   );
                 },
               ),

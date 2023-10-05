@@ -3,6 +3,7 @@ import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/domain/repositories/usuario_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../domain/exceptions/exceptions.dart';
 
@@ -26,6 +27,34 @@ class UsuarioService implements UsuarioRepository {
     }
   }
 
+    
+  Future<void> eliminarTarea({String? userId, String? tareaID}) async {
+
+    try {
+      final DatabaseReference tareaRef = db.ref().child("users").child(userId!).child('listaTareas').child(tareaID!);      
+      await tareaRef.remove();  
+
+      print('tarea: $tareaID');
+
+      Fluttertoast.showToast(
+        msg: 'Tarea eliminada', // message
+        toastLength: Toast.LENGTH_SHORT, // length
+        gravity: ToastGravity.BOTTOM, // location
+      );    
+
+      //pendiente: si el eliminado es exitoso, se debe restaurar el boton de "asignarme esta tarea"
+    } catch (e) {
+      print('error al eliminar la tarea '+e.toString());
+      Fluttertoast.showToast(
+        msg: 'error al eliminar tarea ', // message
+        toastLength: Toast.LENGTH_SHORT, // length
+        gravity: ToastGravity.BOTTOM, // location
+      );    
+    }
+
+  }
+
+ 
   @override
   Future<bool> verificarPuntosSuficientes() async {
     final FirebaseAuth auth = FirebaseAuth.instance;
@@ -33,6 +62,9 @@ class UsuarioService implements UsuarioRepository {
     Usuario usuario = await obtenerUsuarioActual(userId);
     return usuario.tieneSuficientesPuntos();
   }
+  // void _eliminarProyect(){
+
+  // }
 
   Future<Usuario> obtenerUsuarioActual(String userId) async {
     try {
