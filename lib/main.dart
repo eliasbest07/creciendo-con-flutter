@@ -1,3 +1,4 @@
+import 'package:TaskFlow/presentation/screens/initial_home_screen.dart';
 import 'package:TaskFlow/presentation/screens/splash_page.dart';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,8 +25,8 @@ Future<void> main() async {
   // );
   runApp(
     const ProviderScope(
-        child: MyApp(),
-      ),
+      child: MyApp(),
+    ),
   );
 } // para usar Riverpod
 
@@ -63,8 +64,9 @@ class MyApp extends StatelessWidget {
       title: 'TaskFlow', //Titulo
       initialRoute: auth.currentUser == null
           ? 'login'
-          : 'home', // inicial rutas y screens.dart
+          : 'inicio', // inicial rutas y screens.dart
       routes: {
+        'inicio': (_) => const InitialHomeScreen(),
         'home': (_) => const HomeScreen(),
         'ListProject': (_) => const ListProjectScreen(),
         //  'ListGoals':  (_) => const ListGoalScreen(),

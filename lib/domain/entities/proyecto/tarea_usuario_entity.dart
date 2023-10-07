@@ -41,8 +41,8 @@ class TareaUsuario {
       metaId: json['metaId'],
       tareaid: json['tareaid'],
       proyectoId: json['proyectoId'],
-      userTareaId: json['userTareaId'],
-      nombre: json['nombre'],
+      userTareaId: json['userTareaId'] ?? '',
+      nombre: json['nombre'] ?? 'sin nombre',
     );
   }
 

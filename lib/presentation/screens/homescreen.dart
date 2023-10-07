@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:TaskFlow/presentation/screens/notification_screen.dart';
 import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -50,7 +51,15 @@ class HomeScreen extends ConsumerWidget {
       }
     });
 
-final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
+
+    final List<Widget> listWidget = [
+      HomeScreen(),
+      NotificationScreen(),
+    ];
+
+    final index = ref.watch(indexPage);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -75,12 +84,7 @@ final size = MediaQuery.of(context).size;
               ),
             )
           ]),
-      drawer: SizedBox(
-          height: height * 0.7,
-          width: width * 0.7,
-          child: DrawerCustom(
-            size: Size(height, width),
-          )),
+
       body: Stack(children: [
         Column(
           children: [
@@ -103,21 +107,24 @@ final size = MediaQuery.of(context).size;
             SizedBox(
               height: height * 0.02,
             ),
-            listaTareas.isEmpty  ? const Text('Para tener tareas, primero debes unirte a un proyecto') :
-            SizedBox(
-              height: height * 0.2,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: listaTareas.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: CardTarea(
-                        size: size,
-                        listTarea: TareaUsuario.convertirListTarea(listaTareas) ,
-                        index: index),
-                                
-                    /*
+            listaTareas.isEmpty
+                ? const Text(
+                    'Para tener tareas, primero debes unirte a un proyecto')
+                : SizedBox(
+                    height: height * 0.2,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: listaTareas.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CardTarea(
+                              size: size,
+                              listTarea:
+                                  TareaUsuario.convertirListTarea(listaTareas),
+                              index: index),
+
+                          /*
                     GestureDetector(
                       onTap: () {
                         // Navigator.push(
@@ -148,26 +155,41 @@ final size = MediaQuery.of(context).size;
                                       topLeft: Radius.circular(10),
                                       topRight: Radius.circular(10)),
                                 ),
-                              ),
-                              Positioned(
-                                top:10,
-                                left: 7,
-                                child: Text(listaTareas[index].estado)),
-                                Positioned(
-                                top:50,
-                                left: 7,
-                                child: SizedBox(
-                                  width: height * 0.16,
-                                  height: 55,
-                                  child: Text(listaTareas[index].descripcion)))
-                            ],
-                          )),
+                                child: Stack(
+                                  children: [
+                                    Container(
+                                      height: 40,
+                                      decoration: const BoxDecoration(
+                                        color:
+                                            Color.fromARGB(155, 147, 216, 207),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(10),
+                                            topRight: Radius.circular(10)),
+                                      ),
+                                    ),
+                                    Positioned(
+                                        top: 10,
+                                        left: 7,
+                                        child: Text(listaTareas[index].estado)),
+                                    Positioned(
+                                        top: 50,
+                                        left: 7,
+                                        child: SizedBox(
+                                            width: height * 0.16,
+                                            height: 55,
+                                            child: Text(listaTareas[index]
+                                                .descripcion)))
+                                  ],
+                                )),
+                          ),
+                        );
+                      },
                     ),
                     */
-                  );
-                },
-              ),
-            ),
+                        );
+                      },
+                    ),
+                  ),
             SizedBox(
               height: height * 0.02,
             ),
@@ -273,7 +295,7 @@ final size = MediaQuery.of(context).size;
           ],
         ),
       ]),
-      bottomNavigationBar: NavBar(primaryColor: primaryColor, width: width),
+      //bottomNavigationBar: NavBar(primaryColor: primaryColor, width: width),
     );
   }
 }

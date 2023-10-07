@@ -50,10 +50,10 @@ class GoalDetailScreen extends ConsumerWidget {
           )
         ],
       ),
-      floatingActionButton: NavBar(
-        primaryColor: Theme.of(context).primaryColor,
-        width: size.width,
-      ),
+      // floatingActionButton: NavBar(
+      //   primaryColor: Theme.of(context).primaryColor,
+      //   width: size.width,
+      // ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
       body: Stack(
@@ -132,18 +132,17 @@ class GoalDetailScreen extends ConsumerWidget {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      // otra forma que se me ocurre es guardar en Tarea es ide de TareaUsuario, 
+                                      // otra forma que se me ocurre es guardar en Tarea es ide de TareaUsuario,
                                       //en donde el usuario dice que se asigna esa tarea
 
                                       //encontré una forma de obtener ese id, y es con un metodo que sugiere bing
                                       // ohh genial xd a ver
-                                      // Bro mañana continuamos, tengo que ir a dormir porque tengo examen mañana 
-                                      // mañana seguimos igual comenzamos a las 7 o 7:30 
+                                      // Bro mañana continuamos, tengo que ir a dormir porque tengo examen mañana
+                                      // mañana seguimos igual comenzamos a las 7 o 7:30
 
                                       // dale bro, descansa feliz noche
 
-
-                                      //segun bing, una de las formas de saber el id de TareaUsuario (padre), 
+                                      //segun bing, una de las formas de saber el id de TareaUsuario (padre),
                                       //es a traves de su hijo (cada item de tarea dentro de listaTareas)
                                       // ya que, cada item hijo tiene "tareaid", este puede usarse para buscar entre el listado de listaTareas
                                       // y trarse ese id padre
@@ -153,8 +152,9 @@ class GoalDetailScreen extends ConsumerWidget {
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               TaskDetailScreen(
-                                                  meta: meta,
-                                                  tarea: listTarea[index], )),
+                                                meta: meta,
+                                                tarea: listTarea[index],
+                                              )),
                                     );
                                   },
                                   child: CardTarea(
@@ -339,16 +339,17 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                                 topRight: Radius.circular(25.0),
                               )),
                               builder: (context) {
-                                
                                 return Container(
                                   height:
                                       MediaQuery.of(context).size.height * 0.6,
                                   width: double.infinity,
                                   child: ListView.builder(
                                     itemBuilder: (context, index) {
-                                      return Column(children: [
-                                       const Text('Lista de Participantes')
-                                      ],);
+                                      return Column(
+                                        children: [
+                                          const Text('Lista de Participantes')
+                                        ],
+                                      );
                                     },
                                   ),
                                 );

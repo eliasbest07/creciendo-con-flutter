@@ -3,20 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:TaskFlow/presentation/screens/homescreen.dart';
 import '../../../infrastructure/services/usuario_service.dart';
+import '../../../providers/riverpod_provider.dart';
 import '../../drawables/nav_bar.dart';
 
 class NavBar extends ConsumerWidget {
-  const NavBar({
-    super.key,
-    required this.primaryColor,
-    required this.width,
-  });
+  const NavBar(
+      {super.key,
+      required this.primaryColor,
+      required this.width,
+      required this.goToScreen});
 
   final Color primaryColor;
   final double width;
+  final Function goToScreen;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final indexP = ref.read(indexPage.notifier).state;
+
     return Container(
         height: 150,
         width: double.infinity,
@@ -66,8 +70,8 @@ class NavBar extends ConsumerWidget {
                   stream: UsuarioService().obtenerPuntos(),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                     //  ref.read(showPuntos.notifier).state = double.parse(snapshot.data.toString());
-                       print(snapshot.data.toString());
+                      //  ref.read(showPuntos.notifier).state = double.parse(snapshot.data.toString());
+                      print(snapshot.data.toString());
                       return Center(child: Text(snapshot.data.toString()));
                     } else {
                       return Center(
@@ -89,11 +93,13 @@ class NavBar extends ConsumerWidget {
             bottom: 20,
             child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
-                    ));
+                goToScreen(0);
+
+                // Navigator.pushReplacement(
+                //     context,
+                //     MaterialPageRoute(
+                //       builder: (context) => const HomeScreen(),
+                //     ));
               },
               child: Container(
                   height: 40,
@@ -105,9 +111,11 @@ class NavBar extends ConsumerWidget {
                     // ),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.home,
-                    color: Colors.white,
+                    color: indexP == 0
+                        ? Colors.white
+                        : const Color.fromARGB(155, 103, 159, 228),
                     size: 30,
                   )),
             ),
@@ -134,21 +142,28 @@ class NavBar extends ConsumerWidget {
           Positioned(
             left: width * 0.4,
             bottom: 20,
-            child: Container(
-                height: 40,
-                width: 60,
-                decoration: BoxDecoration(
-                  // border: Border.all(
-                  //   color:const Color.fromARGB(155, 103, 159, 228),
-                  //   width: 2,
-                  // ),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Icon(
-                  Icons.notifications,
-                  color: Color.fromARGB(255, 103, 159, 228),
-                  size: 30,
-                )),
+            child: GestureDetector(
+              onTap: () {
+                goToScreen(1);
+              },
+              child: Container(
+                  height: 40,
+                  width: 60,
+                  decoration: BoxDecoration(
+                    // border: Border.all(
+                    //   color:const Color.fromARGB(155, 103, 159, 228),
+                    //   width: 2,
+                    // ),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Icon(
+                    Icons.notifications,
+                    color: indexP == 1
+                        ? Colors.white
+                        : const Color.fromARGB(155, 103, 159, 228),
+                    size: 30,
+                  )),
+            ),
           ),
           Positioned(
             top: 22,

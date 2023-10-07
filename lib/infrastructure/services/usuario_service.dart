@@ -80,16 +80,19 @@ class UsuarioService implements UsuarioRepository {
   }
 
   Future<Usuario> obtenerUsuario() async {
-    try {
-      final DatabaseReference usuarioRef =
-          db.ref().child("users").child(auth.currentUser!.uid);
-      DatabaseEvent databaseEvent = await usuarioRef.once();
-      Map<dynamic, dynamic> userData =
-          databaseEvent.snapshot.value as Map<dynamic, dynamic>;
-      return Usuario.fromJson(userData);
-    } catch (e) {
-      throw GetUserFailed("Error al obtener el usuario actual: $e");
-    }
+    // try {
+    final DatabaseReference usuarioRef =
+        db.ref().child("users").child(auth.currentUser!.uid);
+    DatabaseEvent databaseEvent = await usuarioRef.once();
+    Map<dynamic, dynamic> userData =
+        databaseEvent.snapshot.value as Map<dynamic, dynamic>;
+
+    final modelUsuer = Usuario.fromJson(userData);
+    print(modelUsuer);
+    return modelUsuer;
+    // } catch (e) {
+    // throw GetUserFailed("Error al obtener el usuario actual: $e");
+    // }
   }
 
 //obtiene lista de todos los usuarios, por ejemlo: auxiliares

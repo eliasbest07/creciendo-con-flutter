@@ -13,7 +13,8 @@ class ProyectoLider {
       );
 
   factory ProyectoLider.fromJson(Map<dynamic, dynamic> json) => ProyectoLider(
-        proyectoLiderId: json["proyectoLiderId"],
+        //proyectoLiderId: json["proyectoLiderId"],
+        proyectoLiderId: json["proyectoId"],
       );
 
   Map<String, dynamic> toJson() => {

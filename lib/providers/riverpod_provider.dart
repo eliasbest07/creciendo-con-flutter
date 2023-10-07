@@ -16,6 +16,8 @@ import '../presentation/controllers/proyecto_controller.dart';
 import '../domain/entities/login.dart';
 import '../domain/entities/proyecto/proyecto_entity.dart';
 
+final indexPage = StateProvider<int>((ref) => 0);
+
 final loadingProvider = StateProvider<bool>((ref) => false);
 final showClave =
     StateProvider<bool>((ref) => true); // para la pantalla de login
@@ -27,12 +29,14 @@ final showClaveReg = StateProvider<bool>(
     (ref) => true); // para la pantalla de login en Registrar
 // final listaProyectos = StateNotifierProvider<ProyectoProvider, List<Proyecto>> ((ref) => ProyectoProvider([Proyecto()])); // es una forma
 
+final listaTareasNueMeta = StateProvider<List<Tarea>>((ref) => []);
+
 final listaProyectos = StateNotifierProvider<ProyectoProvider, List<Proyecto>>(
     (ref) => ProyectoProvider()); // es una forma
 final listaMetasMyProyecto =
     StateNotifierProvider<MetasController, Map<String, List<Meta>>>(
         (ref) => MetasController({}));
-        final listaTareaMyMeta =
+final listaTareaMyMeta =
     StateNotifierProvider<TaskController, Map<String, List<Tarea>>>(
         (ref) => TaskController({}));
 final listaMetasDetalleProyecto =
@@ -53,7 +57,9 @@ final editGoal = StateNotifierProvider<EditGoalController, Meta>(
 final tareaDetails = StateNotifierProvider<TaskDetailController, bool>(
     (ref) => TaskDetailController());
 
-final newTask = StateNotifierProvider<NewTaskController, bool> ((ref) => NewTaskController());
+final newTask = StateNotifierProvider<NewTaskController, bool>(
+    (ref) => NewTaskController());
 
-final listTareaUsuario =  StateNotifierProvider<TaskUserController, List<TareaUsuario>>(
+final listTareaUsuario =
+    StateNotifierProvider<TaskUserController, List<TareaUsuario>>(
         (ref) => TaskUserController());
