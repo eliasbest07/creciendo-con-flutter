@@ -44,41 +44,42 @@ class ListProjectScreen extends ConsumerWidget {
                 onPressed: () {
                   //TODO: condicional para preguntar cantidad de puntos
                   //si puntos > 100 puede abrir el dialogo, sino, muestra Toast: 'Debes tener al menos 100 puntos para esto'
-                  
-                  // double puntosUsuario = 100; // obtener puntos del usuario 
-                  if( puntosUsuario < 100){
+
+                  // double puntosUsuario = 100; // obtener puntos del usuario
+                  if (puntosUsuario < 100) {
                     // toast 'Debes tener al menos 100 puntos para esto'
                     Fluttertoast.showToast(
-                      msg: 'Debes tener al menos 100 puntos para esto', // message
+                      msg:
+                          'Debes tener al menos 100 puntos para esto', // message
                       toastLength: Toast.LENGTH_SHORT, // length
                       gravity: ToastGravity.BOTTOM, // location
                     );
-                  }else{
+                  } else {
                     showDialog(
-                      context: context,
-                      builder: (context) => Center(
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: NewProjectDialog(
-                              context: context, size: size)
-                        )
-                      )
-                    );                
-                }
+                        context: context,
+                        builder: (context) => Center(
+                            child: Align(
+                                alignment: Alignment.topCenter,
+                                child: NewProjectDialog(
+                                    context: context, size: size))));
+                  }
                 },
                 icon: const Icon(
                   Icons.add_box_rounded,
                   color: Colors.white,
                 )),
-          )                                   
+          )
         ],
       ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      bottomNavigationBar: NavBar(
-        primaryColor: Theme.of(context).primaryColor,
-        width: size.width,
-      ),
+      // floatingActionButtonLocation:
+      //     FloatingActionButtonLocation.miniCenterDocked,
+      // bottomNavigationBar: NavBar(
+      //   primaryColor: Theme.of(context).primaryColor,
+      //   width: size.width,
+      //  goToScreen: (index) {
+      //       ref.read(indexPage.notifier).update((state) => index);
+      //     },
+      // ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: Column(
@@ -91,22 +92,22 @@ class ListProjectScreen extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () async{
-
-                       // ref.read(listProject.notifier).state = [];
-                      //  List<ProyectoByRol> lider = await ProyectoService().obtenerProyectosByRol('Lider');
-                       // print(lider[0].nombre);
-                       // ref.read(listProject.notifier).state = lider;
-                      proyectRole.roleIsLider=true; // lider
+                      onTap: () async {
+                        // ref.read(listProject.notifier).state = [];
+                        //  List<ProyectoByRol> lider = await ProyectoService().obtenerProyectosByRol('Lider');
+                        // print(lider[0].nombre);
+                        // ref.read(listProject.notifier).state = lider;
+                        proyectRole.roleIsLider = true; // lider
                         showListByRol("Lider", ref);
 
                         //TODO: situa color claro y pone en oscuro el otro gesture
-
                       },
                       child: Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: proyectRole.roleIsLider ? Theme.of(context).primaryColor : const Color.fromARGB(155, 103, 159, 228),
+                          color: proyectRole.roleIsLider
+                              ? Theme.of(context).primaryColor
+                              : const Color.fromARGB(155, 103, 159, 228),
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: const Padding(
@@ -125,14 +126,15 @@ class ListProjectScreen extends ConsumerWidget {
                     child: GestureDetector(
                       onTap: () {
                         showListByRol("Auxiliar", ref);
-                         proyectRole.roleIsLider=false; // auxiliar
+                        proyectRole.roleIsLider = false; // auxiliar
                         //TODO: situa color claro y pone en oscuro el otro gesture
-                        
                       },
                       child: Container(
                         height: 40,
                         decoration: BoxDecoration(
-                          color: proyectRole.roleIsLider ? const Color.fromARGB(155, 103, 159, 228) :  Theme.of(context).primaryColor  ,
+                          color: proyectRole.roleIsLider
+                              ? const Color.fromARGB(155, 103, 159, 228)
+                              : Theme.of(context).primaryColor,
                           borderRadius: BorderRadius.circular(30),
                         ),
                         child: const Padding(
@@ -150,20 +152,18 @@ class ListProjectScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 20),
-            ListProjectWidget( 
-              isLider: proyectRole.roleIsLider,
-              listProject:listProyecto ,
-              onMetas: ( idProject ){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ListGoalScreen(
-                            projectID: idProject ?? 'null'),
-                  )
-                );
-              }, 
-              onConfiguraciones: (){}),
+            ListProjectWidget(
+                isLider: proyectRole.roleIsLider,
+                listProject: listProyecto,
+                onMetas: (idProject) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            ListGoalScreen(projectID: idProject ?? 'null'),
+                      ));
+                },
+                onConfiguraciones: () {}),
             // SizedBox(
             //   height: size.height * 0.7,
             //   width: double.infinity,
@@ -368,16 +368,16 @@ class ListProjectScreen extends ConsumerWidget {
             //                           color: Colors.white,
             //                           onPressed: () {
             //                             //print('ID Project ${listaProject[index].id }');
-                                        // Navigator.push(
-                                        //     context,
-                                        //     MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           ListGoalScreen(
-                                        //               projectID:
-                                        //                   listaProject[index]
-                                        //                           .id ??
-                                        //                       'null'),
-                                        //     ));
+            // Navigator.push(
+            //     context,
+            //     MaterialPageRoute(
+            //       builder: (context) =>
+            //           ListGoalScreen(
+            //               projectID:
+            //                   listaProject[index]
+            //                           .id ??
+            //                       'null'),
+            //     ));
             //                             // Navigator.pushNamed(context, 'ListGoals');
             //                           },
             //                           child: const Text(
@@ -417,10 +417,11 @@ class ListProjectScreen extends ConsumerWidget {
       ),
     );
   }
-  
+
   Future<void> showListByRol(String role, WidgetRef ref) async {
     ref.read(listProject.notifier).state = [];
-    List<ProyectoByRol> rol = await ProyectoService().obtenerProyectosByRol(role);
+    List<ProyectoByRol> rol =
+        await ProyectoService().obtenerProyectosByRol(role);
     ref.read(listProject.notifier).state = rol;
   }
 }

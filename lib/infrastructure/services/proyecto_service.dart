@@ -108,12 +108,29 @@ class ProyectoService implements ProyectoRepository {
       DatabaseReference proyectoRef =
           db.ref().child("proyecto").child(proyectoId);
       DatabaseReference metaRef = proyectoRef.child("listMeta").push();
+
       //Obtener el ID generado
       String metaId = metaRef.key!;
+      List<Tarea> listTaskTemp = meta.listTarea!;
+
       //Asignar el ID a la meta
       meta.id = metaId;
       meta.fechaCreada = DateTime.now();
+
+      //Limpiamos las tareas para que no lleguen como lista
+      meta.listTarea = [];
       await metaRef.set(meta.toJson());
+
+      for (Tarea tarea in listTaskTemp) {
+        String tareaId =
+            "tarea-${tarea.id}"; // Utilizar el índice como parte de la clave
+        tarea.id = tareaId;
+
+        // Guardar la Tarea en la base de datos bajo la clave personalizada
+        await guardarTarea(proyectoId, metaId, tarea);
+
+        //await metaRef.child(metaId).child(tareaId).set(tarea.toJson());
+      }
     } catch (e) {
       throw MetaStorageFailed("Error al almacenar meta: $e");
     }
@@ -152,8 +169,7 @@ class ProyectoService implements ProyectoRepository {
       DatabaseReference userRef =
           db.ref().child("users").child(userId).child('listaTareas').push();
       dirTarea["userTareaId"] = userRef.key.toString();
-      
-      
+
       userRef.set(dirTarea);
       userRef = db
           .ref()
@@ -208,6 +224,55 @@ class ProyectoService implements ProyectoRepository {
       throw TareaStorageFailed("Error al almacenar tarea: $e");
     }
   }
+
+  // @override
+  // Future<void> asignarTarea({
+  //   required proyectoId,
+  //   required String metaId,
+  //   required String tareaID,
+  //   required String userId,
+  //   required Tarea tarea,
+
+  // }) async {
+  //   try {
+  //     // DatabaseReference proyectoRef =
+  //     //     db.ref().child("proyecto").child(proyectoId);
+  //     // DatabaseReference metaRef = proyectoRef.child("listMeta").child(metaId).child('listTarea').child(tareaID);
+  //     // metaRef.child('usuarioAsignado').set(userId);
+
+  //     Map<String, String> dirTarea = {
+  //       "proyectoId": proyectoId,
+  //       "metaId": metaId,
+  //       "descripcion": tarea.descripcion,
+  //       "estado": tarea.estado,
+  //       "tareaid": tarea.id!,
+  //       "fechaEstablecida": tarea.fechaEstablecida.toIso8601String()
+  //     };
+  //     DatabaseReference userRef =
+  //         db.ref().child("users").child(userId).child('listaTareas').push();
+  //     userRef.set(dirTarea);
+  //   } catch (e) {
+  //     throw MetaStorageFailed("Error al asignar usuario a la tarea: $e");
+  //   }
+  // }
+
+  // @override
+  // Future<void> actualizarTarea(
+  //     String proyectoId, String metaId, Tarea tarea) async {
+  //   try {
+  //     DatabaseReference metaRef = db
+  //         .ref()
+  //         .child("proyecto")
+  //         .child(proyectoId)
+  //         .child("listMeta")
+  //         .child(metaId);
+  //     DatabaseReference tareaRef = metaRef.child("listTarea").child(tarea.id!);
+
+  //     await tareaRef.set(tarea.toJson());
+  //   } catch (e) {
+  //     throw TareaStorageFailed("Error al almacenar tarea: $e");
+  //   }
+  // }
 
   @override
   Future<void> guardarComentarioProyecto(
@@ -307,7 +372,6 @@ class ProyectoService implements ProyectoRepository {
     DatabaseReference usersRef =
         db.ref().child("users").child(userId).child('listaTareas');
 
-        
     DatabaseEvent databaseEvent = await usersRef.once();
 
     Map<dynamic, dynamic>? tareasData =

@@ -2,11 +2,13 @@
 import 'package:TaskFlow/infrastructure/services/acortadores_string.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
+import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../domain/entities/proyecto/meta_entity.dart';
+import '../../domain/entities/proyecto/tarea_entity.dart';
 import '../../providers/riverpod_provider.dart';
 
 class NewGoalScreen extends ConsumerWidget {
@@ -17,6 +19,7 @@ class NewGoalScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controllerMeta = ref.watch(listaMetasMyProyecto.notifier);
     final mapMeta = ref.watch(listaMetasMyProyecto);
+    final listTarea = ref.watch(listaTareasNueMeta);
     controllerMeta.addProyecto(projectID);
     if (mapMeta[projectID] == null) {
       mapMeta[projectID] != [];
@@ -68,12 +71,37 @@ class NewGoalScreen extends ConsumerWidget {
 
               if (camposCompletos) {
                 Meta meta = Meta(
-                  nombre: controllerMeta.nameGoal.text,
-                  item: controllerMeta.type,
-                  proyectoID: projectID,
-                  fechaCreada: controllerMeta.fechaCreada,
-                  fechaEstablecida: controllerMeta.fechaEstablecida,
-                );
+                    nombre: controllerMeta.nameGoal.text,
+                    item: controllerMeta.type,
+                    proyectoID: projectID,
+                    fechaCreada: controllerMeta.fechaCreada,
+                    fechaEstablecida: controllerMeta.fechaEstablecida,
+                    listTarea: listTarea
+                    // [
+                    //   Tarea(
+                    //     id: 'IDTareaEliasBest',
+                    //     nombre: 'Tarea 1',
+                    //     descripcion: 'Tarea 1 de prueba',
+                    //     listComentarioTarea: [],
+                    //     usuarioAsignado: '',
+                    //     fechaCreada: DateTime.now(),
+                    //     fechaEstablecida: DateTime.now(),
+                    //     estado: 'En espera',
+                    //     nivel: 2,
+                    //   ),
+                    //   Tarea(
+                    //     id: 'IDTareaEliasBest2',
+                    //     nombre: 'Tarea 2',
+                    //     descripcion: 'Tarea 2 de prueba',
+                    //     listComentarioTarea: [],
+                    //     usuarioAsignado: '',
+                    //     fechaCreada: DateTime.now(),
+                    //     fechaEstablecida: DateTime.now(),
+                    //     estado: 'En espera',
+                    //     nivel: 1,
+                    //   ),
+                    // ],
+                    );
                 listMeta?.add(meta);
                 proyecto.guardarMeta(projectID, meta);
               }
@@ -341,9 +369,17 @@ class NewGoalScreen extends ConsumerWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ListTaskScreen(), // metaID: metaID
+                      builder: (context) => NewTaskScreen(
+                        proyectoId: projectID,
+                      ), // metaID: metaID
                     ),
                   );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ListTaskScreen(), // metaID: metaID
+                  //   ),
+                  // );
                 },
                 child: Container(
                   alignment: Alignment.center,

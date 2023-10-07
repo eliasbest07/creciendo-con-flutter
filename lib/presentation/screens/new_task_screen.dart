@@ -10,26 +10,26 @@ import '../../providers/riverpod_provider.dart';
 
 class NewTaskScreen extends ConsumerWidget {
   const NewTaskScreen(
-      {Key? key, 
-      required this.proyectoId, 
-      required this.metaId, 
-      required this.name, 
-      required this.descripcion, 
-      required this.fechaInicio, 
-      required this.fechaEstablecida, 
-      required this.prioridad,
-      this.isEdit =false,
-      this.tareaId='',
+      {Key? key,
+      required this.proyectoId,
+      this.metaId,
+      this.name,
+      this.descripcion,
+      this.fechaInicio,
+      this.fechaEstablecida,
+      this.prioridad,
+      this.isEdit = false,
+      this.tareaId = '',
       this.fromMeta})
       : super(key: key);
-      
+
   final String proyectoId;
-  final String metaId;
-  final String name;
-  final String descripcion;
+  final String? metaId;
+  final String? name;
+  final String? descripcion;
   final DateTime? fechaInicio;
   final DateTime? fechaEstablecida;
-  final int prioridad;
+  final int? prioridad;
   final bool isEdit;
   final Meta? fromMeta;
   final String tareaId;
@@ -40,28 +40,34 @@ class NewTaskScreen extends ConsumerWidget {
     final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final TextEditingController controllerNombre = TextEditingController();
     final TextEditingController controllerDescription = TextEditingController();
-    final TextEditingController controllerPrioridad = TextEditingController(); // por cambiar
+    final TextEditingController controllerPrioridad =
+        TextEditingController(); // por cambiar
+    final listTarea = ref.watch(listaTareasNueMeta);
 
-  if(isEdit){
-    controllerNombre.text = name;
-    controllerDescription.text= descripcion;
-    controllerPrioridad.text='$prioridad';
+    print('este es el ID de una nueva META aun no guardad $metaId');
 
-    newTaskController.controllerFechaInicio.text =fechaInicio.toString();
-    newTaskController.controllerFechaEstablecida.text =fechaEstablecida.toString();
-  }else{
-    String comienzo = DateFormat('d/M/yyyy h:mm a').format(DateTime.now());
-    String fechafinal = DateFormat('d/M/yyyy h:mm a').format(DateTime.now().add(const Duration(hours: 1)));
-    newTaskController.controllerFechaInicio.text =comienzo;
-    newTaskController.controllerFechaEstablecida.text =fechafinal;
-  }
+    if (isEdit) {
+      controllerNombre.text = name!;
+      controllerDescription.text = descripcion!;
+      controllerPrioridad.text = '$prioridad';
+
+      newTaskController.controllerFechaInicio.text = fechaInicio.toString();
+      newTaskController.controllerFechaEstablecida.text =
+          fechaEstablecida.toString();
+    } else {
+      String comienzo = DateFormat('d/M/yyyy h:mm a').format(DateTime.now());
+      String fechafinal = DateFormat('d/M/yyyy h:mm a')
+          .format(DateTime.now().add(const Duration(hours: 1)));
+      newTaskController.controllerFechaInicio.text = comienzo;
+      newTaskController.controllerFechaEstablecida.text = fechafinal;
+    }
 
     //ProyectoService proyecto = ProyectoService();
 
     return Scaffold(
         appBar: AppBar(
           title: Text(
-            isEdit ? 'Editar Tarea' :'Nueva Tarea',
+            isEdit ? 'Editar Tarea' : 'Nueva Tarea',
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w800,
@@ -73,16 +79,40 @@ class NewTaskScreen extends ConsumerWidget {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   print('true');
-                  crearTarea(
-                          _formKey,
-                          context,
-                          controllerNombre.text,
-                          controllerDescription.text,
-                          newTaskController.convertirFecha(
-                              newTaskController.controllerFechaInicio.text),
-                          newTaskController.convertirFecha(newTaskController
-                              .controllerFechaEstablecida.text),
-                          int.parse(controllerPrioridad.text));
+                  // verificar si la meta se esta creando nueva
+
+                  if (metaId == null) {
+                    ref.read(listaTareasNueMeta.notifier).update(
+                          (state) => [
+                            Tarea(
+                              nombre: controllerNombre.text,
+                              descripcion: controllerDescription.text,
+                              fechaCreada: newTaskController.convertirFecha(
+                                  newTaskController.controllerFechaInicio.text),
+                              fechaEstablecida: newTaskController
+                                  .convertirFecha(newTaskController
+                                      .controllerFechaEstablecida.text),
+                              estado: 'nueva',
+                              nivel: int.parse(controllerPrioridad.text),
+                            ),
+                            ...state
+                          ],
+                        );
+                  } else {
+                    crearTarea(
+                        _formKey,
+                        context,
+                        controllerNombre.text,
+                        controllerDescription.text,
+                        newTaskController.convertirFecha(
+                            newTaskController.controllerFechaInicio.text),
+                        newTaskController.convertirFecha(
+                            newTaskController.controllerFechaEstablecida.text),
+                        int.parse(controllerPrioridad.text));
+                  }
+
+                  //  = [ ,...listTarea];
+                  // listTarea.add();
                 }
               },
               icon: const Icon(Icons.check),
@@ -180,11 +210,11 @@ class NewTaskScreen extends ConsumerWidget {
                             firstDate: DateTime(2000),
                             lastDate: DateTime(2100));
                         if (pickedDate != null) {
-                            String formattedDate =
-                            DateFormat("dd/MM/yyyy").format(pickedDate);
-                        newTaskController.controllerFechaEstablecida.text =
-                            formattedDate.toString();
-                        newTaskController.actualizarEstado(true); //setState
+                          String formattedDate =
+                              DateFormat("dd/MM/yyyy").format(pickedDate);
+                          newTaskController.controllerFechaEstablecida.text =
+                              formattedDate.toString();
+                          newTaskController.actualizarEstado(true); //setState
                         } //when click we have to show the datepicker
                       }),
                   // const SizedBox(height: 16.0),
@@ -220,32 +250,33 @@ class NewTaskScreen extends ConsumerWidget {
                   const SizedBox(height: 26.0),
                   ElevatedButton(
                     onPressed: () {
-                      if( isEdit){
-                            Tarea tarea = Tarea(
-                              id: tareaId,
-                              nombre: controllerNombre.text,
-                              descripcion: controllerDescription.text,
-                              fechaCreada: DateTime.parse( newTaskController.controllerFechaInicio.text),
-                              fechaEstablecida: DateTime.parse( newTaskController.controllerFechaEstablecida.text),
-                              estado: 'nueva',
-                              nivel: int.parse(controllerPrioridad.text));
+                      if (isEdit) {
+                        Tarea tarea = Tarea(
+                            id: tareaId,
+                            nombre: controllerNombre.text,
+                            descripcion: controllerDescription.text,
+                            fechaCreada: DateTime.parse(
+                                newTaskController.controllerFechaInicio.text),
+                            fechaEstablecida: DateTime.parse(newTaskController
+                                .controllerFechaEstablecida.text),
+                            estado: 'nueva',
+                            nivel: int.parse(controllerPrioridad.text));
 
-                          actualizarTarea(tarea, context);
-                      }else{
-                        
-                      crearTarea(
-                          _formKey,
-                          context,
-                          controllerNombre.text,
-                          controllerDescription.text,
-                          newTaskController.convertirFecha(
-                              newTaskController.controllerFechaInicio.text),
-                          newTaskController.convertirFecha(newTaskController
-                              .controllerFechaEstablecida.text),
-                          int.parse(controllerPrioridad.text));
+                        actualizarTarea(tarea, context);
+                      } else {
+                        crearTarea(
+                            _formKey,
+                            context,
+                            controllerNombre.text,
+                            controllerDescription.text,
+                            newTaskController.convertirFecha(
+                                newTaskController.controllerFechaInicio.text),
+                            newTaskController.convertirFecha(newTaskController
+                                .controllerFechaEstablecida.text),
+                            int.parse(controllerPrioridad.text));
                       }
                     },
-                    child: Text(isEdit ? 'Actualizar' :'Crear'),
+                    child: Text(isEdit ? 'Actualizar' : 'Crear'),
                   ),
                 ],
               ),
@@ -253,57 +284,60 @@ class NewTaskScreen extends ConsumerWidget {
           ),
         ));
   }
-  void actualizarTarea(Tarea tarea,BuildContext context,){
-    
+
+  void actualizarTarea(
+    Tarea tarea,
+    BuildContext context,
+  ) {
     ProyectoService proyecto = ProyectoService();
-    proyecto.actualizarTarea(proyectoId, metaId, tarea);
+    proyecto.actualizarTarea(proyectoId, metaId!, tarea);
 
     final size = MediaQuery.of(context).size;
     showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) => Center(
-              child: Align(
-                  alignment: Alignment.center,
-                  child: Material(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Center(
+            child: Align(
+                alignment: Alignment.center,
+                child: Material(
                     child: Container(
-                      width: size.width*0.45,
-                      height: size.height*0.15,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                      child:  Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text('¡Se Actualizo la tarea! '),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                child: MaterialButton(
-                                  elevation: 3,
-                                  color:Theme.of(context).primaryColor,
-                                onPressed: (){
-                                  //Navigator.pop(context); se hace push replacement para llegar a la pantalla de editar meta con valores actualizados
-                                  Navigator.pushReplacement(context,  MaterialPageRoute( 
-                                        builder: (context) =>  EditGoalScreen(projectID: proyectoId, porEditar: fromMeta!),
-                                  ));
-                                  
-                                  },
-                                child: const Text('Continuar', style: TextStyle(color: Colors.white))
-                                )
-                              )
-                            ]
-                          )
-                        )
-                      )
-                    )
-                  )
-                )
-              )
-            );
-    
+                        width: size.width * 0.45,
+                        height: size.height * 0.15,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20)),
+                        child: Center(
+                            child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Text('¡Se Actualizo la tarea! '),
+                                      Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 10, 0, 0),
+                                          child: MaterialButton(
+                                              elevation: 3,
+                                              color: Theme.of(context)
+                                                  .primaryColor,
+                                              onPressed: () {
+                                                //Navigator.pop(context); se hace push replacement para llegar a la pantalla de editar meta con valores actualizados
+                                                Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          EditGoalScreen(
+                                                              projectID:
+                                                                  proyectoId,
+                                                              porEditar:
+                                                                  fromMeta!),
+                                                    ));
+                                              },
+                                              child: const Text('Continuar',
+                                                  style: TextStyle(
+                                                      color: Colors.white))))
+                                    ]))))))));
   }
+
   void crearTarea(
       formKey,
       BuildContext context,
@@ -312,8 +346,7 @@ class NewTaskScreen extends ConsumerWidget {
       DateTime fechaInicio,
       DateTime fechaEstablecida,
       int nivel) {
-
-        final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
 
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
@@ -321,14 +354,15 @@ class NewTaskScreen extends ConsumerWidget {
       ProyectoService proyecto = ProyectoService();
 
       Tarea tarea = Tarea(
-          nombre: nombreTarea,
-          descripcion: descripcion,
-          fechaCreada: fechaInicio,
-          fechaEstablecida: fechaEstablecida,
-          estado: 'nueva',
-          nivel: nivel);
-
-      proyecto.guardarTarea(proyectoId, metaId, tarea);
+        nombre: nombreTarea,
+        descripcion: descripcion,
+        fechaCreada: fechaInicio,
+        fechaEstablecida: fechaEstablecida,
+        estado: 'nueva',
+        nivel: nivel,
+      );
+      print('este es el ID de una nueva META aun no guardad $metaId');
+      proyecto.guardarTarea(proyectoId, metaId!, tarea);
 
       showDialog(
           context: context,
@@ -338,11 +372,11 @@ class NewTaskScreen extends ConsumerWidget {
                   alignment: Alignment.center,
                   child: Material(
                     child: Container(
-                      width: size.width*0.45,
-                      height: size.height*0.15,
-                      decoration:
-                          BoxDecoration(borderRadius: BorderRadius.circular(20)),
-                      child:  Center(
+                      width: size.width * 0.45,
+                      height: size.height * 0.15,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -353,9 +387,15 @@ class NewTaskScreen extends ConsumerWidget {
                                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                 child: MaterialButton(
                                   elevation: 3,
-                                  color:Theme.of(context).primaryColor,
-                                onPressed: (){Navigator.pop(context); Navigator.pop(context);},
-                                child: const Text('Continuar', style: TextStyle(color: Colors.white),),
+                                  color: Theme.of(context).primaryColor,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'Continuar',
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ],
