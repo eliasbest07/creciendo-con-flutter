@@ -1,17 +1,21 @@
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
+import 'package:TaskFlow/presentation/controllers/login_controller.dart';
+import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final usuarioService = UsuarioService();
     final FirebaseAuth auth = FirebaseAuth.instance;
     final String userId = auth.currentUser!.uid;
+    final LoginController controller = ref.watch(loginController.notifier);
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 246, 249, 255),
@@ -209,9 +213,17 @@ class ProfileScreen extends StatelessWidget {
                 title: 'Cerrar sesión',
                 icon: Icons.exit_to_app_rounded,
                 colorTextAndIcon: const Color(0xffE41919),
+                onTap: () async {
+                  await controller.cerrarSesion();
+                  if (context.mounted) {
+                    Navigator.pushReplacementNamed(context, 'login');
+                  }
+                },
                 widget: Container(),
               ),
             ),
+
+            const SizedBox(height: 25),
           ],
         ),
       ),
@@ -278,6 +290,7 @@ class OptionsProfileWidget extends StatelessWidget {
   final IconData icon;
   final Widget widget;
   final Color? colorTextAndIcon;
+  final Function()? onTap;
 
   const OptionsProfileWidget({
     super.key,
@@ -285,46 +298,90 @@ class OptionsProfileWidget extends StatelessWidget {
     required this.icon,
     required this.widget,
     this.colorTextAndIcon = Colors.black,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            //                    <--- top side
-            color: Color(0xffDCDCDC),
-            width: 1.0,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        decoration: const BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              //                    <--- top side
+              color: Color(0xffDCDCDC),
+              width: 1.0,
+            ),
           ),
         ),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 10), //, vertical: 15
-      height: 65,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                color: colorTextAndIcon,
-              ),
-              const SizedBox(width: 15),
-              Text(
-                title,
-                style: TextStyle(
+        padding: const EdgeInsets.symmetric(horizontal: 10), //, vertical: 15
+        height: 65,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  icon,
                   color: colorTextAndIcon,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 14,
                 ),
-              ),
-            ],
-          ),
-          widget,
-        ],
+                const SizedBox(width: 15),
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: colorTextAndIcon,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+            widget,
+          ],
+        ),
       ),
     );
+    // return GestureDetector(
+    //   onTap: onTap,
+    //   child: Container(
+    //     width: double.infinity,
+    //     decoration: const BoxDecoration(
+    //       border: Border(
+    //         bottom: BorderSide(
+    //           //                    <--- top side
+    //           color: Color(0xffDCDCDC),
+    //           width: 1.0,
+    //         ),
+    //       ),
+    //     ),
+    //     padding: const EdgeInsets.symmetric(horizontal: 10), //, vertical: 15
+    //     height: 65,
+    //     child: Row(
+    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //       children: [
+    //         Row(
+    //           children: [
+    //             Icon(
+    //               icon,
+    //               color: colorTextAndIcon,
+    //             ),
+    //             const SizedBox(width: 15),
+    //             Text(
+    //               title,
+    //               style: TextStyle(
+    //                 color: colorTextAndIcon,
+    //                 fontWeight: FontWeight.w500,
+    //                 fontSize: 14,
+    //               ),
+    //             ),
+    //           ],
+    //         ),
+    //         widget,
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }
