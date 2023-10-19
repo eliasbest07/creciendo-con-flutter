@@ -60,4 +60,15 @@ class TareaUsuario {
     }
     return resultado;
   }
+
+  static Tarea convertirTarea(TareaUsuario tareaUsuario) {
+    return Tarea(
+      descripcion: tareaUsuario.descripcion,
+      estado: tareaUsuario.estado,
+      nivel: 1,
+      nombre: tareaUsuario.descripcion,
+      fechaEstablecida: tareaUsuario.fechaEstablecida,
+      id: tareaUsuario.tareaid,
+    );
+  }
 }

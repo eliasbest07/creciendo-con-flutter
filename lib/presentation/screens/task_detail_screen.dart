@@ -4,6 +4,7 @@ import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
+import 'package:TaskFlow/presentation/screens/notificar_avance_screen.dart';
 import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,11 +16,11 @@ import '../../domain/entities/proyecto/tarea_entity.dart';
 
 class TaskDetailScreen extends ConsumerWidget {
   final Tarea tarea;
-  final Meta meta;
+  final Meta? meta;
   //final TareaUsuario tareaUsuario;
 
 // eliminar error de los required aun teniendo el const
-  TaskDetailScreen({super.key, required this.meta, required this.tarea});
+  TaskDetailScreen({super.key, this.meta, required this.tarea});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -269,7 +270,13 @@ class TaskDetailScreen extends ConsumerWidget {
                         children: [
                           MaterialButton(
                               color: Theme.of(context).primaryColor,
-                              onPressed: () {},
+                              onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                             NotificarAvanceScreen( poryectID: meta!.proyectoID, )));
+                              },
                               child: const Text('Notificar avance',
                                   style: TextStyle(color: Colors.white))),
                           MaterialButton(

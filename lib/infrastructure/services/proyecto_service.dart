@@ -225,6 +225,24 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
+  Future<List<Usuario>> obtenerLiderProyecto(String proyectoID) async {
+  List<Usuario> lideres = [];
+  DatabaseReference ref = FirebaseDatabase.instance.ref('proyecto').child(proyectoID).child('listUserProyecto');
+  DatabaseEvent databaseEvent = await ref.once();
+
+    Map<dynamic, dynamic>? liderProject =
+        databaseEvent.snapshot.value as Map<dynamic, dynamic>?;
+
+
+    if (liderProject != null) {
+      liderProject.forEach((proyectoId, proyectoData) {
+        Usuario? inTarea = Usuario.fromJson(proyectoData);
+
+        lideres.add(inTarea);
+      });
+    }
+  return lideres;
+}
   // @override
   // Future<void> asignarTarea({
   //   required proyectoId,

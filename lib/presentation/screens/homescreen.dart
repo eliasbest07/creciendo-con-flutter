@@ -1,13 +1,11 @@
 import 'dart:io';
-
+import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../domain/entities/proyecto/tarea_usuario_entity.dart';
 import '../../infrastructure/services/local_storage/local_storage.dart';
-
 import '../../infrastructure/services/usuario_service.dart';
 import '../../providers/riverpod_provider.dart';
 import '../controllers/login_controller.dart';
@@ -20,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final Meta meta;
 
     final LoginController controller = ref.watch(loginController.notifier);
     final listaProject = ref.watch(listaProyectos);
@@ -128,91 +127,101 @@ class HomeScreen extends ConsumerWidget {
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (_, index) {
                         final tarea = listaTareas[index];
-
+                              
                         //Separar el widget en otra clase y pasar como parametro
                         //un objeto de tipo TareaUsuario
-                        return Container(
-                          width: width * 0.7,
-                          padding: const EdgeInsets.all(15.0),
-                          margin: const EdgeInsets.only(bottom: 10.0),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color.fromARGB(10, 155, 155, 155),
-                                offset: Offset(0.0, 2.0),
-                                blurRadius: 5.0,
-                                spreadRadius: 10.0,
-                              ),
-                            ],
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      tarea.nombre,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                    const Spacer(),
-                                    Row(
-                                      children: [
-                                        const Text(
-                                          'Estado: ',
-                                          style: TextStyle(
-                                            color: Color(0xffB9B9B9),
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500,
-                                          ),
+                        return GestureDetector(
+                          onTap: (){
+                            Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskDetailScreen(tarea: TareaUsuario.convertirTarea( listaTareas[index] )),
+                            ),
+                          );
+                          },
+                          child: Container(
+                            width: width * 0.7,
+                            padding: const EdgeInsets.all(15.0),
+                            margin: const EdgeInsets.only(bottom: 10.0),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20.0),
+                              color: Colors.white,
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Color.fromARGB(10, 155, 155, 155),
+                                  offset: Offset(0.0, 2.0),
+                                  blurRadius: 5.0,
+                                  spreadRadius: 10.0,
+                                ),
+                              ],
+                            ),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        tarea.nombre,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
                                         ),
-                                        Container(
-                                          height: 20,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10.0,
-                                          ),
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(50.0),
-                                            color: Colors.amber,
-                                          ),
-                                          child: Text(
-                                            tarea.estado,
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                      ),
+                                      const Spacer(),
+                                      Row(
+                                        children: [
+                                          const Text(
+                                            'Estado: ',
+                                            style: TextStyle(
+                                              color: Color(0xffB9B9B9),
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                             ),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                          Container(
+                                            height: 20,
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 10.0,
+                                            ),
+                                            alignment: Alignment.center,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(50.0),
+                                              color: Colors.amber,
+                                            ),
+                                            child: Text(
+                                              tarea.estado,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 20),
-                              Transform.scale(
-                                scale: 2,
-                                child: Checkbox(
-                                  checkColor: Colors.white,
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.padded,
-                                  activeColor: const Color(0xff0A3567),
-                                  visualDensity: VisualDensity.compact,
-                                  value: true,
-                                  shape: const CircleBorder(),
-                                  onChanged: (bool? value) {},
+                                const SizedBox(width: 20),
+                                Transform.scale(
+                                  scale: 2,
+                                  child: Checkbox(
+                                    checkColor: Colors.white,
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.padded,
+                                    activeColor: const Color(0xff0A3567),
+                                    visualDensity: VisualDensity.compact,
+                                    value: true,
+                                    shape: const CircleBorder(),
+                                    onChanged: (bool? value) {},
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       },

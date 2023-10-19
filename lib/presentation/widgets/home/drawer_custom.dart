@@ -1,5 +1,6 @@
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
+import 'package:TaskFlow/presentation/screens/actualizaciones_screen.dart';
 import 'package:TaskFlow/presentation/screens/profile_screen.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -108,6 +109,30 @@ class DrawerCustom extends ConsumerWidget {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               )),
         ),
+
+        const Divider(),
+
+                MaterialButton(
+          color: Theme.of(context).primaryColor,
+          onPressed: () {
+            
+             Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const Actualizaciones()));
+          },
+          child: const ListTile(
+              leading: Icon(
+                Icons.notifications,
+                color: Colors.white,
+                size: 35,
+              ),
+              title: Text(
+                'Actualizaciones',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              )),
+        ),
+
 
         const Divider(),
 
