@@ -33,7 +33,7 @@ dependencies:
   intl: any
   device_preview: ^1.1.0
   cached_network_image: ^3.2.3
-  
+  lottie: ^2.6.0
 
 flutter_native_splash:
   color: "#FFFFFF"

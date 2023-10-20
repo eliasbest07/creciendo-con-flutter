@@ -4,6 +4,7 @@ import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import '../../domain/entities/proyecto/tarea_usuario_entity.dart';
 import '../../infrastructure/services/local_storage/local_storage.dart';
 import '../../infrastructure/services/usuario_service.dart';
@@ -116,7 +117,7 @@ class HomeScreen extends ConsumerWidget {
                     width: double.infinity,
                     height: height * 0.14,
                     padding: paddingHorizontal,
-                    child: const Placeholder(),
+                    child: Lottie.asset('assets/empty_animation.json'),
                   )
                 : SizedBox(
                     height: height * 0.14,
@@ -127,17 +128,21 @@ class HomeScreen extends ConsumerWidget {
                       physics: const BouncingScrollPhysics(),
                       itemBuilder: (_, index) {
                         final tarea = listaTareas[index];
-                              
+
                         //Separar el widget en otra clase y pasar como parametro
                         //un objeto de tipo TareaUsuario
                         return GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TaskDetailScreen(tarea: TareaUsuario.convertirTarea( listaTareas[index] )),
-                            ),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskDetailScreen(
+                                  tarea: TareaUsuario.convertirTarea(
+                                      listaTareas[index]),
+                                  lideres: [],
+                                ),
+                              ),
+                            );
                           },
                           child: Container(
                             width: width * 0.7,
@@ -159,7 +164,8 @@ class HomeScreen extends ConsumerWidget {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         tarea.nombre,

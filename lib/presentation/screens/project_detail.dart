@@ -43,6 +43,10 @@ class ProjectDetailScreen extends ConsumerWidget {
     tarea.projectoID = project.id!;
 
     final size = MediaQuery.of(context).size;
+
+    List<UsuariosProyecto> listaFiltrada = project.listUserProyecto!
+        .where((usuario) => usuario.rol != 'Auxiliar')
+        .toList();
     //final List<Usuario> colaboradores = ;
 
     //instancia del servicio: clase acortador de palabras
@@ -229,9 +233,10 @@ class ProjectDetailScreen extends ConsumerWidget {
               height: size.height * 0.15,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: project.listUserProyecto?.length ?? 0,
+                  itemCount: listaFiltrada.length ?? 0,
                   itemBuilder: (context, index) {
                     //project.listUserProyecto
+
                     return Padding(
                       padding: const EdgeInsets.only(left: 5, right: 5, top: 5),
                       child: Container(
@@ -256,7 +261,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                               child: Align(
                                   alignment: Alignment.topLeft,
                                   child: Text(
-                                    project.listUserProyecto![index].rol,
+                                    listaFiltrada[index].rol,
                                     style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold),
@@ -277,7 +282,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                                     FittedBox(
                                       fit: BoxFit.scaleDown,
                                       child: Text(
-                                        project.listUserProyecto![index].nombre,
+                                        listaFiltrada[index].nombre,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -350,10 +355,12 @@ class ProjectDetailScreen extends ConsumerWidget {
                                   radius: 25,
                                   backgroundImage: NetworkImage(usuario.avatar),
                                 ),
-                                Text(
-                                  acortador.getFirstWord(usuario.nombre),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 10),
+                                Expanded(
+                                  child: Text(
+                                    acortador.getFirstWord(usuario.nombre),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
                                 ),
                               ],
                             ),
@@ -425,12 +432,14 @@ class ProjectDetailScreen extends ConsumerWidget {
                                     );
                                   } else {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              (GoalDetailScreen(
-                                                  meta: metas[index])),
-                                        ));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => (GoalDetailScreen(
+                                          meta: metas[index],
+                                          project: project,
+                                        )),
+                                      ),
+                                    );
                                   }
                                 },
                                 child: Padding(
