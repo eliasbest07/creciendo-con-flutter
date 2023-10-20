@@ -350,10 +350,12 @@ class ProjectDetailScreen extends ConsumerWidget {
                                   radius: 25,
                                   backgroundImage: NetworkImage(usuario.avatar),
                                 ),
-                                Text(
-                                  acortador.getFirstWord(usuario.nombre),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(fontSize: 10),
+                                Expanded(
+                                  child: Text(
+                                    acortador.getFirstWord(usuario.nombre),
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(fontSize: 10),
+                                  ),
                                 ),
                               ],
                             ),
@@ -425,12 +427,14 @@ class ProjectDetailScreen extends ConsumerWidget {
                                     );
                                   } else {
                                     Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              (GoalDetailScreen(
-                                                  meta: metas[index])),
-                                        ));
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => (GoalDetailScreen(
+                                          meta: metas[index],
+                                          project: project,
+                                        )),
+                                      ),
+                                    );
                                   }
                                 },
                                 child: Padding(

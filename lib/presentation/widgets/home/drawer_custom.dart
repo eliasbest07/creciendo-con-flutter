@@ -112,14 +112,13 @@ class DrawerCustom extends ConsumerWidget {
 
         const Divider(),
 
-                MaterialButton(
+        MaterialButton(
           color: Theme.of(context).primaryColor,
           onPressed: () {
-            
-             Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const Actualizaciones()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const Actualizaciones()));
           },
           child: const ListTile(
               leading: Icon(
@@ -132,7 +131,6 @@ class DrawerCustom extends ConsumerWidget {
                 style: TextStyle(color: Colors.white, fontSize: 16),
               )),
         ),
-
 
         const Divider(),
 

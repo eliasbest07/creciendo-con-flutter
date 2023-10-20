@@ -5,13 +5,17 @@ import 'package:TaskFlow/presentation/widgets/home/navbar.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/proyecto/proyecto_entity.dart';
 import '../../domain/entities/proyecto/tarea_entity.dart';
+import '../../domain/entities/proyecto/usuarioProyecto_entity.dart';
 import '../widgets/home/card_tarea.dart';
 import 'screens.dart';
 
 class GoalDetailScreen extends ConsumerWidget {
-  const GoalDetailScreen({super.key, required this.meta});
+  const GoalDetailScreen(
+      {super.key, required this.meta, required this.project});
   final Meta meta;
+  final Proyecto project;
   // falta el proyecto
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,6 +157,8 @@ class GoalDetailScreen extends ConsumerWidget {
                                           builder: (context) =>
                                               TaskDetailScreen(
                                                 meta: meta,
+                                                lideres:
+                                                    project.listUserProyecto!,
                                                 tarea: listTarea[index],
                                               )),
                                     );
@@ -398,9 +404,14 @@ class TaskCardWidget extends StatelessWidget {
   final Size size;
   final Tarea tarea;
   final Meta meta;
+  final List<UsuariosProyecto> lideres;
 
   const TaskCardWidget(
-      {super.key, required this.size, required this.tarea, required this.meta});
+      {super.key,
+      required this.size,
+      required this.tarea,
+      required this.meta,
+      required this.lideres});
 
   @override
   Widget build(BuildContext context) {
@@ -427,7 +438,11 @@ class TaskCardWidget extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TaskDetailScreen(tarea: tarea, meta: meta),
+            builder: (context) => TaskDetailScreen(
+              tarea: tarea,
+              meta: meta,
+              lideres: lideres,
+            ),
           ),
         );
       },

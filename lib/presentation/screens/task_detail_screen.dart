@@ -1,6 +1,7 @@
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
@@ -17,10 +18,12 @@ import '../../domain/entities/proyecto/tarea_entity.dart';
 class TaskDetailScreen extends ConsumerWidget {
   final Tarea tarea;
   final Meta? meta;
+  final List<UsuariosProyecto> lideres;
   //final TareaUsuario tareaUsuario;
 
 // eliminar error de los required aun teniendo el const
-  TaskDetailScreen({super.key, this.meta, required this.tarea});
+  TaskDetailScreen(
+      {super.key, this.meta, required this.tarea, required this.lideres});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -271,11 +274,21 @@ class TaskDetailScreen extends ConsumerWidget {
                           MaterialButton(
                               color: Theme.of(context).primaryColor,
                               onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                             NotificarAvanceScreen( poryectID: meta!.proyectoID, )));
+                                List<UsuariosProyecto> listaFiltrada = lideres
+                                    .where(
+                                        (usuario) => usuario.rol != 'Auxiliar')
+                                    .toList();
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => NotificarAvanceScreen(
+                                        listaLideres: lideres
+                                            .where((lider) =>
+                                                lider.rol != 'Auxiliar')
+                                            .toList()),
+                                  ),
+                                );
                               },
                               child: const Text('Notificar avance',
                                   style: TextStyle(color: Colors.white))),
