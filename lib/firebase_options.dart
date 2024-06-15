@@ -57,6 +57,8 @@ class DefaultFirebaseOptions {
     appId: '1:871111009322:android:df709b6f92ec3173678f53',
     messagingSenderId: '871111009322',
     projectId: 'tareas-creciendo-con-flutter',
+    databaseURL: 'https://tareas-creciendo-con-flutter-default-rtdb.firebaseio.com',
     storageBucket: 'tareas-creciendo-con-flutter.appspot.com',
   );
+
 }

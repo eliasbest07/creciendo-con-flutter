@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "871111009322",
+    "firebase_url": "https://tareas-creciendo-con-flutter-default-rtdb.firebaseio.com",
     "project_id": "tareas-creciendo-con-flutter",
     "storage_bucket": "tareas-creciendo-con-flutter.appspot.com"
   },
@@ -14,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "871111009322-r1598jsqcr5gndrh62vem5l6bllsdh0n.apps.googleusercontent.com",
+          "client_id": "871111009322-6b8jnb78bor9ftrdjmlu9in6ve23bkht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tareas_creciendo_con_flutter",
+            "certificate_hash": "03e83d6b03e430295d11bdd9a177ec3dc82e196e"
+          }
+        },
+        {
+          "client_id": "871111009322-g21s5njg36sj2rvalie1p4540nlq8jee.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "871111009322-r1598jsqcr5gndrh62vem5l6bllsdh0n.apps.googleusercontent.com",
+              "client_id": "871111009322-g21s5njg36sj2rvalie1p4540nlq8jee.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
