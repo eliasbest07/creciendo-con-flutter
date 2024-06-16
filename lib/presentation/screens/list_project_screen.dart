@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../providers/riverpod_provider.dart';
 import '../widgets/project/list_projects_widget.dart';
+import 'homescreen.dart';
 
 class ListProjectScreen extends ConsumerWidget {
   const ListProjectScreen({super.key});
@@ -21,7 +22,7 @@ class ListProjectScreen extends ConsumerWidget {
     final listProyecto = ref.watch(listProject);
     final proyectRole = ref.watch(listProject.notifier);
     final puntosUsuario = ref.watch(showPuntos);
-
+    final pantallaActual = ref.watch(indexPage);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 246, 249, 255),
@@ -31,7 +32,15 @@ class ListProjectScreen extends ConsumerWidget {
             const Text('Mis proyectos', style: TextStyle(color: Colors.white)),
         leading: IconButton(
             onPressed: () {
-              Navigator.pop(context);
+              print(pantallaActual);
+              ref.read(indexPage.notifier).state = 0;
+
+/*               Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => HomeScreen(),
+                ),
+              ); */
             },
             icon: const Icon(
               Icons.arrow_back_ios_new_rounded,
@@ -42,12 +51,7 @@ class ListProjectScreen extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 8.0),
             child: IconButton(
                 onPressed: () {
-                  //TODO: condicional para preguntar cantidad de puntos
-                  //si puntos > 100 puede abrir el dialogo, sino, muestra Toast: 'Debes tener al menos 100 puntos para esto'
-
-                  // double puntosUsuario = 100; // obtener puntos del usuario
                   if (puntosUsuario < 100) {
-                    // toast 'Debes tener al menos 100 puntos para esto'
                     Fluttertoast.showToast(
                       msg:
                           'Debes tener al menos 100 puntos para esto', // message
@@ -93,7 +97,7 @@ class ListProjectScreen extends ConsumerWidget {
                   Expanded(
                     child: GestureDetector(
                       onTap: () async {
-                        // ref.read(listProject.notifier).state = [];
+                        ref.read(listProject.notifier).state = [];
                         //  List<ProyectoByRol> lider = await ProyectoService().obtenerProyectosByRol('Lider');
                         // print(lider[0].nombre);
                         // ref.read(listProject.notifier).state = lider;

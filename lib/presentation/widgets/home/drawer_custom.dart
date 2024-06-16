@@ -37,9 +37,11 @@ class DrawerCustom extends ConsumerWidget {
         MaterialButton(
           color: Theme.of(context).primaryColor,
           onPressed: () {
+            // cerrar el drawer
+            Navigator.of(context).pop();
             ref.read(indexPage.notifier).update((state) => 2);
-            Navigator.pop(context);
-            // Navigator.pushNamed(context, 'ListProject');
+            //Navigator.pop(context);
+            //  Navigator.pushNamed(context, 'ListProject');
           },
           child: const ListTile(
               leading: Icon(

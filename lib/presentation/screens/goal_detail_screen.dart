@@ -37,22 +37,38 @@ class GoalDetailScreen extends ConsumerWidget {
           ),
         ),
         actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 10.0, top: 10, bottom: 10),
-            height: 20,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(width: 2, color: Colors.white)),
-            child: const Center(
-                child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 9.0),
-              child: Text(
-                'Sugerir Tarea',
-                style: TextStyle(color: Colors.white),
-              ),
-            )),
+          GestureDetector(
+            onTap: () {
+              //TODO: sugerir tarea
+            },
+            child: Container(
+              margin: const EdgeInsets.only(right: 10.0, top: 10, bottom: 10),
+              height: 20,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(width: 2, color: Colors.white)),
+              child: const Center(
+                  child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 9.0),
+                child: Text(
+                  'Sugerir Tarea',
+                  style: TextStyle(color: Colors.white),
+                ),
+              )),
+            ),
           )
         ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
+              ),
+            );
+          },
+        ),
       ),
       // floatingActionButton: NavBar(
       //   primaryColor: Theme.of(context).primaryColor,

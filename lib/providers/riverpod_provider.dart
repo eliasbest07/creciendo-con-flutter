@@ -33,18 +33,23 @@ final listaTareasNueMeta = StateProvider<List<Tarea>>((ref) => []);
 
 final listaProyectos = StateNotifierProvider<ProyectoProvider, List<Proyecto>>(
     (ref) => ProyectoProvider()); // es una forma
+
 final listaMetasMyProyecto =
     StateNotifierProvider<MetasController, Map<String, List<Meta>>>(
         (ref) => MetasController({}));
+
 final listaTareaMyMeta =
     StateNotifierProvider<TaskController, Map<String, List<Tarea>>>(
         (ref) => TaskController({}));
+
 final listaMetasDetalleProyecto =
     StateNotifierProvider<MetasController, Map<String, List<Meta>>>(
         (ref) => MetasController({}));
+
 final listProject =
     StateNotifierProvider<ProyectoAuxiliar, List<ProyectoByRol>>(
         (ref) => ProyectoAuxiliar());
+
 final loginController =
     StateNotifierProvider<LoginController, Login>((ref) => LoginController());
 

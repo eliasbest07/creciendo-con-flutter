@@ -7,6 +7,7 @@ import 'package:TaskFlow/infrastructure/services/acortadores_string.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:TaskFlow/presentation/screens/goal_detail_screen.dart';
+import 'package:TaskFlow/presentation/screens/new_goals_screen.dart';
 import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,7 @@ class ProjectDetailScreen extends ConsumerWidget {
       : super(key: key);
 
   final Proyecto project;
+
   final CacheManager cacheManager;
 
   @override
@@ -397,11 +399,39 @@ class ProjectDetailScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 15, right: 15, top: 15),
-                    child: Text(
-                      'Metas establecidas',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15, right: 0, top: 15),
+                    child: Row(
+                      children: [
+                        const Text(
+                          'Metas establecidas',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Expanded(
+                          child: IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        NewGoalScreen(projectID: project.id!),
+                                  ));
+
+/*                               showDialog(
+                                  context: context,
+                                  builder: (context) => Center(
+                                      child: Align(
+                                          alignment: Alignment.topCenter,
+                                          child: NewMetaDialog(
+                                              context: context, size: size)))); */
+                            },
+                            icon: const Icon(
+                              Icons.add_box_rounded,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                        )
+                      ],
                     ),
                   ),
                   const SizedBox(height: 15),
@@ -609,7 +639,7 @@ class ProjectDetailScreen extends ConsumerWidget {
 
                                               if (index == 1) {
                                                 return Transform.translate(
-                                                  offset: Offset(-10, 0),
+                                                  offset: const Offset(-10, 0),
                                                   child: const CircleAvatar(
                                                     backgroundColor:
                                                         Color(0xffE3E3E3),
@@ -627,7 +657,7 @@ class ProjectDetailScreen extends ConsumerWidget {
 
                                               if (index == 2) {
                                                 return Transform.translate(
-                                                  offset: Offset(-20, 0),
+                                                  offset: const Offset(-20, 0),
                                                   child: const CircleAvatar(
                                                     backgroundColor:
                                                         Color(0xffE3E3E3),

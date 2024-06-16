@@ -7,13 +7,14 @@ class Actualizaciones extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
-            title: const Text('ACTUALIZACIONES', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-            centerTitle: true,
+          backgroundColor: Theme.of(context).primaryColor,
+          title: const Text('ACTUALIZACIONES',
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          centerTitle: true,
         ),
-        body: Column(children: [
-            const Text('Estos son los ultimos mensajes recibidos')
-        ],)
-    );
+        body: const Column(
+          children: [Text('Estos son los ultimos mensajes recibidos')],
+        ));
   }
 }
