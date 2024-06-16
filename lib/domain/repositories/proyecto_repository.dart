@@ -17,9 +17,9 @@ abstract class ProyectoRepository {
       String proyectoId, Comentario comentario);
   Future<void> guardarComentarioMeta(
       String proyectoId, String metaId, Comentario comentario);
-  Future<void> guardarComentarioTarea(
-      String proyectoId, String metaId, String tareaId, Comentario comentario);
-
+  Future<void> guardarComentarioTarea( String tareaId, Comentario comentario);
+  
+  Future<List<Comentario>> obtenerComentariosTarea(String tareaID);
   Future<void> eliminarProyecto(String proyectoId);
 
   Future<Proyecto?> buscarProyecto(String proyectoId);

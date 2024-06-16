@@ -1,23 +1,26 @@
 class Comentario {
   String? id;
-  String nombre;
-  String descripcion;
+  String nombreUsuario;
+  String imagenUsuario;
+  String contenido;
 
-  Comentario({this.id, required this.nombre, required this.descripcion});
+  Comentario({this.id, required this.imagenUsuario, required this.nombreUsuario, required this.contenido});
 
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'nombre': nombre,
-      'descripcion': descripcion,
+      'nombreUsuario': nombreUsuario,
+      'contenido': contenido,
+      'imagenUsuario':imagenUsuario
     };
   }
 
   factory Comentario.fromJson(Map<dynamic, dynamic> json) {
     return Comentario(
       id: json['id'],
-      nombre: json['nombre'],
-      descripcion: json['descripcion'],
+      nombreUsuario: json['nombreUsuario'],
+      imagenUsuario: json['imagenUsuario'],
+      contenido: json['contenido'],
     );
   }
 }

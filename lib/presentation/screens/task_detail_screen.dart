@@ -1,3 +1,4 @@
+import 'package:TaskFlow/domain/entities/proyecto/comentario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
@@ -12,23 +13,60 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/proyecto/tarea_entity.dart';
 
-class TaskDetailScreen extends ConsumerWidget {
+class TaskDetailScreen extends ConsumerStatefulWidget {
   final Tarea tarea;
   final Meta? meta;
   final List<UsuariosProyecto> lideres;
   //final TareaUsuario tareaUsuario;
 
 // eliminar error de los required aun teniendo el const
-  TaskDetailScreen(
+  const TaskDetailScreen(
       {super.key, this.meta, required this.tarea, required this.lideres});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  TaskDetailScreenState createState() => TaskDetailScreenState();
+}
+
+class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
+  ScrollController scrollComentariosController = ScrollController();
+  TextEditingController comentarioNuevo = TextEditingController();
+  bool showAddBoton = true;
+  double lastScrollPosition = 0;
+  @override
+  void initState() {
+    super.initState();
+    scrollComentariosController.addListener(() {
+
+  final currentScrollPosition = scrollComentariosController.position.pixels;
+    if (currentScrollPosition > lastScrollPosition) {
+      // Scroll hacia la derecha
+      setState(() {
+        showAddBoton = false;
+      });
+    } else if (currentScrollPosition < lastScrollPosition) {
+      // Scroll hacia la izquierda
+    setState(() {
+        showAddBoton = true;
+      });
+    }
+    lastScrollPosition = currentScrollPosition;
+  });
+
+  }
+    @override
+  void dispose() {
+    scrollComentariosController.dispose();
+    
+    super.dispose();
+  }
+  @override
+  Widget build(BuildContext context) {
     Color? colorEstado;
-    switch (tarea.estado) {
+    switch (widget.tarea.estado) {
       case 'En proceso':
         colorEstado = Colors.amber;
         break;
@@ -52,10 +90,12 @@ class TaskDetailScreen extends ConsumerWidget {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xffF6F9FF),
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           'DETALLES DE LA TAREA',
           style: TextStyle(
             fontSize: 15,
+            color: Colors.white,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -74,31 +114,98 @@ class TaskDetailScreen extends ConsumerWidget {
             SizedBox(
               height: 150,
               width: double.infinity,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: 10, // lista de Comentarios
-                itemBuilder: (context, index) {
-                  return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: 120,
-                        width: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: Colors.white,
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromARGB(74, 46, 46, 46),
-                              offset: Offset(0.0, 2.0),
-                              blurRadius: 7.0,
-                            )
-                          ],
-                        ),
-                        child: Center(
-                          child: Text('Comentario $index'),
-                        ),
-                      ));
-                },
+              child: Row(
+                children: [
+                  if (showAddBoton)
+                  MaterialButton(
+                    
+                    onPressed: (){
+                      showDialog(context: context, builder: (context) {
+                        return Dialog(
+                          child: SizedBox(
+                            height: 280,
+                            child: Column(children: [
+                              const SizedBox(height: 10),
+                              const Text('Escribe tu comentario'),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: SizedBox(
+                                  height: 150,
+                                  child: TextField(
+                                    controller: comentarioNuevo,
+                                    maxLines: 4,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              MaterialButton(
+                                color: Colors.black,
+                                onPressed: (){
+                                  Comentario nuevo= Comentario(contenido: comentarioNuevo.text, nombreUsuario: 'elias', imagenUsuario: 'https://firebasestorage.googleapis.com/v0/b/tareas-creciendo-con-flutter.appspot.com/o/perfilcompany.png?alt=media&token=9e2ad441-ea1a-4063-b902-981d86e82eda' );
+                                  ProyectoService().guardarComentarioTarea(widget.tarea.id!,nuevo);
+                              },
+                              child: const Text('Enviar', style: TextStyle(color: Colors.white),),)
+                            ],),
+                          ),
+                        ); 
+                      },);
+                  },
+                  child: const Icon(Icons.add),),
+                  Expanded(
+                    child: FutureBuilder(
+                      future: ProyectoService().obtenerComentariosTarea(widget.tarea.id!),
+                      builder: (context, snapshot) {
+                        if(snapshot.hasData){
+                          List<Comentario> comentariosTarea = snapshot.data!;
+                        return ListView.builder(
+                          controller: scrollComentariosController,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: comentariosTarea.length, // lista de Comentarios
+                          itemBuilder: (context, index) {
+                            return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 120,
+                                  width: 220,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white,
+                                    boxShadow: const [
+                                      BoxShadow(
+                                        color: Color.fromARGB(74, 46, 46, 46),
+                                        offset: Offset(0.0, 2.0),
+                                        blurRadius: 7.0,
+                                      )
+                                    ],
+                                  ),
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(4.0),
+                                          child: Row(children: [
+                                            CircleAvatar(
+                                              child: Image.network(comentariosTarea[index].imagenUsuario),
+                                            ),
+                                            const SizedBox(width: 10),
+                                            Text(comentariosTarea[index].nombreUsuario)
+                                          ],),
+                                        ),
+                                        Center(
+                                          child: Text(comentariosTarea[index].contenido),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ));
+                          },
+                        );
+                        }
+                        return const SizedBox();
+                      }
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 10),
@@ -114,7 +221,7 @@ class TaskDetailScreen extends ConsumerWidget {
                       color: Colors.white,
                     ),
                     padding: const EdgeInsets.all(15),
-                    child: tarea.usuarioAsignado == null && tareaState ||
+                    child: widget.tarea.usuarioAsignado == null && tareaState ||
                             !tareaState
                         ? // para que lo re dibuje xd
                         MaterialButton(
@@ -165,24 +272,24 @@ class TaskDetailScreen extends ConsumerWidget {
                                                   onPressed: () {
                                                     //TODO: crea la operación de restar 2 pts por tarea y actualiza a firebase
                                                     restarPuntosTarea();
-                                                    tarea.usuarioAsignado =
+                                                    widget.tarea.usuarioAsignado =
                                                         tareaInf.currentUserID;
-                                                    tarea.estado = 'en proceso';
+                                                    widget.tarea.estado = 'en proceso';
                                                     ProyectoService()
                                                         .actualizarTarea(
                                                             tareaInf.projectoID,
                                                             tareaInf.goalID,
-                                                            tarea);
+                                                            widget.tarea);
                                                     ProyectoService()
                                                         .asignarTarea(
                                                             proyectoId: tareaInf
                                                                 .projectoID,
                                                             metaId:
                                                                 tareaInf.goalID,
-                                                            tareaID: tarea.id!,
+                                                            tareaID: widget.tarea.id!,
                                                             userId: tareaInf
                                                                 .currentUserID,
-                                                            tarea: tarea);
+                                                            tarea: widget.tarea);
                                                     Navigator.pop(context);
                                                     tareaInf.setUser();
                                                     ref
@@ -205,7 +312,7 @@ class TaskDetailScreen extends ConsumerWidget {
                           )
                         : FutureBuilder(
                             future: ProyectoService()
-                                .obtenerUsuarioActual(tarea.usuarioAsignado!),
+                                .obtenerUsuarioActual(widget.tarea.usuarioAsignado!),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 Usuario user = snapshot.data!;
@@ -266,15 +373,15 @@ class TaskDetailScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 10),
-            tarea.usuarioAsignado != null
-                ? tarea.usuarioAsignado! == tareaInf.currentUserID
+            widget.tarea.usuarioAsignado != null
+                ? widget.tarea.usuarioAsignado! == tareaInf.currentUserID
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           MaterialButton(
                               color: Theme.of(context).primaryColor,
                               onPressed: () {
-                                List<UsuariosProyecto> listaFiltrada = lideres
+                                List<UsuariosProyecto> listaFiltrada = widget.lideres
                                     .where(
                                         (usuario) => usuario.rol != 'Auxiliar')
                                     .toList();
@@ -283,7 +390,7 @@ class TaskDetailScreen extends ConsumerWidget {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => NotificarAvanceScreen(
-                                        listaLideres: lideres
+                                        listaLideres: widget.lideres
                                             .where((lider) =>
                                                 lider.rol != 'Auxiliar')
                                             .toList()),
@@ -310,7 +417,7 @@ class TaskDetailScreen extends ConsumerWidget {
                                 //String idTareaUsuario = getIdTareaUsuario(tarea.id);
 
                                 String? idTareaUsuario =
-                                    await getIdTareaUsuario(tarea.id);
+                                    await getIdTareaUsuario(widget.tarea.id);
 
                                 print('idTareaUsuario: $idTareaUsuario');
 
@@ -350,7 +457,7 @@ class TaskDetailScreen extends ConsumerWidget {
                               ),
                               Chip(
                                 label: Text(
-                                  tarea.estado,
+                                  widget.tarea.estado,
                                   style: const TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor: colorEstado,
@@ -368,7 +475,7 @@ class TaskDetailScreen extends ConsumerWidget {
                                 radius: 15,
                                 backgroundColor: Colors.grey,
                                 child: Text(
-                                  tarea.nivel.toString(),
+                                  widget.tarea.nivel.toString(),
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),
@@ -415,7 +522,7 @@ class TaskDetailScreen extends ConsumerWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: 5.0),
-                        Text(tarea.descripcion),
+                        Text(widget.tarea.descripcion),
                       ],
                     ),
                   )

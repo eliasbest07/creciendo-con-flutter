@@ -133,6 +133,7 @@ class HomeScreen extends ConsumerWidget {
                         //un objeto de tipo TareaUsuario
                         return GestureDetector(
                           onTap: () {
+                            
                             Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -354,17 +354,13 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<void> guardarComentarioTarea(String proyectoId, String metaId,
-      String tareaId, Comentario comentario) async {
+  Future<void> guardarComentarioTarea(String tareaId, Comentario comentario) async {
     try {
       DatabaseReference tareaRef = db
           .ref()
-          .child("proyecto")
-          .child(proyectoId)
-          .child("listMeta")
-          .child(metaId)
-          .child("listTarea")
+          .child("tareaComentarios")
           .child(tareaId);
+          
       DatabaseReference comentTareaRef =
           tareaRef.child("listComentarioTarea").push();
       //Obtener el ID generado
@@ -696,6 +692,25 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
+  List<Comentario> _procesarComentariosTareasSnapshot(DataSnapshot tareaSnapshot) {
+    List<Comentario> responmetas = [];
+    try {
+      if (tareaSnapshot.value != null) {
+        Map<dynamic, dynamic>? metasData =
+            tareaSnapshot.value as Map<dynamic, dynamic>?;
+
+        metasData?.forEach((metaId, metaData) {
+          Comentario? meta = Comentario.fromJson(metaData);
+          //proyecto.id = proyectoId;
+          responmetas.add(meta);
+        });
+      }
+      return responmetas;
+    } catch (e) {
+      throw GetAllProyectsFailed("Error al cargar Comentarios Tarea: $e");
+    }
+  }
+
   Proyecto? _procesarProyectoSnapshot(DataSnapshot proyectoSnapshot) {
     try {
       if (proyectoSnapshot.value != null) {
@@ -988,5 +1003,21 @@ class ProyectoService implements ProyectoRepository {
         .child(usuarioProyectoKey)
         .child("rol")
         .set(nuevoRol);
+  }
+  
+  @override
+  Future<List<Comentario>> obtenerComentariosTarea(String tareaID)async {
+    try {
+      DatabaseReference proyectoRef = db
+          .ref()
+          .child("tareaComentarios")
+          .child(tareaID);
+      DatabaseEvent databaseEvent = await proyectoRef.child("listComentarioTarea").once();
+
+      return _procesarComentariosTareasSnapshot(databaseEvent.snapshot);
+    } catch (e) {
+      print(e.toString());
+    }
+    return [];
   }
 }

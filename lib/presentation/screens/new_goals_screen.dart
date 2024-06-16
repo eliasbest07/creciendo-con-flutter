@@ -30,10 +30,12 @@ class NewGoalScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           'NUEVA META',
           style: TextStyle(
             fontSize: 15,
+            color: Colors.white,
             fontWeight: FontWeight.w800,
           ),
         ),
@@ -106,7 +108,7 @@ class NewGoalScreen extends ConsumerWidget {
                 proyecto.guardarMeta(projectID, meta);
               }
             },
-            icon: const Icon(Icons.check),
+            icon: const Icon(Icons.check, color: Colors.white,),
           )
         ],
       ),
