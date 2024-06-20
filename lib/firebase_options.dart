@@ -26,10 +26,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -59,6 +56,18 @@ class DefaultFirebaseOptions {
     projectId: 'tareas-creciendo-con-flutter',
     databaseURL: 'https://tareas-creciendo-con-flutter-default-rtdb.firebaseio.com',
     storageBucket: 'tareas-creciendo-con-flutter.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyDwMbakC6n-LHaTE4gMzgRTySUX2tIUXec',
+    appId: '1:871111009322:ios:6a296f24581682b0678f53',
+    messagingSenderId: '871111009322',
+    projectId: 'tareas-creciendo-con-flutter',
+    databaseURL: 'https://tareas-creciendo-con-flutter-default-rtdb.firebaseio.com',
+    storageBucket: 'tareas-creciendo-con-flutter.appspot.com',
+    androidClientId: '871111009322-6b8jnb78bor9ftrdjmlu9in6ve23bkht.apps.googleusercontent.com',
+    iosClientId: '871111009322-3ilt9nde0oo3gr7qlfrq5if34vu7gnpd.apps.googleusercontent.com',
+    iosBundleId: 'com.example.creciendoConFlutter',
   );
 
 }
