@@ -25,14 +25,17 @@ class InitialHomeScreen extends ConsumerWidget {
     final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text("data"),
+      ),
       drawer: SizedBox(
           height: height * 0.7,
           width: width * 0.7,
           child: DrawerCustom(
             size: Size(height, width),
           )),
+      // body: listWidget[index],
       body: listWidget[index],
-      //body: listWidget[index],
       bottomNavigationBar: NavBar(
           primaryColor: primaryColor,
           width: width,

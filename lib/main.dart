@@ -1,3 +1,4 @@
+import 'package:TaskFlow/firebase_options.dart';
 import 'package:TaskFlow/presentation/screens/initial_home_screen.dart';
 import 'package:TaskFlow/presentation/screens/splash_page.dart';
 import 'package:device_preview/device_preview.dart';
@@ -11,7 +12,9 @@ import 'presentation/screens/screens.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   //Esto es para Riverpod
   //runApp(const ProviderScope(child: MyApp()));
