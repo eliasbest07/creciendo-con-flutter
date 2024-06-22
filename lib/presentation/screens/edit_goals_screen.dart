@@ -14,7 +14,7 @@ class EditGoalScreen extends ConsumerWidget {
   final Meta porEditar;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-        final mapTarea = ref.watch(listaTareaMyMeta);
+    final mapTarea = ref.watch(listaTareaMyMeta);
 
     ProyectoService proyecto = ProyectoService();
     print('porEditar: ${porEditar.id}');
@@ -26,7 +26,7 @@ class EditGoalScreen extends ConsumerWidget {
     controllerEdita.fechaEstimadaController.text =
         porEditar.fechaEstablecida.toString();
 
-final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -117,7 +117,8 @@ final size = MediaQuery.of(context).size;
                         border: Border.all(
                           color: true //listMeta?.last.item == 'UI'
                               ? Colors.blue
-                              : Colors.transparent, // TODO este es el campo, se obtiene de una lista desde el backend
+                              : Colors
+                                  .transparent, // TODO este es el campo, se obtiene de una lista desde el backend
                           width: 2,
                         ),
                       ),
@@ -145,7 +146,8 @@ final size = MediaQuery.of(context).size;
                         border: Border.all(
                           color: true //listMeta?.last.item == 'FRONT'
                               ? Colors.blue
-                              : Colors.transparent, // TODO este es el campo, se obtiene de una lista desde el backend
+                              : Colors
+                                  .transparent, // TODO este es el campo, se obtiene de una lista desde el backend
                           width: 2,
                         ),
                       ),
@@ -168,7 +170,8 @@ final size = MediaQuery.of(context).size;
                         border: Border.all(
                           color: true //listMeta?.last.item == 'BACK'
                               ? Colors.blue
-                              : Colors.transparent, // TODO este es el campo, se obtiene de una lista desde el backend
+                              : Colors
+                                  .transparent, // TODO este es el campo, se obtiene de una lista desde el backend
                           width: 2,
                         ),
                       ),
@@ -297,9 +300,16 @@ final size = MediaQuery.of(context).size;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            NewTaskScreen(descripcion: '' , fechaEstablecida: null , fechaInicio: null, metaId: porEditar.id!, name: '', prioridad: 0 , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
-                            ),
+                        builder: (context) => NewTaskScreen(
+                              descripcion: '',
+                              fechaEstablecida: null,
+                              fechaInicio: null,
+                              metaId: porEditar.id!,
+                              name: '',
+                              prioridad: 0,
+                              proyectoId: projectID,
+                            ) // goalID: mapMeta[projectID]?[index].id ?? '',),
+                        ),
                   );
                 },
                 child: Container(
@@ -329,66 +339,92 @@ final size = MediaQuery.of(context).size;
             ),
             const SizedBox(height: 15),
             SizedBox(
-                height: size.height*0.15,
-                width: double.infinity,
-                child: Column(children: [
-        const SizedBox(height: 20),
-        FutureBuilder( // se obtienen las tareas de la meta desde firebase y se guardan en el mapa de riverpod
-          future: proyecto.obtenerTareas(porEditar.id!,projectID), // porEditar 
-          builder: (context, snapshot) {
-            print('data : $snapshot');
-            if (snapshot.hasData) {
-              mapTarea[porEditar.id!]=snapshot.data!;
-            return Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: mapTarea[porEditar.id!]?.length ?? 0,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                      onTap: (){
-                        Navigator.push(
-                              context,
-                              MaterialPageRoute( // mapMeta[projectID][index]
-                              //al tocar en una tarea, abro pantalla con los datos cargados de esa tarea
-                              //al ser una lista de tareas, los valores serán respecto al index de esa lista de tareas
+              height: size.height * 0.15,
+              width: double.infinity,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  FutureBuilder(
+                    // se obtienen las tareas de la meta desde firebase y se guardan en el mapa de riverpod
+                    future: proyecto.obtenerTareas(
+                        porEditar.id!, projectID), // porEditar
+                    builder: (context, snapshot) {
+                      print('data : $snapshot');
+                      if (snapshot.hasData) {
+                        mapTarea[porEditar.id!] = snapshot.data!;
+                        return Expanded(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: mapTarea[porEditar.id!]?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          // mapMeta[projectID][index]
+                                          //al tocar en una tarea, abro pantalla con los datos cargados de esa tarea
+                                          //al ser una lista de tareas, los valores serán respecto al index de esa lista de tareas
 
-                              //hay que estimar como pasar estos datos, que ya me entrega firebase
-                                builder: (context) =>  NewTaskScreen( descripcion: mapTarea[porEditar.id!]![index].descripcion,
-                                  proyectoId: projectID,
-                                  name:  mapTarea[porEditar.id!]![index].nombre,
-                                  fechaEstablecida:  mapTarea[porEditar.id!]![index].fechaEstablecida,
-                                  fechaInicio:  mapTarea[porEditar.id!]![index].fechaCreada,
-                                  metaId:  porEditar.id!,
-                                  prioridad:  mapTarea[porEditar.id!]![index].nivel,
-                                  isEdit: true,
-                                  fromMeta: porEditar,
-                                  tareaId: mapTarea[porEditar.id!]![index].id!,
-                                ),
-                                  //descripcion: mapTarea[projectID]![index].descripcion , fechaEstablecida: mapTarea[projectID]![index].fechaEstablecida , fechaInicio: mapTarea[projectID]![index].fechaCreada, metaId: porEditar.id!, name: mapTarea[projectID]![index].nombre, prioridad: mapTarea[projectID]![index].nivel , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
-                              ),
-                            );
-                      },
-                      child:Container(
-                      height: 100,
-                      width: 250,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(15)),
-                        color: Color.fromARGB(255, 255, 245, 216)),child: Text(mapTarea[porEditar.id!]?[index].nombre ?? 'No hay metas')
-                    ), 
-                    )
-                  );
-                },
+                                          //hay que estimar como pasar estos datos, que ya me entrega firebase
+                                          builder: (context) => NewTaskScreen(
+                                            descripcion:
+                                                mapTarea[porEditar.id!]![index]
+                                                    .descripcion,
+                                            proyectoId: projectID,
+                                            name:
+                                                mapTarea[porEditar.id!]![index]
+                                                    .nombre,
+                                            fechaEstablecida:
+                                                mapTarea[porEditar.id!]![index]
+                                                    .fechaEstablecida,
+                                            fechaInicio:
+                                                mapTarea[porEditar.id!]![index]
+                                                    .fechaCreada,
+                                            metaId: porEditar.id!,
+                                            prioridad:
+                                                mapTarea[porEditar.id!]![index]
+                                                    .prioridad,
+                                            isEdit: true,
+                                            fromMeta: porEditar,
+                                            tareaId:
+                                                mapTarea[porEditar.id!]![index]
+                                                    .id!,
+                                          ),
+                                          //descripcion: mapTarea[projectID]![index].descripcion , fechaEstablecida: mapTarea[projectID]![index].fechaEstablecida , fechaInicio: mapTarea[projectID]![index].fechaCreada, metaId: porEditar.id!, name: mapTarea[projectID]![index].nombre, prioridad: mapTarea[projectID]![index].nivel , proyectoId: projectID,)// goalID: mapMeta[projectID]?[index].id ?? '',),
+                                        ),
+                                      );
+                                    },
+                                    child: Container(
+                                        height: 100,
+                                        width: 250,
+                                        decoration: const BoxDecoration(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15)),
+                                            color: Color.fromARGB(
+                                                255, 255, 245, 216)),
+                                        child: Text(mapTarea[porEditar.id!]
+                                                    ?[index]
+                                                .nombre ??
+                                            'No hay metas')),
+                                  ));
+                            },
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(
+                          "${snapshot.error}",
+                          style: const TextStyle(color: Colors.black),
+                        );
+                      }
+                      return const CircularProgressIndicator();
+                    },
+                  ),
+                ],
               ),
-            );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}", style: const  TextStyle(color: Colors.black),);
-            }
-            return const CircularProgressIndicator();
-          },
-      ),],),                                                                                                                                        
-                /* ListView.builder(
+              /* ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return Padding(
@@ -427,8 +463,8 @@ final size = MediaQuery.of(context).size;
                       ),
                     );
                   },
-                ) */),
-          
+                ) */
+            ),
           ],
         ),
       ),

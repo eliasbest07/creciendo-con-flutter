@@ -59,12 +59,12 @@ class GoalDetailScreen extends ConsumerWidget {
           )
         ],
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomeScreen(),
+                builder: (context) => const HomeScreen(),
               ),
             );
           },
@@ -250,6 +250,7 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
       },
       child: Container(
         height: tamanio,
+        //width: ,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: Theme.of(context).primaryColor),
@@ -283,7 +284,7 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                     Text('Tareas completadas 4/6',
                         style: TextStyle(
                             color: Color.fromARGB(255, 136, 188, 249))),
-                    const SizedBox(width: 5),
+                    SizedBox(width: 5),
                     Text('75%', style: TextStyle(color: Colors.white))
                   ]),
                   SizedBox(
@@ -297,7 +298,7 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                   )
                 ])
               ]),
-              const SizedBox(height: 5),
+              const SizedBox(height: 10),
               Text(
                 widget.meta.nombre,
                 maxLines: 2,
@@ -317,23 +318,24 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                       Container(
                         height: 40,
                         width: 40,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             shape: BoxShape.circle, color: Colors.white),
                       ),
                       const SizedBox(width: 5),
-                      Text(
+                      const Text(
                         'Nombre del usuario ',
                         style: TextStyle(color: Colors.white),
                       )
                     ],
                   ),
+                  const SizedBox(height: 15),
                   const Text('Fecha de Inicio:',
                       style:
                           TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
-                  Row(
+                  const Row(
                     children: [
-                      const Icon(Icons.calendar_today, color: Colors.white),
-                      const SizedBox(width: 5),
+                      Icon(Icons.calendar_today, color: Colors.white),
+                      SizedBox(width: 5),
                       Text(
                         '12 Oct 2023 ',
                         style: TextStyle(color: Colors.white),
@@ -348,7 +350,7 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                   const SizedBox(height: 7),
                   Row(
                     children: [
-                      Text('6', style: TextStyle(color: Colors.white)),
+                      const Text('6', style: TextStyle(color: Colors.white)),
                       const SizedBox(width: 7),
                       GestureDetector(
                           onTap: () {
@@ -367,9 +369,9 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                                   width: double.infinity,
                                   child: ListView.builder(
                                     itemBuilder: (context, index) {
-                                      return Column(
+                                      return const Column(
                                         children: [
-                                          const Text('Lista de Participantes')
+                                          Text('Lista de Participantes')
                                         ],
                                       );
                                     },
@@ -392,14 +394,14 @@ class _CardGoalDetailState extends State<CardGoalDetail> {
                               ))))
                     ],
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 15),
                   const Text('Fecha Establecida:',
                       style:
                           TextStyle(color: Color.fromARGB(255, 136, 188, 249))),
-                  Row(
+                  const Row(
                     children: [
-                      const Icon(Icons.date_range, color: Colors.white),
-                      const SizedBox(width: 5),
+                      Icon(Icons.date_range, color: Colors.white),
+                      SizedBox(width: 5),
                       Text(
                         '12 Oct 2023 ',
                         style: TextStyle(color: Colors.white),
@@ -495,7 +497,7 @@ class TaskCardWidget extends StatelessWidget {
                       CircleAvatar(
                         radius: 15,
                         child: Text(
-                          tarea.nivel.toString(),
+                          tarea.prioridad.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                           ),

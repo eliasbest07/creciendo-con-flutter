@@ -18,9 +18,14 @@ class NewTaskController extends StateNotifier<bool> {
     state = stado; // para que se redibujen los widget xD
   }
 
-  // he creado un nuevo metodo de actualizar estado ya que el estado de una tarea es una lista y no un bool: creada, tomada, en pausa, desistida, avanzada, terminada
+  // he creado un nuevo metodo de actualizar estado ya que el estado de una tarea es una lista y no un bool:
+  // creada, tomada, en pausa, desistida, avanzada, terminada
   // recibe un nuevoEstado para actualizar en firebase el estado actualizado de dicha tarea
   void updateEstado(String nuevoEstado) {
+    //TODO: actualizar a firebase
+  }
+
+  void updatePrioridad(int nuevaPrioridad) {
     //TODO: actualizar a firebase
   }
 
@@ -34,7 +39,7 @@ class NewTaskController extends StateNotifier<bool> {
     try {
       DateTime fecha = DateFormat(formatoEsperado)
           .parseStrict(acortarFecha.getFixDate(fechaStr));
-      Fluttertoast.showToast(msg: 'Fecha convertida: $fecha');
+      //Fluttertoast.showToast(msg: 'Fecha convertida: $fecha');
       print('Fecha string convertida: $fechaStr');
       return fecha;
     } catch (e) {

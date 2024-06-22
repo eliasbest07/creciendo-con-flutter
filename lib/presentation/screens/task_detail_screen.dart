@@ -40,29 +40,29 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
   void initState() {
     super.initState();
     scrollComentariosController.addListener(() {
-
-  final currentScrollPosition = scrollComentariosController.position.pixels;
-    if (currentScrollPosition > lastScrollPosition) {
-      // Scroll hacia la derecha
-      setState(() {
-        showAddBoton = false;
-      });
-    } else if (currentScrollPosition < lastScrollPosition) {
-      // Scroll hacia la izquierda
-    setState(() {
-        showAddBoton = true;
-      });
-    }
-    lastScrollPosition = currentScrollPosition;
-  });
-
+      final currentScrollPosition = scrollComentariosController.position.pixels;
+      if (currentScrollPosition > lastScrollPosition) {
+        // Scroll hacia la derecha
+        setState(() {
+          showAddBoton = false;
+        });
+      } else if (currentScrollPosition < lastScrollPosition) {
+        // Scroll hacia la izquierda
+        setState(() {
+          showAddBoton = true;
+        });
+      }
+      lastScrollPosition = currentScrollPosition;
+    });
   }
-    @override
+
+  @override
   void dispose() {
     scrollComentariosController.dispose();
-    
+
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Color? colorEstado;
@@ -117,93 +117,119 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
               child: Row(
                 children: [
                   if (showAddBoton)
-                  MaterialButton(
-                    
-                    onPressed: (){
-                      showDialog(context: context, builder: (context) {
-                        return Dialog(
-                          child: SizedBox(
-                            height: 280,
-                            child: Column(children: [
-                              const SizedBox(height: 10),
-                              const Text('Escribe tu comentario'),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: SizedBox(
-                                  height: 150,
-                                  child: TextField(
-                                    controller: comentarioNuevo,
-                                    maxLines: 4,
-                                  ),
+                    MaterialButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return Dialog(
+                              child: SizedBox(
+                                height: 280,
+                                child: Column(
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    const Text('Escribe tu comentario'),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 4.0),
+                                      child: SizedBox(
+                                        height: 150,
+                                        child: TextField(
+                                          controller: comentarioNuevo,
+                                          maxLines: 4,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    MaterialButton(
+                                      color: Colors.black,
+                                      onPressed: () {
+                                        Comentario nuevo = Comentario(
+                                            contenido: comentarioNuevo.text,
+                                            nombreUsuario: 'elias',
+                                            imagenUsuario:
+                                                'https://firebasestorage.googleapis.com/v0/b/tareas-creciendo-con-flutter.appspot.com/o/perfilcompany.png?alt=media&token=9e2ad441-ea1a-4063-b902-981d86e82eda');
+                                        ProyectoService()
+                                            .guardarComentarioTarea(
+                                                widget.tarea.id!, nuevo);
+                                      },
+                                      child: const Text(
+                                        'Enviar',
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                              const SizedBox(height: 10),
-                              MaterialButton(
-                                color: Colors.black,
-                                onPressed: (){
-                                  Comentario nuevo= Comentario(contenido: comentarioNuevo.text, nombreUsuario: 'elias', imagenUsuario: 'https://firebasestorage.googleapis.com/v0/b/tareas-creciendo-con-flutter.appspot.com/o/perfilcompany.png?alt=media&token=9e2ad441-ea1a-4063-b902-981d86e82eda' );
-                                  ProyectoService().guardarComentarioTarea(widget.tarea.id!,nuevo);
-                              },
-                              child: const Text('Enviar', style: TextStyle(color: Colors.white),),)
-                            ],),
-                          ),
-                        ); 
-                      },);
-                  },
-                  child: const Icon(Icons.add),),
-                  Expanded(
-                    child: FutureBuilder(
-                      future: ProyectoService().obtenerComentariosTarea(widget.tarea.id!),
-                      builder: (context, snapshot) {
-                        if(snapshot.hasData){
-                          List<Comentario> comentariosTarea = snapshot.data!;
-                        return ListView.builder(
-                          controller: scrollComentariosController,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: comentariosTarea.length, // lista de Comentarios
-                          itemBuilder: (context, index) {
-                            return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 120,
-                                  width: 220,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: Colors.white,
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: Color.fromARGB(74, 46, 46, 46),
-                                        offset: Offset(0.0, 2.0),
-                                        blurRadius: 7.0,
-                                      )
-                                    ],
-                                  ),
-                                  child: SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.all(4.0),
-                                          child: Row(children: [
-                                            CircleAvatar(
-                                              child: Image.network(comentariosTarea[index].imagenUsuario),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Text(comentariosTarea[index].nombreUsuario)
-                                          ],),
-                                        ),
-                                        Center(
-                                          child: Text(comentariosTarea[index].contenido),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ));
+                            );
                           },
                         );
-                        }
-                        return const SizedBox();
-                      }
+                      },
+                      child: const Icon(Icons.add),
                     ),
+                  Expanded(
+                    child: FutureBuilder(
+                        future: ProyectoService()
+                            .obtenerComentariosTarea(widget.tarea.id!),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<Comentario> comentariosTarea = snapshot.data!;
+                            return ListView.builder(
+                              controller: scrollComentariosController,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: comentariosTarea
+                                  .length, // lista de Comentarios
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      height: 120,
+                                      width: 220,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color:
+                                                Color.fromARGB(74, 46, 46, 46),
+                                            offset: Offset(0.0, 2.0),
+                                            blurRadius: 7.0,
+                                          )
+                                        ],
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Column(
+                                          children: [
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(4.0),
+                                              child: Row(
+                                                children: [
+                                                  CircleAvatar(
+                                                    child: Image.network(
+                                                        comentariosTarea[index]
+                                                            .imagenUsuario),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Text(comentariosTarea[index]
+                                                      .nombreUsuario)
+                                                ],
+                                              ),
+                                            ),
+                                            Center(
+                                              child: Text(
+                                                  comentariosTarea[index]
+                                                      .contenido),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ));
+                              },
+                            );
+                          }
+                          return const SizedBox();
+                        }),
                   ),
                 ],
               ),
@@ -272,9 +298,11 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                                                   onPressed: () {
                                                     //TODO: crea la operación de restar 2 pts por tarea y actualiza a firebase
                                                     restarPuntosTarea();
-                                                    widget.tarea.usuarioAsignado =
+                                                    widget.tarea
+                                                            .usuarioAsignado =
                                                         tareaInf.currentUserID;
-                                                    widget.tarea.estado = 'en proceso';
+                                                    widget.tarea.estado =
+                                                        'en proceso';
                                                     ProyectoService()
                                                         .actualizarTarea(
                                                             tareaInf.projectoID,
@@ -286,10 +314,12 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                                                                 .projectoID,
                                                             metaId:
                                                                 tareaInf.goalID,
-                                                            tareaID: widget.tarea.id!,
+                                                            tareaID: widget
+                                                                .tarea.id!,
                                                             userId: tareaInf
                                                                 .currentUserID,
-                                                            tarea: widget.tarea);
+                                                            tarea:
+                                                                widget.tarea);
                                                     Navigator.pop(context);
                                                     tareaInf.setUser();
                                                     ref
@@ -311,8 +341,8 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                             ),
                           )
                         : FutureBuilder(
-                            future: ProyectoService()
-                                .obtenerUsuarioActual(widget.tarea.usuarioAsignado!),
+                            future: ProyectoService().obtenerUsuarioActual(
+                                widget.tarea.usuarioAsignado!),
                             builder: (context, snapshot) {
                               if (snapshot.hasData) {
                                 Usuario user = snapshot.data!;
@@ -381,7 +411,8 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                           MaterialButton(
                               color: Theme.of(context).primaryColor,
                               onPressed: () {
-                                List<UsuariosProyecto> listaFiltrada = widget.lideres
+                                List<UsuariosProyecto> listaFiltrada = widget
+                                    .lideres
                                     .where(
                                         (usuario) => usuario.rol != 'Auxiliar')
                                     .toList();
@@ -475,7 +506,7 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                                 radius: 15,
                                 backgroundColor: Colors.grey,
                                 child: Text(
-                                  widget.tarea.nivel.toString(),
+                                  widget.tarea.prioridad.toString(),
                                   style: const TextStyle(
                                     color: Colors.white,
                                   ),

@@ -224,11 +224,14 @@ class ProjectDetailScreen extends ConsumerWidget {
                 },
               ),
             ),
+            SizedBox(
+              height: size.height * 0.03,
+            ),
             const Padding(
               padding: EdgeInsets.only(left: 20.0),
               child: Text(
                 'Responsables:',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 14),
               ),
             ),
             SizedBox(
@@ -326,11 +329,14 @@ class ProjectDetailScreen extends ConsumerWidget {
                 userId: userId,
                 primaryColor: primaryColor,
                 nombre: nombre),
+            SizedBox(
+              height: size.height * 0.02,
+            ),
             const Padding(
               padding: EdgeInsets.only(left: 20.0, top: 20),
               child: Text(
                 'Auxiliares:',
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 14),
               ),
             ),
             Padding(
@@ -408,26 +414,32 @@ class ProjectDetailScreen extends ConsumerWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         Expanded(
-                          child: IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        NewGoalScreen(projectID: project.id!),
-                                  ));
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: IconButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => NewGoalScreen(
+                                            projectID: project.id!),
+                                      ));
 
-/*                               showDialog(
-                                  context: context,
-                                  builder: (context) => Center(
-                                      child: Align(
-                                          alignment: Alignment.topCenter,
-                                          child: NewMetaDialog(
-                                              context: context, size: size)))); */
-                            },
-                            icon: const Icon(
-                              Icons.add_box_rounded,
-                              color: Colors.blueGrey,
+                                  /*                               showDialog(
+                                      context: context,
+                                      builder: (context) => Center(
+                                          child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: NewMetaDialog(
+                                                  context: context, size: size)))); */
+                                },
+                                icon: const Icon(
+                                  Icons.add_box_rounded,
+                                  color: Colors.blueGrey,
+                                ),
+                              ),
                             ),
                           ),
                         )
@@ -764,6 +776,12 @@ class ProjectDetailScreen extends ConsumerWidget {
           ],
         ),
       ),
+      bottomNavigationBar: NavBar(
+          primaryColor: primaryColor,
+          width: width,
+          goToScreen: (index) {
+            ref.read(indexPage.notifier).update((state) => index);
+          }),
     );
   }
 }
