@@ -362,8 +362,9 @@ class NewGoalScreen extends ConsumerWidget {
                 ),
               ),
             ),
-/*             const SizedBox(height: 15),
-            const Text(
+            const SizedBox(height: 15),
+            
+       /*      const Text(
               'Lista de comentarios:',
               style: TextStyle(
                 fontWeight: FontWeight.w500,

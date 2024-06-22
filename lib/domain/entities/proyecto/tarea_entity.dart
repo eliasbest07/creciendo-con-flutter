@@ -56,7 +56,7 @@ class Tarea {
           : null,
       fechaEstablecida: DateTime.parse(json['fechaEstablecida']),
       estado: json['estado'],
-      prioridad: json['prioridad'],
+      prioridad: json['nivel'],
     );
   }
 
