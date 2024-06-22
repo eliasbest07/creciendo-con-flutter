@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>871111009322-3ilt9nde0oo3gr7qlfrq5if34vu7gnpd.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.871111009322-3ilt9nde0oo3gr7qlfrq5if34vu7gnpd</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>871111009322-6b8jnb78bor9ftrdjmlu9in6ve23bkht.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDwMbakC6n-LHaTE4gMzgRTySUX2tIUXec</string>
+	<key>GCM_SENDER_ID</key>
+	<string>871111009322</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.creciendoConFlutter</string>
+	<key>PROJECT_ID</key>
+	<string>tareas-creciendo-con-flutter</string>
+	<key>STORAGE_BUCKET</key>
+	<string>tareas-creciendo-con-flutter.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:871111009322:ios:6a296f24581682b0678f53</string>
+	<key>DATABASE_URL</key>
+	<string>https://tareas-creciendo-con-flutter-default-rtdb.firebaseio.com</string>
+</dict>
+</plist>
