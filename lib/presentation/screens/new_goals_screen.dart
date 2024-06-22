@@ -1,6 +1,7 @@
 //import 'package:TaskFlow/domain/repositories/proyecto_repository.dart';
 import 'package:TaskFlow/infrastructure/services/acortadores_string.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
+import 'package:TaskFlow/presentation/controllers/list_goals_controller.dart';
 import 'package:TaskFlow/presentation/screens/list_task_screen.dart';
 import 'package:TaskFlow/presentation/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -41,75 +42,26 @@ class NewGoalScreen extends ConsumerWidget {
         ),
         centerTitle: true,
         actions: [
-          IconButton(
-            onPressed: () {
-              //saving goal object
-              // validar que ingreso un nombre
-              // validar que selecion un tipo controllerMeta.type
-              // validar que selecion una fecha de comienzo
-              // validar que selecion una fecha de fin
-
-              bool camposCompletos = false;
-
-              if (controllerMeta.nameGoal.text.isEmpty ||
-                  controllerMeta.type == '' ||
-                  controllerMeta.fechaCreada == null ||
-                  controllerMeta.fechaEstablecida == null) {
-                camposCompletos = false;
-                Fluttertoast.showToast(
-                  msg: "Debes llenar todos los campos", // message
-                  toastLength: Toast.LENGTH_SHORT, // length
-                  gravity: ToastGravity.BOTTOM, // location
-                );
-              } else {
-                Fluttertoast.showToast(
-                  msg: "Meta guardada con éxito", // message
-                  toastLength: Toast.LENGTH_SHORT, // length
-                  gravity: ToastGravity.BOTTOM, // location
-                );
-                Navigator.pop(context);
-                camposCompletos = true;
-              }
-
-              if (camposCompletos) {
-                Meta meta = Meta(
-                    nombre: controllerMeta.nameGoal.text,
-                    item: controllerMeta.type,
-                    proyectoID: projectID,
-                    fechaCreada: controllerMeta.fechaCreada,
-                    fechaEstablecida: controllerMeta.fechaEstablecida,
-                    listTarea: listTarea
-                    // [
-                    //   Tarea(
-                    //     id: 'IDTareaEliasBest',
-                    //     nombre: 'Tarea 1',
-                    //     descripcion: 'Tarea 1 de prueba',
-                    //     listComentarioTarea: [],
-                    //     usuarioAsignado: '',
-                    //     fechaCreada: DateTime.now(),
-                    //     fechaEstablecida: DateTime.now(),
-                    //     estado: 'En espera',
-                    //     nivel: 2,
-                    //   ),
-                    //   Tarea(
-                    //     id: 'IDTareaEliasBest2',
-                    //     nombre: 'Tarea 2',
-                    //     descripcion: 'Tarea 2 de prueba',
-                    //     listComentarioTarea: [],
-                    //     usuarioAsignado: '',
-                    //     fechaCreada: DateTime.now(),
-                    //     fechaEstablecida: DateTime.now(),
-                    //     estado: 'En espera',
-                    //     nivel: 1,
-                    //   ),
-                    // ],
-                    );
-                listMeta?.add(meta);
-                proyecto.guardarMeta(projectID, meta);
-              }
-            },
-            icon: const Icon(Icons.check, color: Colors.white,),
-          )
+          if (listTarea.isEmpty)
+            IconButton(
+              onPressed: () {
+                //saving goal object
+                // validar que ingreso un nombre
+                // validar que selecion un tipo controllerMeta.type
+                // validar que selecion una fecha de comienzo
+                // validar que selecion una fecha de fin
+                guardarMetaFirebase(
+                    context: context,
+                    controllerMeta: controllerMeta,
+                    listTarea: listTarea,
+                    proyecto: proyecto,
+                    listMeta: listMeta);
+              },
+              icon: const Icon(
+                Icons.check,
+                color: Colors.white,
+              ),
+            )
         ],
       ),
       body: SingleChildScrollView(
@@ -368,12 +320,14 @@ class NewGoalScreen extends ConsumerWidget {
               height: 60,
               child: GestureDetector(
                 onTap: () {
+                  //llamar caso de uso: guardar meta en firebase y obtener el id de esa meta
+                  // la funcion que esta en el action del appbar
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => NewTaskScreen(
                         proyectoId: projectID,
-                      ), // metaID: metaID
+                      ), // metaID: metaID // pasar el id
                     ),
                   );
                   // Navigator.push(
@@ -514,5 +468,46 @@ class NewGoalScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void guardarMetaFirebase(
+      {required BuildContext context,
+      required MetasController controllerMeta,
+      required List<Tarea> listTarea,
+      required List<Meta>? listMeta,
+      required ProyectoService proyecto}) {
+    bool camposCompletos = false;
+
+    if (controllerMeta.nameGoal.text.isEmpty ||
+        controllerMeta.type == '' ||
+        controllerMeta.fechaCreada == null ||
+        controllerMeta.fechaEstablecida == null) {
+      camposCompletos = false;
+      Fluttertoast.showToast(
+        msg: "Debes llenar todos los campos", // message
+        toastLength: Toast.LENGTH_SHORT, // length
+        gravity: ToastGravity.BOTTOM, // location
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: "Meta guardada con éxito", // message
+        toastLength: Toast.LENGTH_SHORT, // length
+        gravity: ToastGravity.BOTTOM, // location
+      );
+      Navigator.pop(context);
+      camposCompletos = true;
+    }
+
+    if (camposCompletos) {
+      Meta meta = Meta(
+          nombre: controllerMeta.nameGoal.text,
+          item: controllerMeta.type,
+          proyectoID: projectID,
+          fechaCreada: controllerMeta.fechaCreada,
+          fechaEstablecida: controllerMeta.fechaEstablecida,
+          listTarea: listTarea);
+      listMeta?.add(meta);
+      proyecto.guardarMeta(projectID, meta);
+    }
   }
 }

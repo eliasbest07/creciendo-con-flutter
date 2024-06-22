@@ -52,7 +52,7 @@ class TareaUsuario {
       resultado.add(Tarea(
         descripcion: element.descripcion,
         estado: element.estado,
-        nivel: 1,
+        prioridad: 1,
         nombre: element.descripcion,
         fechaEstablecida: element.fechaEstablecida,
         id: element.tareaid,
@@ -65,7 +65,7 @@ class TareaUsuario {
     return Tarea(
       descripcion: tareaUsuario.descripcion,
       estado: tareaUsuario.estado,
-      nivel: 1,
+      prioridad: 1,
       nombre: tareaUsuario.descripcion,
       fechaEstablecida: tareaUsuario.fechaEstablecida,
       id: tareaUsuario.tareaid,
