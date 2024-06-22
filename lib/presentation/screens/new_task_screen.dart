@@ -44,6 +44,17 @@ class NewTaskScreen extends ConsumerWidget {
         TextEditingController(); // por cambiar
     final listTarea = ref.watch(listaTareasNueMeta);
 
+    String estadoSelected = 'Recién creada';
+
+    final List<String> estadosTarea = [
+      'Recién creada',
+      'Tomada',
+      'En pausa',
+      'Desistida',
+      'Avanzada',
+      'Terminada',
+    ];
+
     print('este es el ID de una nueva META aun no guardad $metaId');
 
     if (isEdit) {
@@ -247,6 +258,31 @@ class NewTaskScreen extends ConsumerWidget {
                       return null;
                     },
                   ),
+
+                  const SizedBox(height: 16.0),
+                  DropdownButtonFormField<String>(
+                    value: estadoSelected,
+                    onChanged: (newValue) {
+                      ref.read(newTask.notifier).updateEstado(newValue!);
+                    },
+                    items: estadosTarea.map((estado) {
+                      return DropdownMenuItem(
+                        value: estado,
+                        child: Text(estado),
+                      );
+                    }).toList(),
+                    decoration: InputDecoration(
+                      icon: Icon(Icons.star_rate),
+                      labelText: 'Estado',
+                      hintText: 'Elige un estado',
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Por favor, selecciona un estado';
+                      }
+                      return null;
+                    },
+                  ),
                   const SizedBox(height: 26.0),
                   ElevatedButton(
                     onPressed: () {
@@ -259,7 +295,7 @@ class NewTaskScreen extends ConsumerWidget {
                                 newTaskController.controllerFechaInicio.text),
                             fechaEstablecida: DateTime.parse(newTaskController
                                 .controllerFechaEstablecida.text),
-                            estado: 'nueva',
+                            estado: estadoSelected,
                             nivel: int.parse(controllerPrioridad.text));
 
                         actualizarTarea(tarea, context);
@@ -275,6 +311,8 @@ class NewTaskScreen extends ConsumerWidget {
                                 .controllerFechaEstablecida.text),
                             int.parse(controllerPrioridad.text));
                       }
+
+                      Navigator.pop(context);
                     },
                     child: Text(isEdit ? 'Actualizar' : 'Crear'),
                   ),
