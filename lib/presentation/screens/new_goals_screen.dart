@@ -42,7 +42,7 @@ class NewGoalScreen extends ConsumerWidget {
         ),
         centerTitle: true,
         actions: [
-          if (listTarea.isEmpty)
+          if (listTarea.isNotEmpty)
             IconButton(
               onPressed: () {
                 //saving goal object
@@ -362,7 +362,27 @@ class NewGoalScreen extends ConsumerWidget {
                 ),
               ),
             ),
-/*             const SizedBox(height: 15),
+            const SizedBox(height: 15),
+            SizedBox(
+              height: 200,
+              child: ListView.builder(
+                itemCount: listTarea.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                        height: 100,
+                        width: 200,
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(15)),
+                            color: Color.fromARGB(255, 255, 245, 216)),
+                        child: Center(child: Text(listTarea[index].nombre))),
+                  );
+                },
+              ),
+            )
+            /* 
             const Text(
               'Lista de comentarios:',
               style: TextStyle(

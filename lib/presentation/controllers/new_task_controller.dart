@@ -18,7 +18,7 @@ class NewTaskController extends StateNotifier<bool> {
     state = stado; // para que se redibujen los widget xD
   }
 
-  // he creado un nuevo metodo de actualizar estado ya que el estado de una tarea es una lista y no un bool:
+  // he creado un nuevo metodo de actualizar estado ya que el estado de una tarea es una string y no un bool:
   // creada, tomada, en pausa, desistida, avanzada, terminada
   // recibe un nuevoEstado para actualizar en firebase el estado actualizado de dicha tarea
   void updateEstado(String nuevoEstado) {

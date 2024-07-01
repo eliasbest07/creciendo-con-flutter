@@ -4,6 +4,7 @@ import 'package:TaskFlow/domain/entities/proyecto/proyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/tarea_usuario_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
+import 'package:TaskFlow/infrastructure/services/local_storage/local_storage.dart';
 import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:TaskFlow/presentation/screens/notificar_avance_screen.dart';
@@ -13,7 +14,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/proyecto/tarea_entity.dart';
 
@@ -120,6 +120,7 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                     MaterialButton(
                       onPressed: () {
                         showDialog(
+                          barrierDismissible: false,
                           context: context,
                           builder: (context) {
                             return Dialog(
@@ -143,15 +144,29 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                                     const SizedBox(height: 10),
                                     MaterialButton(
                                       color: Colors.black,
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        String nombreUser =
+                                            await LocalStorage().getNombre();
                                         Comentario nuevo = Comentario(
                                             contenido: comentarioNuevo.text,
-                                            nombreUsuario: 'elias',
+                                            nombreUsuario: nombreUser,
                                             imagenUsuario:
                                                 'https://firebasestorage.googleapis.com/v0/b/tareas-creciendo-con-flutter.appspot.com/o/perfilcompany.png?alt=media&token=9e2ad441-ea1a-4063-b902-981d86e82eda');
                                         ProyectoService()
                                             .guardarComentarioTarea(
                                                 widget.tarea.id!, nuevo);
+
+                                        Navigator.pop(context);
+
+                                        Navigator.pushReplacement(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TaskDetailScreen(
+                                                      lideres: widget.lideres,
+                                                      tarea: widget.tarea,
+                                                      meta: widget.meta,
+                                                    )));
                                       },
                                       child: const Text(
                                         'Enviar',
@@ -421,6 +436,8 @@ class TaskDetailScreenState extends ConsumerState<TaskDetailScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => NotificarAvanceScreen(
+                                        actualizarTarea: widget.tarea,
+                                        meta: widget.meta!,
                                         listaLideres: widget.lideres
                                             .where((lider) =>
                                                 lider.rol != 'Auxiliar')

@@ -68,3 +68,5 @@ final newTask = StateNotifierProvider<NewTaskController, bool>(
 final listTareaUsuario =
     StateNotifierProvider<TaskUserController, List<TareaUsuario>>(
         (ref) => TaskUserController());
+
+final tareaEstado = StateProvider<String>((ref) => '');

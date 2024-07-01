@@ -40,4 +40,14 @@ class LocalStorage {
     await initializePrefs();
     await prefs.setString('nombre', value);
   }
+
+  Future<String> getAvatar() async {
+    await initializePrefs();
+    return prefs.getString('url') ?? 'vacio';
+  }
+
+  Future<String> setAvatar() async {
+    await initializePrefs();
+    return prefs.getString('url') ?? 'vacio';
+  }
 }

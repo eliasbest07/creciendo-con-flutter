@@ -25,9 +25,6 @@ class InitialHomeScreen extends ConsumerWidget {
     final primaryColor = Theme.of(context).primaryColor;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("data"),
-      ),
       drawer: SizedBox(
           height: height * 0.7,
           width: width * 0.7,

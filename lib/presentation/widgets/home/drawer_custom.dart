@@ -1,4 +1,5 @@
 import 'package:TaskFlow/domain/entities/usuario/usuario_entity.dart';
+import 'package:TaskFlow/infrastructure/services/local_storage/local_storage.dart';
 import 'package:TaskFlow/infrastructure/services/usuario_service.dart';
 import 'package:TaskFlow/presentation/screens/actualizaciones_screen.dart';
 import 'package:TaskFlow/presentation/screens/profile_screen.dart';
@@ -145,8 +146,8 @@ class DrawerCustom extends ConsumerWidget {
                 onPressed: () {
                   // Navigator.pushNamed(context,'ListProject');
                 },
-                child: FutureBuilder<Usuario>(
-                  future: usuarioService.obtenerUsuarioActual(userId),
+                child: FutureBuilder<String>(
+                  future: LocalStorage().getNombre(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       if (snapshot.hasData) {
@@ -158,7 +159,7 @@ class DrawerCustom extends ConsumerWidget {
                             size: 35,
                           ),
                           title: Text(
-                            usuario.nombre,
+                            usuario,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16,
