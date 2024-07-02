@@ -354,13 +354,12 @@ class ProyectoService implements ProyectoRepository {
   }
 
   @override
-  Future<void> guardarComentarioTarea(String tareaId, Comentario comentario) async {
+  Future<void> guardarComentarioTarea(
+      String tareaId, Comentario comentario) async {
     try {
-      DatabaseReference tareaRef = db
-          .ref()
-          .child("tareaComentarios")
-          .child(tareaId);
-          
+      DatabaseReference tareaRef =
+          db.ref().child("tareaComentarios").child(tareaId);
+
       DatabaseReference comentTareaRef =
           tareaRef.child("listComentarioTarea").push();
       //Obtener el ID generado
@@ -692,7 +691,8 @@ class ProyectoService implements ProyectoRepository {
     }
   }
 
-  List<Comentario> _procesarComentariosTareasSnapshot(DataSnapshot tareaSnapshot) {
+  List<Comentario> _procesarComentariosTareasSnapshot(
+      DataSnapshot tareaSnapshot) {
     List<Comentario> responmetas = [];
     try {
       if (tareaSnapshot.value != null) {
@@ -1004,15 +1004,14 @@ class ProyectoService implements ProyectoRepository {
         .child("rol")
         .set(nuevoRol);
   }
-  
+
   @override
-  Future<List<Comentario>> obtenerComentariosTarea(String tareaID)async {
+  Future<List<Comentario>> obtenerComentariosTarea(String tareaID) async {
     try {
-      DatabaseReference proyectoRef = db
-          .ref()
-          .child("tareaComentarios")
-          .child(tareaID);
-      DatabaseEvent databaseEvent = await proyectoRef.child("listComentarioTarea").once();
+      DatabaseReference proyectoRef =
+          db.ref().child("tareaComentarios").child(tareaID);
+      DatabaseEvent databaseEvent =
+          await proyectoRef.child("listComentarioTarea").once();
 
       return _procesarComentariosTareasSnapshot(databaseEvent.snapshot);
     } catch (e) {

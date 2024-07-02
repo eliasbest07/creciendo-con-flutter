@@ -74,7 +74,10 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.notifications),
+            icon: const Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ),
           ),
           // IconButton(
           //   onPressed: () async {
@@ -133,7 +136,6 @@ class HomeScreen extends ConsumerWidget {
                         //un objeto de tipo TareaUsuario
                         return GestureDetector(
                           onTap: () {
-                            
                             Navigator.push(
                               context,
                               MaterialPageRoute(

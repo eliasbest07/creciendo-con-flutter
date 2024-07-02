@@ -1,3 +1,4 @@
+import 'package:TaskFlow/infrastructure/services/local_storage/local_storage.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -255,7 +256,8 @@ class CuadroRegistro extends StatelessWidget {
                       controllerAnim.showMensaje.forward();
                       return;
                     }
-                    if (controllerLogin.inputControllerPasswordRegister.text.length <
+                    if (controllerLogin
+                            .inputControllerPasswordRegister.text.length <
                         6) {
                       ref.read(showMensaje.notifier).state =
                           'La clave debe ser mayor a 6 digitos 🧐';
@@ -268,6 +270,8 @@ class CuadroRegistro extends StatelessWidget {
                         .forward(); // comienza la animacion de cargando
                     final isRegister = await controllerLogin.registrar();
                     if (context.mounted && isRegister) {
+                      LocalStorage().setNombre(
+                          controllerLogin.inputControllerNameRegister.text);
                       Navigator.pushReplacementNamed(context, 'home');
                     } else {
                       controllerAnim.showalerta.reverse();
