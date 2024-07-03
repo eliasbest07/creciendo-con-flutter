@@ -75,7 +75,7 @@ class MyApp extends StatelessWidget {
           : 'inicio', // inicial rutas y screens.dart
       routes: {
         'inicio': (_) => const InitialHomeScreen(),
-        'home': (_) => const HomeScreen(),
+        'home': (_) => const InitialHomeScreen(),
         'ListProject': (_) => const ListProjectScreen(),
         //  'ListGoals':  (_) => const ListGoalScreen(),
         'ListTasks': (_) => const ListTaskScreen(),

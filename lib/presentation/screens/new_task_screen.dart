@@ -139,6 +139,7 @@ class NewTaskScreen extends ConsumerWidget {
                   //  = [ ,...listTarea];
                   // listTarea.add();
                 }
+                Navigator.pop(context);
               },
               icon: const Icon(Icons.check),
             )
@@ -363,7 +364,7 @@ class NewTaskScreen extends ConsumerWidget {
                           print('TAREA LISTA Y CREADA');
                         }
 
-                        // Navigator.push()
+                        Navigator.pop(context);
                       },
                       child: Text(isEdit ? 'Actualizar' : 'Crear'),
                     ),
@@ -500,7 +501,7 @@ class NewTaskScreen extends ConsumerWidget {
                       ),
                     ),
                   ))));
-      Navigator.pop(context);
+      //  Navigator.pop(context);
     }
   }
 }

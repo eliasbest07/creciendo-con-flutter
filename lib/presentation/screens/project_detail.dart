@@ -420,6 +420,7 @@ class ProjectDetailScreen extends ConsumerWidget {
                               alignment: Alignment.centerRight,
                               child: IconButton(
                                 onPressed: () {
+                                  // TODO: crear regla: solo lideres y sublideres puedn ver el boton de crear meta
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

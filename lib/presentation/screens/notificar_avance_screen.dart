@@ -1,24 +1,42 @@
+import 'package:TaskFlow/domain/entities/proyecto/meta_entity.dart';
+import 'package:TaskFlow/domain/entities/proyecto/tarea_entity.dart';
 import 'package:TaskFlow/domain/entities/proyecto/usuarioProyecto_entity.dart';
+import 'package:TaskFlow/infrastructure/services/proyecto_service.dart';
+import 'package:TaskFlow/providers/riverpod_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../domain/entities/proyecto/tarea_usuario_entity.dart';
-import '../../infrastructure/services/proyecto_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class NotificarAvanceScreen extends ConsumerWidget {
+  final Tarea actualizarTarea;
+  final Meta meta;
   final List<UsuariosProyecto> listaLideres;
 
-  NotificarAvanceScreen({required this.listaLideres});
+  NotificarAvanceScreen(
+      {super.key,
+      required this.listaLideres,
+      required this.meta,
+      required this.actualizarTarea});
+
+  final List<String> estadosList = [
+    'Recién creada',
+    'Tomada',
+    'En pausa',
+    'Desistida',
+    'Avanzada',
+    'Terminada',
+  ];
+
+  final TextEditingController descripInput = TextEditingController();
+
+  //TODO: La variable estadoSelected debe inicialzarse a como esté en firebase
+
+  String estadoSelected = 'Recién creada';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // const List<String> liderProyecto = <String>[
-    //   'Carlos',
-    //   'Elias',
-    //   'Jorg',
-    //   'Hugo'
-    // ];
-    final TextEditingController descripInput = TextEditingController();
+    final actualizarEstadoTarea = ref.watch(tareaEstado);
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).primaryColor,
@@ -26,6 +44,12 @@ class NotificarAvanceScreen extends ConsumerWidget {
             'Notificar avance',
             style: TextStyle(color: Colors.white),
           ),
+          centerTitle: true,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white)),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -108,6 +132,30 @@ class NotificarAvanceScreen extends ConsumerWidget {
               //     return const Center(child: CircularProgressIndicator());
               //   },
               // ),
+              DropdownButtonFormField<String>(
+                value: estadoSelected,
+                onChanged: (newValue) {
+                  //para que se redibuje
+                  ref.read(tareaEstado.notifier).state = newValue!;
+                },
+                items: estadosList.map((estado) {
+                  return DropdownMenuItem(
+                    value: estado,
+                    child: Text(estado),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.star_rate),
+                  labelText: 'Estado',
+                  hintText: 'Elige un estado',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Por favor, selecciona un estado';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 30),
               const Text('Mensaje:'),
               const SizedBox(
@@ -138,7 +186,21 @@ class NotificarAvanceScreen extends ConsumerWidget {
                 children: [
                   MaterialButton(
                       color: Theme.of(context).primaryColor,
-                      onPressed: () {},
+                      onPressed: () {
+                        actualizarTarea.estado = actualizarEstadoTarea;
+                        ProyectoService proyecto = ProyectoService();
+                        proyecto.actualizarTarea(
+                            meta.proyectoID, meta.id!, actualizarTarea);
+
+                        // crear metodo para actualizar en proyecto/idproyecto/listMeta/idmeta/listTarea/idtarea
+
+                        Fluttertoast.showToast(
+                          msg: 'Avance notificado',
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                        );
+                        Navigator.pop(context);
+                      },
                       child: const Text(
                         'Enviar',
                         style: TextStyle(color: Colors.white),
