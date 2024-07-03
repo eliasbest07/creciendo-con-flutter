@@ -29,11 +29,13 @@ class GoalDetailScreen extends ConsumerWidget {
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color.fromARGB(255, 246, 249, 255),
       appBar: AppBar(
+        backgroundColor: Theme.of(context).primaryColor,
         title: const Text(
           'META',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w800,
+            color: Colors.white
           ),
         ),
         actions: [
@@ -61,149 +63,167 @@ class GoalDetailScreen extends ConsumerWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const HomeScreen(),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => const HomeScreen(),
+            //   ),
+            // );
+            Navigator.pop(context);
           },
         ),
       ),
-      // floatingActionButton: NavBar(
-      //   primaryColor: Theme.of(context).primaryColor,
-      //   width: size.width,
-      // ),
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      body: Stack(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 150,
-                width: double.infinity,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 10, // lista de Comentarios
-                  itemBuilder: (context, index) {
-                    return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Container(
-                          height: 120,
-                          width: 220,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: Colors.white,
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Color.fromARGB(74, 46, 46, 46),
-                                offset: Offset(0.0, 2.0),
-                                blurRadius: 7.0,
-                              )
-                            ],
-                          ),
-                          child: Center(
-                            child: Text('Comentario $index'),
-                          ),
-                        ));
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // bottomNavigationBar: NavBar(
+        //   primaryColor: Theme.of(context).primaryColor,
+        //   width: size.width,
+        //   goToScreen: (index) {
+        //     ref.read(indexPage.notifier).update((state) => index);
+        //   }),
+     
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Lista de Tareas 05',
-                        style: TextStyle(color: Colors.grey)),
-                    IconButton(
-                        onPressed: () {},
-                        icon: SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CustomPaint(
-                                size: Size.infinite, painter: FilterIcon())))
+                    SizedBox(
+                      height: 150,
+                      width: double.infinity,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 10, // lista de Comentarios
+                        itemBuilder: (context, index) {
+                          return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 120,
+                                width: 220,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromARGB(74, 46, 46, 46),
+                                      offset: Offset(0.0, 2.0),
+                                      blurRadius: 7.0,
+                                    )
+                                  ],
+                                ),
+                                child: Center(
+                                  child: Text('Comentario $index'),
+                                ),
+                              ));
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Lista de Tareas 05',
+                              style: TextStyle(color: Colors.grey)),
+                          IconButton(
+                              onPressed: () {},
+                              icon: SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CustomPaint(
+                                      size: Size.infinite, painter: FilterIcon())))
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                        height: size.height * 0.62,
+                        child: FutureBuilder(
+                          future: ProyectoService()
+                              .obtenerTareas(meta.id!, meta.proyectoID),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              List<Tarea> listTarea = snapshot.data ?? [];
+                              return ListView.builder(
+                                  controller: listTask,
+                                  itemCount: listTarea.length,
+                                  itemBuilder: (context, index) {
+                                    return Padding(
+                                      padding: index == listTarea.length - 1
+                                          ? const EdgeInsets.only(
+                                              bottom: 320.0,
+                                              top: 8,
+                                              left: 8,
+                                              right: 8)
+                                          : const EdgeInsets.all(8.0),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            // otra forma que se me ocurre es guardar en Tarea es ide de TareaUsuario,
+                                            //en donde el usuario dice que se asigna esa tarea
+            
+                                            //encontré una forma de obtener ese id, y es con un metodo que sugiere bing
+                                            // ohh genial xd a ver
+                                            // Bro mañana continuamos, tengo que ir a dormir porque tengo examen mañana
+                                            // mañana seguimos igual comenzamos a las 7 o 7:30
+            
+                                            // dale bro, descansa feliz noche
+            
+                                            //segun bing, una de las formas de saber el id de TareaUsuario (padre),
+                                            //es a traves de su hijo (cada item de tarea dentro de listaTareas)
+                                            // ya que, cada item hijo tiene "tareaid", este puede usarse para buscar entre el listado de listaTareas
+                                            // y trarse ese id padre
+            
+                                            //getIdTareaUsuario(tarea.id);
+            
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TaskDetailScreen(
+                                                      meta: meta,
+                                                      lideres:
+                                                          project.listUserProyecto!,
+                                                      tarea: listTarea[index],
+                                                    )),
+                                          );
+                                        },
+                                        child: CardTarea(
+                                            size: size,
+                                            listTarea: listTarea,
+                                            index: index),
+                                      ),
+                                    );
+                                  });
+                            }
+                            return const Center(child: CircularProgressIndicator());
+                          },
+                        ))
                   ],
                 ),
-              ),
-              SizedBox(
-                  height: size.height * 0.62,
-                  child: FutureBuilder(
-                    future: ProyectoService()
-                        .obtenerTareas(meta.id!, meta.proyectoID),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<Tarea> listTarea = snapshot.data ?? [];
-                        return ListView.builder(
-                            controller: listTask,
-                            itemCount: listTarea.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: index == listTarea.length - 1
-                                    ? const EdgeInsets.only(
-                                        bottom: 320.0,
-                                        top: 8,
-                                        left: 8,
-                                        right: 8)
-                                    : const EdgeInsets.all(8.0),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      // otra forma que se me ocurre es guardar en Tarea es ide de TareaUsuario,
-                                      //en donde el usuario dice que se asigna esa tarea
-
-                                      //encontré una forma de obtener ese id, y es con un metodo que sugiere bing
-                                      // ohh genial xd a ver
-                                      // Bro mañana continuamos, tengo que ir a dormir porque tengo examen mañana
-                                      // mañana seguimos igual comenzamos a las 7 o 7:30
-
-                                      // dale bro, descansa feliz noche
-
-                                      //segun bing, una de las formas de saber el id de TareaUsuario (padre),
-                                      //es a traves de su hijo (cada item de tarea dentro de listaTareas)
-                                      // ya que, cada item hijo tiene "tareaid", este puede usarse para buscar entre el listado de listaTareas
-                                      // y trarse ese id padre
-
-                                      //getIdTareaUsuario(tarea.id);
-
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              TaskDetailScreen(
-                                                meta: meta,
-                                                lideres:
-                                                    project.listUserProyecto!,
-                                                tarea: listTarea[index],
-                                              )),
-                                    );
-                                  },
-                                  child: CardTarea(
-                                      size: size,
-                                      listTarea: listTarea,
-                                      index: index),
-                                ),
-                              );
-                            });
-                      }
-                      return const Center(child: CircularProgressIndicator());
-                    },
-                  ))
-            ],
-          ),
-          Positioned(
-              bottom: 135,
-              left: 0,
-              right: 0,
-              child: CardGoalDetail(
-                meta: meta,
-                scrollController: listTask,
-                maximoTamanio: 200,
-                minimoTamanio: 100,
-              ))
-        ],
+                Positioned(
+                    bottom: 135,
+                    left: 0,
+                    right: 0,
+                    child: CardGoalDetail(
+                      meta: meta,
+                      scrollController: listTask,
+                      maximoTamanio: 200,
+                      minimoTamanio: 100,
+                    ))
+              ],
+            ),
+          ],
+        ),
       ),
+    
+     bottomNavigationBar: NavBar(
+        primaryColor: Theme.of(context).primaryColor,
+        width: size.width,  goToScreen: (index) {
+            ref.read(indexPage.notifier).update((state) => index);
+          }
+      ),
+      
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
     );
   }
 }

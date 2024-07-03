@@ -290,3 +290,4 @@ class ListGoalScreen extends ConsumerWidget {
     );
   }
 }
+

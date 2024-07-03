@@ -7,6 +7,8 @@
 import 'package:flutter/material.dart';
 
 class FilterIcon extends CustomPainter {
+    Color? color= const Color(0xff000000);
+    FilterIcon({this.color});
     @override
     void paint(Canvas canvas, Size size) {
             
@@ -111,7 +113,7 @@ Path path_0 = Path();
     path_0.close();
 
 Paint paint_0_fill = Paint()..style=PaintingStyle.fill;
-paint_0_fill.color = Colors.black.withOpacity(1.0);
+paint_0_fill.color = color!;
 canvas.drawPath(path_0,paint_0_fill);
 
 }
