@@ -444,7 +444,7 @@ class EditGoalScreen extends ConsumerWidget {
                       ),
                      //fecha establecida, 
 
-                       Text(
+                      Text(
                         'Fecha de creación:\n${controllerEdita.fechaCreadaController}',
                         style: const TextStyle(
                           fontWeight: FontWeight.w500,
@@ -452,7 +452,7 @@ class EditGoalScreen extends ConsumerWidget {
                         ),
                       ),
                       //fecha final
-                       Text(
+                        Text(
                           'Fecha de culminación:${controllerEdita.fechaEstimadaController}',
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
